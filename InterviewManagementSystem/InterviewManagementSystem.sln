@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InterviewManagementSystem.A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InterviewManagementSystem.Application", "InterviewManagementSystem.Application\InterviewManagementSystem.Application.csproj", "{E847C85A-A165-4C23-87A5-31C35114CB46}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InterviewManagementSystem.Domain", "InterviewManagementSystem.Domain\InterviewManagementSystem.Domain.csproj", "{F15C1FEF-C406-4A2D-AFC7-EA8B3C183975}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InterviewManagementSystem.Infrastructure", "InterviewManagementSystem.Infrastructure\InterviewManagementSystem.Infrastructure.csproj", "{C0EA35A2-C025-46CB-A477-0C256A42433C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{E847C85A-A165-4C23-87A5-31C35114CB46}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E847C85A-A165-4C23-87A5-31C35114CB46}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E847C85A-A165-4C23-87A5-31C35114CB46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F15C1FEF-C406-4A2D-AFC7-EA8B3C183975}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F15C1FEF-C406-4A2D-AFC7-EA8B3C183975}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F15C1FEF-C406-4A2D-AFC7-EA8B3C183975}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F15C1FEF-C406-4A2D-AFC7-EA8B3C183975}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0EA35A2-C025-46CB-A477-0C256A42433C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0EA35A2-C025-46CB-A477-0C256A42433C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0EA35A2-C025-46CB-A477-0C256A42433C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0EA35A2-C025-46CB-A477-0C256A42433C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
