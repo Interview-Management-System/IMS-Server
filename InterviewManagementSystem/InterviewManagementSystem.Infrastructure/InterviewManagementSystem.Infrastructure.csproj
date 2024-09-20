@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Services\Email\" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\InterviewManagementSystem.Domain\InterviewManagementSystem.Domain.csproj" />
   </ItemGroup>
 
