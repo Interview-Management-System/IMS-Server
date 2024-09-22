@@ -16,8 +16,6 @@ public static class JobStatusEnumExtension
         {  JobStatusEnum.Draft, nameof(JobStatusEnum.Draft) },
         {  JobStatusEnum.Open, nameof(JobStatusEnum.Open) },
         {  JobStatusEnum.Closed, nameof(JobStatusEnum.Closed)  },
-
-
     };
 
     public static string GetJobStatusName(this JobStatusEnum status)

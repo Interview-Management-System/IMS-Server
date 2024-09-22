@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using InterviewManagementSystem.Domain.Enums;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -12,7 +13,6 @@ internal static class AccessControl
 
         string? secretKeyString = configuration["JWT:SecretKey"];
         ArgumentException.ThrowIfNullOrWhiteSpace(secretKeyString);
-
 
 
         var secretKeyByte = Encoding.UTF8.GetBytes(secretKeyString);
@@ -49,9 +49,29 @@ internal static class AccessControl
 
 
 
-    internal static void AddAuthorization(this IServiceCollection services)
+    internal static void AddRoleAuthorization(this IServiceCollection services)
     {
 
+        string adminRole = RoleEnum.Admin.GetName();
+        string managerRole = RoleEnum.Manager.GetName();
+        string candidateRole = RoleEnum.Candidate.GetName();
+        string recruiterRole = RoleEnum.Recruiter.GetName();
+        string interviewRole = RoleEnum.Interviewer.GetName();
+
+        string[] adminAndManagerRoles = [adminRole, managerRole];
+        string[] adminManagerRecruiterRoles = [adminRole, managerRole, recruiterRole];
+        string[] allRoles = [adminRole, managerRole, candidateRole, recruiterRole, interviewRole];
+        string[] adminManagerRecruiterInterviewerRoles = [adminRole, managerRole, recruiterRole, interviewRole];
+
+
+        services.AddAuthorizationBuilder()
+            .AddPolicy(AuthorizationPolicy.RequiredAdmin, policy => policy.RequireRole(adminRole))
+            .AddPolicy(AuthorizationPolicy.RequiredAllRoles, policy => policy.RequireRole(allRoles))
+            .AddPolicy(AuthorizationPolicy.RequiredManager, policy => policy.RequireRole(managerRole))
+            .AddPolicy(AuthorizationPolicy.RequiredInterviewerRole, policy => policy.RequireRole(interviewRole))
+            .AddPolicy(AuthorizationPolicy.RequiredAdminManager, policy => policy.RequireRole(adminAndManagerRoles))
+            .AddPolicy(AuthorizationPolicy.RequiredAdminManagerRecruiter, policy => policy.RequireRole(adminManagerRecruiterRoles))
+            .AddPolicy(AuthorizationPolicy.RequiredAdminManagerRecruiterInterviewer, policy => policy.RequireRole(adminManagerRecruiterInterviewerRoles));
     }
 
 
@@ -65,4 +85,17 @@ internal static class AccessControl
             )
         );
     }
+}
+
+
+internal static class AuthorizationPolicy
+{
+    public const string RequiredAdmin = "RequiredAdmin";
+    public const string RequiredManager = "RequiredManager";
+    public const string RequiredAllRoles = "RequiredAllRoles";
+    public const string RequiredAdminManager = "RequiredAdminManager";
+    public const string RequiredInterviewerRole = "RequiredInterviewerRole";
+    public const string RequiredAdminManagerRecruiter = "RequiredAdminManagerRecruiter";
+    public const string RequiredAdminManagerRecruiterInterviewer = "RequiredAdminManagerRecruiterInterviewer";
+
 }

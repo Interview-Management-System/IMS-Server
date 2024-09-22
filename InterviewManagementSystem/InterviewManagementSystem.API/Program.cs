@@ -1,10 +1,11 @@
+global using InterviewManagementSystem.Application.Services.BaseServices.BaseInterfaces;
+global using AuthorizationPolicy = InterviewManagementSystem.API.Configurations.AuthorizationPolicy;
 using System.Text.Json.Serialization;
 using InterviewManagementSystem.API.Configurations;
 using InterviewManagementSystem.API.Middlewares;
 
-var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services
@@ -12,16 +13,17 @@ builder.Services
     .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwagger();
 builder.Services.AddJWTAuthentication(builder.Configuration);
+builder.Services.AddRoleAuthorization();
 builder.Services.AddCrossOriginResourceSharing();
+builder.Services.AddMapper();
 builder.Services.AddInjectionService();
-//builder.Services.AddExceptionHandlers();
+builder.Services.AddExceptionHandlers();
 builder.Services.AddHttpContextAccessor();
-
-
 
 
 
@@ -33,7 +35,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-//app.UseExceptionHandler();
+app.UseExceptionHandler();
 app.UseHttpsRedirection();
 app.UseCors();
 app.UseAuthentication();
@@ -42,3 +44,4 @@ app.UseMiddleware<CancellationTokenMiddleware>();
 app.MapControllers();
 
 app.Run();
+

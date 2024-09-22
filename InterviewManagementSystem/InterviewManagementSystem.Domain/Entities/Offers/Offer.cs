@@ -1,6 +1,4 @@
-﻿using InterviewManagementSystem.Domain.ValueObjects;
-
-namespace InterviewManagementSystem.Domain.Entities.Offers;
+﻿namespace InterviewManagementSystem.Domain.Entities.Offers;
 
 
 public partial class Offer : BaseEntity

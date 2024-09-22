@@ -1,6 +1,4 @@
-﻿using InterviewManagementSystem.Domain.ValueObjects;
-
-namespace InterviewManagementSystem.Domain.Entities.Interviews;
+﻿namespace InterviewManagementSystem.Domain.Entities.Interviews;
 
 public partial class InterviewSchedule : BaseEntity
 {

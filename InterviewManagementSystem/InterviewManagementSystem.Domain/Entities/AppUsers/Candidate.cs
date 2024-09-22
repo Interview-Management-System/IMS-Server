@@ -1,4 +1,6 @@
-﻿namespace InterviewManagementSystem.Domain.Entities.AppUsers;
+﻿using InterviewManagementSystem.Domain.Enums;
+
+namespace InterviewManagementSystem.Domain.Entities.AppUsers;
 
 public partial class Candidate : AppUser
 {
@@ -27,4 +29,20 @@ public partial class Candidate : AppUser
     public virtual AppUser? Recruiter { get; set; }
 
     public virtual ICollection<Skill> Skills { get; set; } = new List<Skill>();
+}
+
+
+
+
+
+
+public partial class Candidate
+{
+    public void ChangeStatus(CandidateStatusEnum candidateStatusEnum)
+    {
+        CandidateStatusId = (short)candidateStatusEnum;
+    }
+
+
+
 }

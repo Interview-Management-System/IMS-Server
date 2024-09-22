@@ -1,38 +1,52 @@
-﻿using InterviewManagementSystem.Domain.Exceptions;
+﻿using System.Text.RegularExpressions;
+using InterviewManagementSystem.Application.CustomClasses;
+using InterviewManagementSystem.Domain.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
 
 namespace InterviewManagementSystem.API.Exceptions;
 
 internal sealed class ExceptionHandler : IExceptionHandler
 {
+    private static readonly string MESSAGE_PATTERN = @"'([^']*)'";
 
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
 
-
-        var problemDetails = new ProblemDetails()
+        var apiResponse = new ApiResponse<bool>()
         {
-            Detail = exception.Message,
+            Message = exception.Message
         };
 
 
-        if (exception is DomainException)
+        int statusCode;
+        switch (exception)
         {
-            problemDetails.Title = "Not found";
-            problemDetails.Status = StatusCodes.Status404NotFound;
-            httpContext.Response.StatusCode = 404;
+            case DomainException:
+                statusCode = StatusCodes.Status400BadRequest;
+                break;
+
+
+            case ArgumentNullException:
+                statusCode = StatusCodes.Status404NotFound;
+                Match match = Regex.Match(exception.Message, MESSAGE_PATTERN);
+
+                if (match.Success)
+                    apiResponse.Message = match.Groups[1].Value;
+                break;
+
+
+            default:
+                statusCode = StatusCodes.Status500InternalServerError;
+                break;
         }
-        else
-        {
-            problemDetails.Title = "An error occurred";
-            problemDetails.Status = StatusCodes.Status500InternalServerError;
-            httpContext.Response.StatusCode = 500;
-        }
+
+        apiResponse.StatusCode = statusCode;
+        httpContext.Response.StatusCode = statusCode;
+
 
         try
         {
-            await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
+            await httpContext.Response.WriteAsJsonAsync(apiResponse, cancellationToken);
             return true;
         }
         catch (Exception)

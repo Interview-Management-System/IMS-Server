@@ -1,6 +1,4 @@
-﻿using InterviewManagementSystem.Domain.ValueObjects;
-
-namespace InterviewManagementSystem.Domain.Entities.Jobs;
+﻿namespace InterviewManagementSystem.Domain.Entities.Jobs;
 
 public partial class Job : BaseEntity
 {

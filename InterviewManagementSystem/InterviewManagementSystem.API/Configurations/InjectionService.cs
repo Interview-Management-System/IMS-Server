@@ -1,4 +1,6 @@
-﻿using InterviewManagementSystem.Domain.Entities.AppUsers;
+﻿using InterviewManagementSystem.Application.Services.BaseServices.BaseImplementations;
+using InterviewManagementSystem.Domain.Entities.AppUsers;
+using InterviewManagementSystem.Domain.Interfaces;
 using InterviewManagementSystem.Infrastructure.Persistences;
 using InterviewManagementSystem.Infrastructure.UnitOfWorks;
 using Microsoft.AspNetCore.Identity;
@@ -14,7 +16,6 @@ internal static class InjectionService
 
         // Setup DB
         const string connection = "Host=localhost;Database=InterviewManagementSystem;Username=postgres;Password=sa";
-
         services.AddDbContext<InterviewManagementSystemContext>(options => options.UseNpgsql(connection));
 
         services.AddIdentity<AppUser, IdentityRole<Guid>>()
@@ -23,6 +24,7 @@ internal static class InjectionService
 
 
 
-        services.AddSingleton<UnitOfWork>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IGetEntityBaseService<object, object>, GetEntityBaseService<object, object>>();
     }
 }

@@ -6,9 +6,9 @@ namespace InterviewManagementSystem.Domain.Interfaces;
 
 public interface IBaseRepository<T> where T : class
 {
-    Task<List<T>> GetAllAsync();
+    Task<List<T>> GetAllAsync(bool isTracking = false);
 
-    Task<T> GetByIdAsync(Guid id);
+    Task<T?> GetByIdAsync(object id, bool isTracking = false);
 
     Task AddAsync(T entity);
 
@@ -18,9 +18,9 @@ public interface IBaseRepository<T> where T : class
 
     void Delete(T entity, bool isHardDelete = false);
 
-    void Delete(IEnumerable<T> entities, bool isHardDelete = false);
+    void DeleteRange(IEnumerable<T> entities, bool isHardDelete = false);
 
-    void Delete(Expression<Func<T, bool>> where, bool isHardDelete = false);
+    void DeleteRangeWithConditions(Expression<Func<T, bool>> where, bool isHardDelete = false);
 
     IQueryable<T> GetQuery();
 
@@ -47,12 +47,12 @@ public interface IBaseRepository<T> where T : class
     /// <param name="includeProperties"></param>
     /// <param name="canLoadDeleted"></param>
     /// <returns></returns>
-    IQueryable<T> GetWithInclude(Expression<Func<T, bool>> filter = null!, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null!, string includeProperties = "", bool canLoadDeleted = false, bool isNoTracking = false);
+    IQueryable<T> GetWithInclude(Expression<Func<T, bool>>? filter, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy, string includeProperties = "", bool canLoadDeleted = false, bool isNoTracking = false);
 
 
 
 
-    Task<PageResult<T>> GetByPageWithIncludeAsync(PaginationParameter<T> pagingParameter, IEnumerable<string>? includeProperties = null);
+    Task<PageResult<T>> GetByPageWithIncludeAsync(PaginationParameter<T> pagingParameter, IEnumerable<string>? includeProperties);
 
 
 
@@ -65,5 +65,5 @@ public interface IBaseRepository<T> where T : class
     /// <param name="includes"></param>
     /// <param name="canLoadDeleted"></param>
     /// <returns>List of type T</returns>
-    IQueryable<T> GetWithInclude(Expression<Func<T, bool>> filter = null!, Expression<Func<IQueryable<T>, IIncludableQueryable<T, object>>>[] includes = null!);
+    IQueryable<T> GetWithInclude(Expression<Func<T, bool>>? filter, Expression<Func<IQueryable<T>, IIncludableQueryable<T, object>>>[]? includes);
 }

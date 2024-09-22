@@ -1,5 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using InterviewManagementSystem.Application.CustomClasses;
 using InterviewManagementSystem.Domain.Entities.AppUsers;
+using InterviewManagementSystem.Domain.ValueObjects;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,15 +12,21 @@ namespace InterviewManagementSystem.API.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
-
+        IGetEntityBaseService<object, object> get;
         UserManager<AppUser> a;
 
-        public ValuesController(UserManager<AppUser> a)
+        public ValuesController(UserManager<AppUser> a, IGetEntityBaseService<object, object> test)
         {
+            //var ss = test.Mapper;
+            get = test;
+
+
+
             this.a = a;
         }
 
         [HttpGet]
+        [Authorize(Policy = AuthorizationPolicy.RequiredAdmin)]
         public IActionResult Get()
         {
 
@@ -39,9 +48,18 @@ namespace InterviewManagementSystem.API.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] A a)
+        public async Task<IActionResult> Post()
         {
-            return Ok(a);
+
+
+            ApiResponse<bool> apiResponse = new();
+            apiResponse.Test();
+
+
+            SalaryRange.CreateSalaryRange(0, 1);
+            TimeOnly aa = new TimeOnly(18, 30);
+
+            return Ok(aa.ToString("HH:mm tt"));
         }
     }
 
@@ -53,7 +71,7 @@ namespace InterviewManagementSystem.API.Controllers
         [Required, Range(10, 100)]
         public int MyProperty { get; set; }
 
-        [Required]
-        public string MyString { get; set; }
+        //[JsonConverter(typeof(TimeOnlyJsonConverter))]
+        public TimeOnly MyString { get; set; }
     }
 }

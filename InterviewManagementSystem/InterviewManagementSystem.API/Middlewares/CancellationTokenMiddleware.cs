@@ -11,7 +11,6 @@ public sealed class CancellationTokenMiddleware(RequestDelegate next)
     public async Task InvokeAsync(HttpContext context)
     {
         CancellationTokenProvider.CancellationToken = context.RequestAborted;
-
         await _next(context);
     }
 
