@@ -12,7 +12,7 @@ internal static class AccessControl
     {
 
         string? secretKeyString = configuration["JWT:SecretKey"];
-        ArgumentException.ThrowIfNullOrWhiteSpace(secretKeyString);
+        ArgumentException.ThrowIfNullOrWhiteSpace(secretKeyString, "Secret key not found");
 
 
         var secretKeyByte = Encoding.UTF8.GetBytes(secretKeyString);
@@ -58,6 +58,7 @@ internal static class AccessControl
         string recruiterRole = RoleEnum.Recruiter.GetName();
         string interviewRole = RoleEnum.Interviewer.GetName();
 
+
         string[] adminAndManagerRoles = [adminRole, managerRole];
         string[] adminManagerRecruiterRoles = [adminRole, managerRole, recruiterRole];
         string[] allRoles = [adminRole, managerRole, candidateRole, recruiterRole, interviewRole];
@@ -80,9 +81,11 @@ internal static class AccessControl
     internal static void AddCrossOriginResourceSharing(this IServiceCollection services)
     {
         services.AddCors(options =>
-            options.AddDefaultPolicy(
-                builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
-            )
+            options.AddDefaultPolicy(builder =>
+                                                builder
+                                                .AllowAnyOrigin()
+                                                .AllowAnyMethod()
+                                                .AllowAnyHeader())
         );
     }
 }

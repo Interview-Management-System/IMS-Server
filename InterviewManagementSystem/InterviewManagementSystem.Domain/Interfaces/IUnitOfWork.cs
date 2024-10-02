@@ -1,5 +1,5 @@
-﻿using System.Data.Common;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Data.Common;
 
 namespace InterviewManagementSystem.Domain.Interfaces
 {
@@ -7,9 +7,14 @@ namespace InterviewManagementSystem.Domain.Interfaces
     {
 
         #region Repository Propterties
-        IBaseRepository<Offer> OfferRepository { get; }
-        IBaseRepository<Job> JobRepository { get; }
-        IBaseRepository<InterviewSchedule> InterviewScheduleRepository { get; }
+        IBaseRepository<Job> JobRepository { get; protected set; }
+        IBaseRepository<Level> LevelRepository { get; protected set; }
+        IBaseRepository<Skill> SkillRepository { get; protected set; }
+        IBaseRepository<Offer> OfferRepository { get; protected set; }
+        IBaseRepository<Benefit> BenefitRepository { get; protected set; }
+        IBaseRepository<AppUser> AppUserRepository { get; protected set; }
+        IBaseRepository<Candidate> CandidateRepository { get; protected set; }
+        IBaseRepository<InterviewSchedule> InterviewScheduleRepository { get; protected set; }
         #endregion
 
 

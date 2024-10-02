@@ -4,11 +4,13 @@ using InterviewManagementSystem.Domain.Entities.Jobs;
 using InterviewManagementSystem.Domain.Entities.MasterData;
 using InterviewManagementSystem.Domain.Entities.Offers;
 using InterviewManagementSystem.Infrastructure.Persistences.EntityConfigurations;
+using InterviewManagementSystem.Infrastructure.Persistences.Interceptors;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace InterviewManagementSystem.Infrastructure.Persistences;
 
-public partial class InterviewManagementSystemContext : DbContext
+public partial class InterviewManagementSystemContext : IdentityDbContext<AppUser, AppRole, Guid>
 {
     public InterviewManagementSystemContext()
     {
@@ -68,7 +70,12 @@ public partial class InterviewManagementSystemContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (optionsBuilder.IsConfigured == false)
-            optionsBuilder.UseNpgsql("Host=localhost;Database=InterviewManagementSystem;Username=postgres;Password=sa");
+        {
+            optionsBuilder
+                .UseNpgsql("Host=localhost;Database=InterviewManagementSystem;Username=postgres;Password=sa")
+                .AddInterceptors(new CustomCommandInterceptor());
+
+        }
     }
 
 

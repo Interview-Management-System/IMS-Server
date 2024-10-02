@@ -1,6 +1,6 @@
 ﻿namespace InterviewManagementSystem.Domain.Enums;
 
-public enum DepartmentEnum : byte
+public enum DepartmentEnum : short
 {
     IT = 1,
     HR,
@@ -33,5 +33,16 @@ public static class DepartmentEnumExtensions
             return name.Trim();
 
         throw new ArgumentException($"No GUID mapping found for status {status}");
+    }
+
+
+    public static string GetDepartmentNameById(this short id)
+    {
+        if (Enum.IsDefined(typeof(DepartmentEnum), id))
+        {
+            var department = (DepartmentEnum)id;
+            return department.GetDepartmentName();
+        }
+        throw new ArgumentException($"Invalid department ID {id}");
     }
 }

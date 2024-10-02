@@ -1,12 +1,12 @@
-﻿using System.Linq.Expressions;
-using InterviewManagementSystem.Domain.Paginations;
+﻿using InterviewManagementSystem.Domain.Paginations;
 using Microsoft.EntityFrameworkCore.Query;
+using System.Linq.Expressions;
 
 namespace InterviewManagementSystem.Domain.Interfaces;
 
 public interface IBaseRepository<T> where T : class
 {
-    Task<List<T>> GetAllAsync(bool isTracking = false);
+    Task<List<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, bool isTracking = false);
 
     Task<T?> GetByIdAsync(object id, bool isTracking = false);
 
@@ -47,7 +47,7 @@ public interface IBaseRepository<T> where T : class
     /// <param name="includeProperties"></param>
     /// <param name="canLoadDeleted"></param>
     /// <returns></returns>
-    IQueryable<T> GetWithInclude(Expression<Func<T, bool>>? filter, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy, string includeProperties = "", bool canLoadDeleted = false, bool isNoTracking = false);
+    IQueryable<T> GetWithInclude(Expression<Func<T, bool>>? filter, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, bool canLoadDeleted = false, bool isNoTracking = false, params string[] includeProperties);
 
 
 

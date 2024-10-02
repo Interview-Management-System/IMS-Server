@@ -1,6 +1,6 @@
 ﻿namespace InterviewManagementSystem.Domain.Enums;
 
-public enum RoleEnum
+public enum RoleEnum : short
 {
     Admin,
     Manager,

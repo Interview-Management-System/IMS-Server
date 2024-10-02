@@ -1,6 +1,6 @@
 ﻿namespace InterviewManagementSystem.Domain.Enums;
 
-public enum JobStatusEnum : byte
+public enum JobStatusEnum : short
 {
     Draft = 1,
     Open,
@@ -18,11 +18,26 @@ public static class JobStatusEnumExtension
         {  JobStatusEnum.Closed, nameof(JobStatusEnum.Closed)  },
     };
 
+
+
     public static string GetJobStatusName(this JobStatusEnum status)
     {
         if (JobStatusEnumMap.TryGetValue(status, out string? name))
             return name.Trim();
 
         throw new ArgumentException($"No GUID mapping found for status {status}");
+    }
+
+
+
+
+    public static string GetJobStatusNameById(this short status)
+    {
+        if (Enum.IsDefined(typeof(OfferStatusEnum), status))
+        {
+            var candidateStatus = (JobStatusEnum)status;
+            return candidateStatus.GetJobStatusName();
+        }
+        throw new ArgumentException($"Invalid Job status ID {status}");
     }
 }

@@ -30,5 +30,16 @@ public static class ContractTypeEnumExtension
 
         throw new ArgumentException($"No GUID mapping found for status {status}");
     }
+
+
+    public static string GetContractTypeNameById(this short status)
+    {
+        if (Enum.IsDefined(typeof(ContractTypeEnum), status))
+        {
+            var contractType = (ContractTypeEnum)status;
+            return contractType.GetContractTypeName();
+        }
+        throw new ArgumentException($"Invalid Job status ID {status}");
+    }
 }
 

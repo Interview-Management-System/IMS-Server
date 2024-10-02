@@ -1,6 +1,4 @@
-﻿using InterviewManagementSystem.Domain.Entities.Jobs;
-
-namespace InterviewManagementSystem.Domain.Entities.MasterData;
+﻿namespace InterviewManagementSystem.Domain.Entities.MasterData;
 
 public partial class Benefit
 {
@@ -9,4 +7,15 @@ public partial class Benefit
     public string? Name { get; set; }
 
     public virtual ICollection<Job> Jobs { get; set; } = new List<Job>();
+}
+
+
+
+
+public partial class Benefit
+{
+    public void AssignJob(Job job)
+    {
+        Jobs.Add(job);
+    }
 }

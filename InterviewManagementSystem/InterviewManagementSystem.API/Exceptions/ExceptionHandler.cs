@@ -1,7 +1,8 @@
-﻿using System.Text.RegularExpressions;
-using InterviewManagementSystem.Application.CustomClasses;
+﻿using InterviewManagementSystem.Application.CustomClasses;
 using InterviewManagementSystem.Domain.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
+using System.Text.RegularExpressions;
+using ApplicationException = InterviewManagementSystem.Application.Exceptions.ApplicationException;
 
 namespace InterviewManagementSystem.API.Exceptions;
 
@@ -22,9 +23,9 @@ internal sealed class ExceptionHandler : IExceptionHandler
         switch (exception)
         {
             case DomainException:
+            case ApplicationException:
                 statusCode = StatusCodes.Status400BadRequest;
                 break;
-
 
             case ArgumentNullException:
                 statusCode = StatusCodes.Status404NotFound;
@@ -40,7 +41,7 @@ internal sealed class ExceptionHandler : IExceptionHandler
                 break;
         }
 
-        apiResponse.StatusCode = statusCode;
+        //apiResponse.StatusCode = statusCode;
         httpContext.Response.StatusCode = statusCode;
 
 

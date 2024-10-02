@@ -1,6 +1,6 @@
 ﻿namespace InterviewManagementSystem.Domain.Enums;
 
-public enum CandidateStatusEnum : byte
+public enum CandidateStatusEnum : short
 {
     Open = 1,
     Banned,
@@ -47,5 +47,17 @@ public static class CandidateStatusEnumExtension
             return name.Trim();
 
         throw new ArgumentException($"No GUID mapping found for status {status}");
+    }
+
+
+
+    public static string GetCandidateStatusNameById(this short status)
+    {
+        if (Enum.IsDefined(typeof(CandidateStatusEnum), status))
+        {
+            var candidateStatus = (CandidateStatusEnum)status;
+            return candidateStatus.GetCandidateStatusName();
+        }
+        throw new ArgumentException($"Invalid department ID {status}");
     }
 }

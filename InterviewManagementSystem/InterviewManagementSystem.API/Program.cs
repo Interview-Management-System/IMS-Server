@@ -1,8 +1,8 @@
-global using InterviewManagementSystem.Application.Services.BaseServices.BaseInterfaces;
-global using AuthorizationPolicy = InterviewManagementSystem.API.Configurations.AuthorizationPolicy;
-using System.Text.Json.Serialization;
+global using InterviewManagementSystem.Application.DTOs;
 using InterviewManagementSystem.API.Configurations;
 using InterviewManagementSystem.API.Middlewares;
+using System.Text.Json.Serialization;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +10,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
     .AddControllers()
-    .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+    .AddJsonOptions(options =>
+    {
+        //x.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        //options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+    });
 
 
 
@@ -21,13 +26,17 @@ builder.Services.AddJWTAuthentication(builder.Configuration);
 builder.Services.AddRoleAuthorization();
 builder.Services.AddCrossOriginResourceSharing();
 builder.Services.AddMapper();
+builder.Services.AddFluentValidation();
 builder.Services.AddInjectionService();
-builder.Services.AddExceptionHandlers();
+//builder.Services.AddExceptionHandlers();
 builder.Services.AddHttpContextAccessor();
 
 
 
 var app = builder.Build();
+
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -35,7 +44,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseExceptionHandler();
+//app.UseExceptionHandler();
 app.UseHttpsRedirection();
 app.UseCors();
 app.UseAuthentication();

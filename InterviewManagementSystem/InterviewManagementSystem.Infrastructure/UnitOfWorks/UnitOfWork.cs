@@ -1,16 +1,18 @@
-﻿using System.Data;
-using System.Data.Common;
+﻿using InterviewManagementSystem.Domain.Entities.AppUsers;
 using InterviewManagementSystem.Domain.Entities.Interviews;
 using InterviewManagementSystem.Domain.Entities.Jobs;
+using InterviewManagementSystem.Domain.Entities.MasterData;
 using InterviewManagementSystem.Domain.Entities.Offers;
 using InterviewManagementSystem.Domain.Interfaces;
 using InterviewManagementSystem.Infrastructure.Persistences;
 using InterviewManagementSystem.Infrastructure.Persistences.Repositories;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
+using System.Data.Common;
 
 namespace InterviewManagementSystem.Infrastructure.UnitOfWorks;
 
-public sealed class UnitOfWork : IDisposable, IUnitOfWork
+public sealed class UnitOfWork : IUnitOfWork
 {
     #region Fields
     private DbConnection? _connection;
@@ -31,27 +33,14 @@ public sealed class UnitOfWork : IDisposable, IUnitOfWork
 
 
     #region Repositories
-    private readonly IBaseRepository<Offer>? _offerRepository;
-    public IBaseRepository<Offer> OfferRepository
-    {
-        get => _offerRepository ?? new BaseRepository<Offer>(_interviewManagementSystemContext);
-    }
-
-
-
-    private readonly IBaseRepository<Job>? _jobRepository;
-    public IBaseRepository<Job> JobRepository
-    {
-        get => _jobRepository ?? new BaseRepository<Job>(_interviewManagementSystemContext);
-    }
-
-
-
-    private readonly IBaseRepository<InterviewSchedule>? _InterviewScheduleRepository;
-    public IBaseRepository<InterviewSchedule> InterviewScheduleRepository
-    {
-        get => _InterviewScheduleRepository ?? new BaseRepository<InterviewSchedule>(_interviewManagementSystemContext);
-    }
+    public IBaseRepository<Job> JobRepository { get; set; }
+    public IBaseRepository<Offer> OfferRepository { get; set; }
+    public IBaseRepository<Skill> SkillRepository { get; set; }
+    public IBaseRepository<Level> LevelRepository { get; set; }
+    public IBaseRepository<AppUser> AppUserRepository { get; set; }
+    public IBaseRepository<Candidate> CandidateRepository { get; set; }
+    public IBaseRepository<Benefit> BenefitRepository { get; set; }
+    public IBaseRepository<InterviewSchedule> InterviewScheduleRepository { get; set; }
     #endregion
 
 
@@ -59,14 +48,24 @@ public sealed class UnitOfWork : IDisposable, IUnitOfWork
 
     public UnitOfWork(InterviewManagementSystemContext interviewManagementSystemContext)
     {
+
         _dbContext = interviewManagementSystemContext;
         _interviewManagementSystemContext = interviewManagementSystemContext;
+
+        JobRepository = new BaseRepository<Job>(_interviewManagementSystemContext);
+        OfferRepository = new BaseRepository<Offer>(_interviewManagementSystemContext);
+        SkillRepository = new BaseRepository<Skill>(_interviewManagementSystemContext);
+        LevelRepository = new BaseRepository<Level>(_interviewManagementSystemContext);
+        BenefitRepository = new BaseRepository<Benefit>(_interviewManagementSystemContext);
+        AppUserRepository = new BaseRepository<AppUser>(_interviewManagementSystemContext);
+        CandidateRepository = new BaseRepository<Candidate>(_interviewManagementSystemContext);
+        InterviewScheduleRepository = new BaseRepository<InterviewSchedule>(_interviewManagementSystemContext);
     }
 
 
 
 
-
+    #region Transaction Methods
     public async Task<DbTransaction> BeginTransactionAsync()
     {
         _connection ??= _dbContext.Database.GetDbConnection();
@@ -121,6 +120,9 @@ public sealed class UnitOfWork : IDisposable, IUnitOfWork
             await _connection.DisposeAsync();
         }
     }
+    #endregion
+
+
 
 
     public async Task<bool> SaveChangesAsync()
@@ -129,13 +131,13 @@ public sealed class UnitOfWork : IDisposable, IUnitOfWork
     }
 
 
-
+    /*
     public void Dispose()
     {
         GC.SuppressFinalize(this);
         //_interviewManagementSystemContext.Database.EnsureDeleted();
     }
-
+    */
 
 
 
@@ -144,8 +146,11 @@ public sealed class UnitOfWork : IDisposable, IUnitOfWork
     {
         return typeof(T) switch
         {
-            var t when t == typeof(Offer) => (IBaseRepository<T>)OfferRepository,
             var t when t == typeof(Job) => (IBaseRepository<T>)JobRepository,
+            var t when t == typeof(Skill) => (IBaseRepository<T>)SkillRepository,
+            var t when t == typeof(Level) => (IBaseRepository<T>)LevelRepository,
+            var t when t == typeof(Offer) => (IBaseRepository<T>)OfferRepository,
+            var t when t == typeof(Benefit) => (IBaseRepository<T>)BenefitRepository,
             var t when t == typeof(InterviewSchedule) => (IBaseRepository<T>)InterviewScheduleRepository,
             _ => new BaseRepository<T>(_interviewManagementSystemContext)
         };

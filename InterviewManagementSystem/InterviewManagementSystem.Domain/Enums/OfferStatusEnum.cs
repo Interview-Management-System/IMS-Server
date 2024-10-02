@@ -1,6 +1,6 @@
 ﻿namespace InterviewManagementSystem.Domain.Enums;
 
-public enum OfferStatusEnum : byte
+public enum OfferStatusEnum : short
 {
     WaitingForApproval = 1,
     Approved,
@@ -34,5 +34,16 @@ public static class OfferStatusEnumExtension
             return name.Trim();
 
         throw new ArgumentException($"No GUID mapping found for status {status}");
+    }
+
+
+    public static string GetOfferStatusNameById(this short status)
+    {
+        if (Enum.IsDefined(typeof(OfferStatusEnum), status))
+        {
+            var offerStatus = (OfferStatusEnum)status;
+            return offerStatus.GetOfferStatusName();
+        }
+        throw new ArgumentException($"Invalid Job status ID {status}");
     }
 }

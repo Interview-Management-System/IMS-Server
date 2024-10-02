@@ -7,6 +7,15 @@ internal static class MapperConfiguration
 
     internal static void AddMapper(this IServiceCollection services)
     {
-        services.AddAutoMapper(typeof(UserMappingProfile));
+
+        Type[] mappingTypes = [
+            typeof(JobMappingProfile),
+            typeof(UserMappingProfile),
+            typeof(OfferMappingProfile),
+            typeof(MasterDataMappingProfile),
+            typeof(InterviewScheduleMappingProfile),
+        ];
+
+        services.AddAutoMapper(mappingTypes);
     }
 }

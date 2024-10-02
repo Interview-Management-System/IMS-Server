@@ -7,9 +7,9 @@ public partial class AppUser : IdentityUser<Guid>
 
     public DateTime? Dob { get; set; }
 
-    public bool? Gender { get; set; }
+    public bool Gender { get; set; }
 
-    public DateTime? CreateAt { get; set; }
+    public DateTime? CreateAt { get; set; } = DateTime.Now;
 
     public DateTime? UpdateAt { get; set; }
 
@@ -17,9 +17,9 @@ public partial class AppUser : IdentityUser<Guid>
 
     public string? Note { get; set; }
 
-    public bool? IsActive { get; set; }
+    public bool IsActive { get; set; }
 
-    public bool? IsDeleted { get; set; }
+    public bool IsDeleted { get; set; }
 
     public short? DepartmentId { get; set; }
 
@@ -72,4 +72,37 @@ public partial class AppUser : IdentityUser<Guid>
     public virtual ICollection<InterviewSchedule> InterviewSchedules { get; set; } = new List<InterviewSchedule>();
 
     public virtual ICollection<AppRole> Roles { get; set; } = new List<AppRole>();
+}
+
+
+
+
+public partial class AppUser
+{
+
+
+    public void Activate()
+    {
+        IsActive = true;
+    }
+
+
+    public void DeActivate()
+    {
+        IsActive = false;
+    }
+
+
+
+
+    public void Delete()
+    {
+        IsDeleted = true;
+    }
+
+
+    public void UnDoDelete()
+    {
+        IsDeleted = true;
+    }
 }

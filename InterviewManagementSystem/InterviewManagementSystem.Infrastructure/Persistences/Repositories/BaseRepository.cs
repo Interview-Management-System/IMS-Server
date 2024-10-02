@@ -1,16 +1,15 @@
-﻿using System.Linq.Expressions;
-using InterviewManagementSystem.Application.CustomClasses;
+﻿using InterviewManagementSystem.Application.CustomClasses;
 using InterviewManagementSystem.Domain;
 using InterviewManagementSystem.Domain.Interfaces;
 using InterviewManagementSystem.Domain.Paginations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
+using System.Linq.Expressions;
 
 namespace InterviewManagementSystem.Infrastructure.Persistences.Repositories;
 
 public class BaseRepository<T> : IBaseRepository<T> where T : class
 {
-    private static readonly char[] separators = [','];
 
     protected readonly DbSet<T> _dbSet;
     protected readonly InterviewManagementSystemContext _interviewManagementSystemContext;
@@ -82,14 +81,24 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 
 
 
-    public async Task<List<T>> GetAllAsync(bool isTracking = false)
+    public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, bool isTracking = false)
     {
-        if (isTracking)
+
+        IQueryable<T> queryable = _dbSet;
+
+
+        if (filter != null)
         {
-            return await _dbSet.ToListAsync();
+            queryable = queryable.Where(filter);
         }
 
-        return await _dbSet.AsNoTracking().ToListAsync();
+
+        if (isTracking)
+        {
+            return await queryable.ToListAsync();
+        }
+
+        return await queryable.AsNoTracking().ToListAsync();
     }
 
 
@@ -174,10 +183,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 
 
 
-
         query = query.AsSplitQuery();
-
-
         var orderBy = pagingParameter.OrderBy;
 
 
@@ -186,8 +192,6 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 
 
         CancellationToken cancellationToken = CancellationTokenProvider.CancellationToken;
-
-
         var totalRecord = await query.CountAsync(cancellationToken);
 
 
@@ -228,7 +232,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 
 
 
-    public IQueryable<T> GetWithInclude(Expression<Func<T, bool>>? filter, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy, string includeProperties = "", bool canLoadDeleted = false, bool isNoTracking = false)
+    public IQueryable<T> GetWithInclude(Expression<Func<T, bool>>? filter, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, bool canLoadDeleted = false, bool isNoTracking = false, params string[] includeProperties)
     {
         IQueryable<T> query = _dbSet;
 
@@ -239,7 +243,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         }
 
 
-        foreach (var includeProperty in includeProperties.Split(separators, StringSplitOptions.RemoveEmptyEntries))
+        foreach (var includeProperty in includeProperties)
         {
             query = query.Include(includeProperty);
         }
@@ -249,7 +253,12 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
     }
 
 
-
+    /// <summary>
+    /// Support ThenInclude()
+    /// </summary>
+    /// <param name="filter"></param>
+    /// <param name="includes"></param>
+    /// <returns></returns>
     public IQueryable<T> GetWithInclude(Expression<Func<T, bool>>? filter, Expression<Func<IQueryable<T>, IIncludableQueryable<T, object>>>[]? includes)
     {
         IQueryable<T> query = _dbSet.AsNoTracking();
@@ -280,6 +289,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 
     public void Update(T entity)
     {
+        _dbSet.Update(entity);
         _interviewManagementSystemContext.Entry(entity).State = EntityState.Modified;
     }
 

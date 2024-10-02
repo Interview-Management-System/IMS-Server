@@ -1,6 +1,6 @@
 ﻿namespace InterviewManagementSystem.Domain.Enums;
 
-public enum PositionEnum : byte
+public enum PositionEnum : short
 {
     BackendDeveloper = 1,
     BusinessAnalyst,
@@ -34,5 +34,16 @@ public static class PositionEnumExtensions
             return name;
 
         throw new ArgumentException($"No GUID mapping found for status {status}");
+    }
+
+
+    public static string GetPositionNameById(this short status)
+    {
+        if (Enum.IsDefined(typeof(PositionEnum), status))
+        {
+            var position = (PositionEnum)status;
+            return position.GetPositionName();
+        }
+        throw new ArgumentException($"Invalid Job status ID {status}");
     }
 }

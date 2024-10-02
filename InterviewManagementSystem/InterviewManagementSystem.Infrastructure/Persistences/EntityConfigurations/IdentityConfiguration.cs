@@ -8,8 +8,8 @@ public static class IdentityConfiguration
 
     public static void ConfigureIdentity(this ModelBuilder modelBuilder)
     {
-
-        modelBuilder.Entity<IdentityRole<Guid>>().ToTable("AppRoles", "IMS");
+        //modelBuilder.Entity<IdentityRole<Guid>>().ToTable("AppRoles", "IMS");
+        //modelBuilder.Entity<IdentityRole<Guid>>().HasDiscriminator().HasValue(null);
         modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("AppUserRoles", "IMS");
         modelBuilder.Entity<IdentityUserLogin<Guid>>().ToTable("AppUserLogins", "IMS");
         modelBuilder.Entity<IdentityUserToken<Guid>>().ToTable("AppUserTokens", "IMS");

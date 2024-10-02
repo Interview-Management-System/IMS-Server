@@ -1,6 +1,6 @@
 ﻿namespace InterviewManagementSystem.Domain.Enums;
 
-public enum BenefitEnum : byte
+public enum BenefitEnum : short
 {
     Travel = 1,
     HybridWorking,

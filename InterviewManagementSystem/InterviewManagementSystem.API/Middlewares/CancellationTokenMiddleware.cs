@@ -2,7 +2,7 @@
 
 namespace InterviewManagementSystem.API.Middlewares;
 
-public sealed class CancellationTokenMiddleware(RequestDelegate next)
+internal sealed class CancellationTokenMiddleware(RequestDelegate next)
 {
 
     private readonly RequestDelegate _next = next;

@@ -1,6 +1,6 @@
 ﻿namespace InterviewManagementSystem.Domain.Enums;
 
-public enum LevelEnum : byte
+public enum LevelEnum : short
 {
     Fresher = 1,
     Junior,
@@ -33,5 +33,16 @@ public static class LevelEnumExtension
             return name.Trim();
 
         throw new ArgumentException($"No GUID mapping found for status {status}");
+    }
+
+
+    public static string GetLevelNameById(this short levelId)
+    {
+        if (Enum.IsDefined(typeof(LevelEnum), levelId))
+        {
+            var level = (LevelEnum)levelId;
+            return level.GetLevelName();
+        }
+        throw new ArgumentException($"Invalid Job status ID {levelId}");
     }
 }

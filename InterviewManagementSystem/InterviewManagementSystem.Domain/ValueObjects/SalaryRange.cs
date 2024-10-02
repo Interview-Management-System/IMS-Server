@@ -5,7 +5,15 @@ namespace InterviewManagementSystem.Domain.ValueObjects
     public sealed record SalaryRange
     {
         public decimal From { get; private set; }
+
         public decimal To { get; private set; }
+
+
+
+        public SalaryRange()
+        {
+
+        }
 
 
         private SalaryRange(decimal from, decimal to)
@@ -17,7 +25,7 @@ namespace InterviewManagementSystem.Domain.ValueObjects
 
         public static SalaryRange CreateSalaryRange(decimal from, decimal to)
         {
-            CheckValidSalaryRange(from, to);
+            //CheckValidSalaryRange(from, to);
             return new SalaryRange(from, to);
         }
 

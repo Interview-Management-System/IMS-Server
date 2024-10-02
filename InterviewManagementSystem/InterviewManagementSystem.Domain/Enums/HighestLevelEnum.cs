@@ -1,6 +1,6 @@
 ﻿namespace InterviewManagementSystem.Domain.Enums;
 
-public enum HighestLevelEnum : byte
+public enum HighestLevelEnum : short
 {
     HighSchool = 1,
     BachelorDegree,
@@ -10,7 +10,7 @@ public enum HighestLevelEnum : byte
 
 
 
-public static class HighestLevelEnumExtensions
+public static class HighestLevelEnumExtension
 {
     private static readonly Dictionary<HighestLevelEnum, string> HighestLevelEnumMap = new()
     {
@@ -21,11 +21,23 @@ public static class HighestLevelEnumExtensions
 
     };
 
+
     public static string GetHighestLevelName(this HighestLevelEnum status)
     {
         if (HighestLevelEnumMap.TryGetValue(status, out string? name))
             return name.Trim();
 
         throw new ArgumentException($"No GUID mapping found for status {status}");
+    }
+
+
+    public static string GetHighestLevelNameById(this short id)
+    {
+        if (Enum.IsDefined(typeof(HighestLevelEnum), id))
+        {
+            var highestLevel = (HighestLevelEnum)id;
+            return highestLevel.GetHighestLevelName();
+        }
+        throw new ArgumentException($"Invalid department ID {id}");
     }
 }

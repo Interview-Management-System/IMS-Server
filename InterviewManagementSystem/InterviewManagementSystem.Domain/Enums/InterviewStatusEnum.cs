@@ -1,6 +1,6 @@
 ﻿namespace InterviewManagementSystem.Domain.Enums
 {
-    public enum InterviewStatusEnum
+    public enum InterviewStatusEnum : short
     {
         New = 1,
         Invited,
