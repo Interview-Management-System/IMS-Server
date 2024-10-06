@@ -1,5 +1,5 @@
 ﻿using InterviewManagementSystem.Application.CustomClasses;
-using InterviewManagementSystem.Domain;
+using InterviewManagementSystem.Domain.Entities;
 using InterviewManagementSystem.Domain.Interfaces;
 using InterviewManagementSystem.Domain.Paginations;
 using Microsoft.EntityFrameworkCore;
@@ -162,7 +162,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 
 
 
-    public async Task<PageResult<T>> GetByPageWithIncludeAsync(PaginationParameter<T> pagingParameter, IEnumerable<string>? includeProperties)
+    public async Task<PageResult<T>> GetByPageWithIncludeAsync(PaginationParameter<T> pagingParameter, IEnumerable<string>? includeProperties = null)
     {
         IQueryable<T> query = _dbSet.AsNoTracking();
 
@@ -232,7 +232,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 
 
 
-    public IQueryable<T> GetWithInclude(Expression<Func<T, bool>>? filter, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, bool canLoadDeleted = false, bool isNoTracking = false, params string[] includeProperties)
+    public IQueryable<T> GetWithInclude(Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, bool canLoadDeleted = false, bool isNoTracking = false, params string[] includeProperties)
     {
         IQueryable<T> query = _dbSet;
 

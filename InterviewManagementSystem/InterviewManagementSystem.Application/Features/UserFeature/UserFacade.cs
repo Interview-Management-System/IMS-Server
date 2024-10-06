@@ -1,6 +1,7 @@
 ﻿using InterviewManagementSystem.Application.DTOs.UserDTOs.CandidateDTOs;
 using InterviewManagementSystem.Application.DTOs.UserDTOs.UserDTOs;
 using InterviewManagementSystem.Application.Features.UserFeature.UseCases;
+using InterviewManagementSystem.Domain.Paginations;
 
 namespace InterviewManagementSystem.Application.Features.UserFeature;
 
@@ -15,7 +16,13 @@ public sealed class UserFacade
 
 
 
-    public UserFacade(UserCreateUseCase userCreateUseCase, UserRetrieveUseCase userRetrieveUseCase, UserStatusUseCase userStatusUseCase, UserUpdateUseCase userUpdateUseCase, CandidateStatusUseCase candidateStatusUseCase)
+    public UserFacade
+    (
+        UserCreateUseCase userCreateUseCase,
+        UserRetrieveUseCase userRetrieveUseCase,
+        UserStatusUseCase userStatusUseCase,
+        UserUpdateUseCase userUpdateUseCase,
+        CandidateStatusUseCase candidateStatusUseCase)
     {
         UserCreateUseCase = userCreateUseCase;
         UserStatusUseCase = userStatusUseCase;
@@ -36,6 +43,13 @@ public sealed class UserFacade
     public async Task<ApiResponse<List<UserForRetrieveDTO>>> GetListUserAsync()
     {
         return await UserRetrieveUseCase.GetListAsync();
+    }
+
+
+
+    public async Task<ApiResponse<PageResult<UserForRetrieveDTO>>> GetListUserPagingAsync(PaginationRequest paginationRequest, RoleEnum? roleId)
+    {
+        return await UserRetrieveUseCase.GetListUserPagingAsync(paginationRequest, roleId);
     }
 
 
@@ -108,5 +122,12 @@ public sealed class UserFacade
     public async Task<string> UpdateUserAsync(UserForUpdateDTO userForUpdateDTO)
     {
         return await UserUpdateUseCase.UpdateUserAsync(userForUpdateDTO);
+    }
+
+
+
+    public async Task<string> ChangeUserRoleAsync(Guid userId, Guid roleId)
+    {
+        return await UserUpdateUseCase.ChangeUserRole(userId, roleId);
     }
 }

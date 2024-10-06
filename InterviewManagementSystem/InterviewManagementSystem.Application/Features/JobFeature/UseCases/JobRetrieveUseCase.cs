@@ -1,36 +1,29 @@
-﻿using InterviewManagementSystem.Application.DTOs.JobDTOs;
+﻿using InterviewManagementSystem.Application.CustomClasses.Helpers;
+using InterviewManagementSystem.Application.DTOs.JobDTOs;
 using InterviewManagementSystem.Domain.Entities.Jobs;
 using InterviewManagementSystem.Domain.Paginations;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 
 namespace InterviewManagementSystem.Application.Features.JobFeature.UseCases;
 
 public sealed class JobRetrieveUseCase : BaseUseCase
 {
+
+
     public JobRetrieveUseCase(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
     {
     }
 
 
 
-    public async Task<ApiResponse<PageResult<JobForRetrieveDTO>>> GetListJobPagingAsync(PaginationRequest<JobStatusEnum> paginationRequest)
+    public async Task<ApiResponse<PageResult<JobForRetrieveDTO>>> GetListJobPagingAsync(PaginationRequest paginationRequest)
     {
 
-        List<Expression<Func<Job, bool>>> listCondition = [j => j.Title!.Contains(paginationRequest.SearchName ?? "")];
-
-        if (paginationRequest.EnumToFilter.HasValidValue())
-        {
-            listCondition.Add(j => j.JobStatusId == (short)paginationRequest.EnumToFilter);
-        }
+        var filters = FilterHelper.BuildFilters<Job>(paginationRequest, nameof(Job.Title));
 
 
-        PaginationParameter<Job> paginationParameter = new()
-        {
-            Filters = listCondition,
-            PageSize = paginationRequest.PageSize,
-            PageIndex = paginationRequest.PageIndex,
-        };
+        PaginationParameter<Job> paginationParameter = _mapper.Map<PaginationParameter<Job>>(paginationRequest);
+        paginationParameter.Filters = filters;
 
 
         string[] includeProperties = [nameof(Job.Skills), nameof(Job.Levels), nameof(Job.JobStatus)];
@@ -73,3 +66,7 @@ public sealed class JobRetrieveUseCase : BaseUseCase
         };
     }
 }
+
+
+
+

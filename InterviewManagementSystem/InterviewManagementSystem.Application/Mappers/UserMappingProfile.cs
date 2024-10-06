@@ -2,6 +2,7 @@
 using InterviewManagementSystem.Application.DTOs.UserDTOs.CandidateDTOs;
 using InterviewManagementSystem.Application.DTOs.UserDTOs.UserDTOs;
 using InterviewManagementSystem.Domain.Entities.AppUsers;
+using InterviewManagementSystem.Domain.Paginations;
 
 namespace InterviewManagementSystem.Application.Mappers;
 
@@ -20,6 +21,7 @@ public sealed class UserMappingProfile : Profile
             .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender! ? "Male" : "Female"))
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.IsActive! ? "Active" : "In-Active"))
             .ForMember(dest => dest.IsDeleted, opt => opt.MapFrom(src => src.IsDeleted!))
+            .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Roles.Count > 0 ? src.Roles.FirstOrDefault()!.Name : null))
             .ForMember(dest => dest.Department, opt => opt.MapFrom(src =>
                                 src.DepartmentId.HasValue ? src.DepartmentId.Value.GetDepartmentNameById() : null));
 
@@ -31,6 +33,12 @@ public sealed class UserMappingProfile : Profile
             .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
 
 
+        CreateMap<UserForCreateDTO, AppUser>()
+            .ForMember(dest => dest.DepartmentId, opt => opt.MapFrom(src => (short)src.DepartmentId))
+            .ReverseMap();
+
+
+        CreateMap<PageResult<AppUser>, PageResult<UserForRetrieveDTO>>().ReverseMap();
     }
 
 
@@ -52,7 +60,13 @@ public sealed class UserMappingProfile : Profile
             ;
 
 
-        CreateMap<Candidate, CandidateForCreateDTO>().ReverseMap();
+        // aggre for skills
+        CreateMap<CandidateForCreateDTO, Candidate>()
+            .ForMember(dest => dest.DepartmentId, opt => opt.MapFrom(src => (short)src.DepartmentId))
+            .ForMember(dest => dest.PositionId, opt => opt.MapFrom(src => (short)src.PositionId))
+            .ForMember(dest => dest.HighestLevelId, opt => opt.MapFrom(src => (short)src.HighestLevelId))
+            .ReverseMap();
+
         CreateMap<Candidate, CandidateForUpdateDTO>().ReverseMap();
     }
 }

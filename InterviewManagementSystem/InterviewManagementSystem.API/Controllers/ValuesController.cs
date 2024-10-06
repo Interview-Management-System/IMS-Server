@@ -1,5 +1,4 @@
-﻿using InterviewManagementSystem.Application.CustomClasses.Extensions;
-using InterviewManagementSystem.Application.DTOs.JobDTOs;
+﻿using InterviewManagementSystem.Application.DTOs.JobDTOs;
 using InterviewManagementSystem.Domain.Entities.AppUsers;
 using InterviewManagementSystem.Domain.Enums;
 using Microsoft.AspNetCore.Identity;
@@ -25,29 +24,14 @@ namespace InterviewManagementSystem.API.Controllers
         public IActionResult Get(BenefitEnum offerStatusEnum)
         {
 
-
-
-            var s = offerStatusEnum.GetStatusName();
-
-            //var aa = a.Users.ToList()[0];
-
-
-            //var aaaaa = a.CreateAsync(new Candidate() { Id = Guid.NewGuid(), UserName = "can", Email = "candidate@gmail.com", PhoneNumber = "1", YearsOfExperience = 5 }, "T@n75541972").Result;
-
-
-
-            /*
-            var s = a.FindByIdAsync("b363c4ab-b6ff-40cd-a342-bde83ad83cb9").Result;
-
-
-            var ss = a.GetRolesAsync(s).Result;
-            */
-
-            //var q = new InterviewManagementSystemContext().Candidates.ToList();
-
-            return Ok(s);
+            return Ok();
         }
 
+
+        void SS<T>() where T : class
+        {
+
+        }
 
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] JobForRetrieveDTO jobForRetrieveDTO)

@@ -47,12 +47,12 @@ public interface IBaseRepository<T> where T : class
     /// <param name="includeProperties"></param>
     /// <param name="canLoadDeleted"></param>
     /// <returns></returns>
-    IQueryable<T> GetWithInclude(Expression<Func<T, bool>>? filter, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, bool canLoadDeleted = false, bool isNoTracking = false, params string[] includeProperties);
+    IQueryable<T> GetWithInclude(Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, bool canLoadDeleted = false, bool isNoTracking = false, params string[] includeProperties);
 
 
 
 
-    Task<PageResult<T>> GetByPageWithIncludeAsync(PaginationParameter<T> pagingParameter, IEnumerable<string>? includeProperties);
+    Task<PageResult<T>> GetByPageWithIncludeAsync(PaginationParameter<T> pagingParameter, IEnumerable<string>? includeProperties = null);
 
 
 

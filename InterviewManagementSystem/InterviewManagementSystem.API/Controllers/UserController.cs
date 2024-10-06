@@ -1,8 +1,10 @@
-﻿using InterviewManagementSystem.Application.DTOs.UserDTOs.CandidateDTOs;
+﻿using InterviewManagementSystem.Application.CustomClasses;
+using InterviewManagementSystem.Application.DTOs.UserDTOs.CandidateDTOs;
 using InterviewManagementSystem.Application.DTOs.UserDTOs.UserDTOs;
 using InterviewManagementSystem.Application.Features.UserFeature;
 using InterviewManagementSystem.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
+using static InterviewManagementSystem.Application.CustomClasses.Helpers.EntityHelper;
 
 namespace InterviewManagementSystem.API.Controllers;
 
@@ -26,6 +28,23 @@ public sealed class UserController : ControllerBase
     public async Task<IActionResult> GetListUserAsync()
     {
         var apiResponse = await _userFacade.GetListUserAsync();
+        return Ok(apiResponse);
+    }
+
+
+
+    [HttpGet("list-paging")]
+    public async Task<IActionResult> GetListUserPagingAsync(string? searchName, RoleEnum? roleId, int pageSize = 5, int pageIndex = 1)
+    {
+
+        var pagingRequest = new PaginationRequest()
+        {
+            PageSize = pageSize,
+            PageIndex = pageIndex,
+            FieldNamesToSearch = EntityPropertyMapping.BuildAppUserSearchFieldMapping(searchName)
+        };
+
+        var apiResponse = await _userFacade.GetListUserPagingAsync(pagingRequest, roleId);
         return Ok(apiResponse);
     }
 
@@ -132,6 +151,15 @@ public sealed class UserController : ControllerBase
     public async Task<IActionResult> DeActivateUserAsync([FromQuery] Guid id)
     {
         var apiResponse = await _userFacade.DeActivateUserAsync(id);
+        return Ok(apiResponse);
+    }
+
+
+
+    [HttpPatch("change-role")]
+    public async Task<IActionResult> ChangeUserRoleAsync([FromQuery] Guid id, Guid roleId)
+    {
+        var apiResponse = await _userFacade.ChangeUserRoleAsync(id, roleId);
         return Ok(apiResponse);
     }
 }

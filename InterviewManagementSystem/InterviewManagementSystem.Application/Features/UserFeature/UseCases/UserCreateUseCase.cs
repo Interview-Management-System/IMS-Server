@@ -1,14 +1,13 @@
 ﻿using InterviewManagementSystem.Application.DTOs.UserDTOs.CandidateDTOs;
 using InterviewManagementSystem.Application.DTOs.UserDTOs.UserDTOs;
 using InterviewManagementSystem.Domain.Entities.AppUsers;
-using Microsoft.AspNetCore.Identity;
 
 namespace InterviewManagementSystem.Application.Features.UserFeature.UseCases;
 
 public sealed class UserCreateUseCase : BaseUserUseCase
 {
 
-    public UserCreateUseCase(IMapper mapper, IUnitOfWork unitOfWork, UserManager<AppUser> userManager, RoleManager<AppRole> roleManager) : base(mapper, unitOfWork, userManager, roleManager)
+    public UserCreateUseCase(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager) : base(default!, default!, userManager, roleManager)
     {
 
     }

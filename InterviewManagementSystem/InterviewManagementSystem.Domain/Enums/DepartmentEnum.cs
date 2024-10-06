@@ -18,12 +18,12 @@ public static class DepartmentEnumExtensions
 {
     private static readonly Dictionary<DepartmentEnum, string> DepartmentEnumMap = new()
     {
-        {  DepartmentEnum.IT, "Backend Developer" },
-        {  DepartmentEnum.HR, "Business Analyst" },
-        {  DepartmentEnum.Finance, "Tester" },
-        {  DepartmentEnum.Communication, "Human Resource" },
-        {  DepartmentEnum.Marketing, "Project Manager"},
-        {  DepartmentEnum.Accounting, "Not Available" },
+        {  DepartmentEnum.IT, "IT" },
+        {  DepartmentEnum.HR, "Human Resource" },
+        {  DepartmentEnum.Finance, "Finance" },
+        {  DepartmentEnum.Communication, "Communication" },
+        {  DepartmentEnum.Marketing, "Marketing"},
+        {  DepartmentEnum.Accounting, "Accounting" },
 
     };
 

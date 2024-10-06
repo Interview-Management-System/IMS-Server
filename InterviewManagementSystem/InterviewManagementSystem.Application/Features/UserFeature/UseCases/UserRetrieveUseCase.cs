@@ -1,13 +1,17 @@
-﻿using InterviewManagementSystem.Application.DTOs.UserDTOs.CandidateDTOs;
+﻿using InterviewManagementSystem.Application.CustomClasses.Helpers;
+using InterviewManagementSystem.Application.DTOs.UserDTOs.CandidateDTOs;
 using InterviewManagementSystem.Application.DTOs.UserDTOs.UserDTOs;
+using InterviewManagementSystem.Domain.Entities.AppUsers;
+using InterviewManagementSystem.Domain.Paginations;
+using Microsoft.EntityFrameworkCore;
 
 namespace InterviewManagementSystem.Application.Features.UserFeature.UseCases;
 
-public sealed class UserRetrieveUseCase : BaseUseCase
+public sealed class UserRetrieveUseCase : BaseUserUseCase
 {
 
 
-    public UserRetrieveUseCase(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
+    public UserRetrieveUseCase(IMapper mapper, IUnitOfWork unitOfWork, UserManager<AppUser> userManager, RoleManager<AppRole> roleManager) : base(mapper, unitOfWork, userManager, roleManager)
     {
     }
 
@@ -15,8 +19,18 @@ public sealed class UserRetrieveUseCase : BaseUseCase
 
     internal async Task<ApiResponse<List<UserForRetrieveDTO>>> GetListAsync()
     {
-        var listUser = await _unitOfWork.AppUserRepository.GetAllAsync();
+
+        var listUser = await _userManager.Users.ToListAsync();
         var newListUser = _mapper.Map<List<UserForRetrieveDTO>>(listUser);
+
+
+        foreach (var item in newListUser)
+        {
+            var userFoundById = await _userManager.FindByIdAsync(item.Id.ToString());
+            var listRole = await _userManager.GetRolesAsync(userFoundById!);
+
+            item.Role = listRole.FirstOrDefault();
+        }
 
 
         return new ApiResponse<List<UserForRetrieveDTO>>()
@@ -25,6 +39,46 @@ public sealed class UserRetrieveUseCase : BaseUseCase
             Message = "Get user list successful"
         };
     }
+
+
+
+
+
+    internal async Task<ApiResponse<PageResult<UserForRetrieveDTO>>> GetListUserPagingAsync(PaginationRequest paginationRequest, RoleEnum? roleId)
+    {
+
+        var filters = FilterHelper.BuildFilters<AppUser>(paginationRequest, nameof(AppUser.UserName));
+
+
+        PaginationParameter<AppUser> paginationParameter = _mapper.Map<PaginationParameter<AppUser>>(paginationRequest);
+        paginationParameter.Filters = filters;
+
+
+
+        // Filter by role
+        if (roleId != null && roleId.HasValidValue())
+        {
+
+            AppRole? role = await _roleManager.FindByIdAsync(roleId.Value.GetId().ToString());
+            ArgumentNullException.ThrowIfNull(role, "Role not found to filter");
+
+
+            List<Guid> userWithRole = (await _userManager.GetUsersInRoleAsync(role.Name!)).Select(x => x.Id).ToList();
+            paginationParameter.Filters.Add(x => userWithRole.Contains(x.Id));
+        }
+
+        var pageResult = await _unitOfWork.AppUserRepository.GetByPageWithIncludeAsync(paginationParameter);
+
+        return new ApiResponse<PageResult<UserForRetrieveDTO>>()
+        {
+            Data = _mapper.Map<PageResult<UserForRetrieveDTO>>(pageResult),
+            Message = "Get user list successful"
+        };
+    }
+
+
+
+
 
 
 
@@ -38,6 +92,9 @@ public sealed class UserRetrieveUseCase : BaseUseCase
 
 
         var mappedUser = _mapper.Map<UserForRetrieveDTO>(userFoundById);
+        var listRole = await _userManager.GetRolesAsync(userFoundById!);
+
+        mappedUser.Role = listRole.FirstOrDefault();
 
 
         return new ApiResponse<UserForRetrieveDTO>()

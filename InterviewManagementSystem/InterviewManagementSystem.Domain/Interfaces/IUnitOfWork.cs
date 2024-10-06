@@ -31,7 +31,6 @@ namespace InterviewManagementSystem.Domain.Interfaces
         IBaseRepository<T> GetBaseRepository<T>() where T : class;
 
 
-
         Task CommitAsync();
         Task RollbackAsync();
         Task<DbTransaction> BeginTransactionAsync();

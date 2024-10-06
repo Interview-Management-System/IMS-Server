@@ -9,7 +9,7 @@ namespace InterviewManagementSystem.Application.Features.UserFeature.UseCases;
 public sealed class UserUpdateUseCase : BaseUserUseCase
 {
 
-    public UserUpdateUseCase(IMapper mapper, UserManager<AppUser> userManager, RoleManager<AppRole> roleManager) : base(mapper, default!, userManager, roleManager)
+    public UserUpdateUseCase(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager) : base(default!, default!, userManager, roleManager)
     {
     }
 
@@ -26,6 +26,10 @@ public sealed class UserUpdateUseCase : BaseUserUseCase
 
 
         _mapper.Map(userForUpdateDTO, userFoundById);
+        userFoundById.SetUpdateAtIsNow();
+
+
+        await UpdateUserRoleAsync(userFoundById, userForUpdateDTO.RoleId);
 
 
         var result = await _userManager.UpdateAsync(userFoundById);
@@ -59,7 +63,13 @@ public sealed class UserUpdateUseCase : BaseUserUseCase
 
 
         var candidate = userFoundById as Candidate;
+
+
         _mapper.Map(candidateForUpdateDTO, candidate);
+        userFoundById.SetUpdateAtIsNow();
+
+
+        await UpdateUserRoleAsync(userFoundById, candidateForUpdateDTO.RoleId);
 
 
         var result = await _userManager.UpdateAsync(candidate!);
@@ -70,4 +80,54 @@ public sealed class UserUpdateUseCase : BaseUserUseCase
     }
 
 
+
+
+    internal async Task<string> ChangeUserRole(Guid userId, Guid roleId)
+    {
+
+        var userFoundById = await _userManager.FindByIdAsync(userId.ToString());
+
+
+        ArgumentNullException.ThrowIfNull(userFoundById, "User not found to assign new role");
+        ApplicationException.ThrowIfGetDeletedRecord(userFoundById.IsDeleted);
+
+
+        userFoundById.SetUpdateAtIsNow();
+        await UpdateUserRoleAsync(userFoundById, roleId);
+
+
+        var result = await _userManager.UpdateAsync(userFoundById);
+        ApplicationException.ThrowIfOperationFail(result.Succeeded, "Change role failed");
+
+        return "Change role successfully";
+    }
+
+
+
+
+
+    private async Task UpdateUserRoleAsync(AppUser appUser, Guid roleId)
+    {
+
+        // Get role
+        var currentRoles = await _userManager.GetRolesAsync(appUser);
+        ArgumentOutOfRangeException.ThrowIfEqual(currentRoles.Count, 0, "User has no roles");
+
+
+        // Check role
+        AppRole? role = await _roleManager.FindByNameAsync(currentRoles[0]);
+        ArgumentNullException.ThrowIfNull(role, "Role not found to add user");
+
+
+        // Assign new role
+        if (role.Id != roleId)
+        {
+            var removeResult = await _userManager.RemoveFromRolesAsync(appUser, currentRoles);
+            ApplicationException.ThrowIfOperationFail(removeResult.Succeeded, "Remove old role failed");
+
+
+            var changeRoleResult = await _userManager.AddToRoleAsync(appUser, roleId.GetRoleNameById());
+            ApplicationException.ThrowIfOperationFail(changeRoleResult.Succeeded, "Change to new role failed");
+        }
+    }
 }

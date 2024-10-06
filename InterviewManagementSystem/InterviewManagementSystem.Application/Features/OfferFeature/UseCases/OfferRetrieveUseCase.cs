@@ -1,7 +1,7 @@
-﻿using InterviewManagementSystem.Application.DTOs.JobDTOs;
-using InterviewManagementSystem.Domain.Entities.Jobs;
+﻿using InterviewManagementSystem.Application.CustomClasses.Helpers;
+using InterviewManagementSystem.Application.DTOs.OfferDTOs;
+using InterviewManagementSystem.Domain.Entities.Offers;
 using InterviewManagementSystem.Domain.Paginations;
-using System.Linq.Expressions;
 
 namespace InterviewManagementSystem.Application.Features.OfferFeature.UseCases;
 
@@ -12,33 +12,28 @@ public sealed class OfferRetrieveUseCase : BaseUseCase
     }
 
 
-    public async Task<ApiResponse<PageResult<JobForRetrieveDTO>>> GetListJobPagingAsync(string? jobTitle, JobStatusEnum? statusEnum, int pageSize, int pageIndex)
+    public async Task<ApiResponse<PageResult<OfferForRetrieveDTO>>> GetListJobPagingAsync(PaginationRequest paginationRequest)
     {
 
-        List<Expression<Func<Job, bool>>> listCondition = [j => j.Title!.Contains(jobTitle ?? "")];
 
-        if (statusEnum.HasValue)
-        {
-            listCondition.Add(j => j.JobStatusId == (short)statusEnum);
-        }
+        var filters = FilterHelper.BuildFilters<Offer>(paginationRequest, nameof(Offer.Candidate.UserName));
 
 
-        PaginationParameter<Job> paginationParameter = new()
-        {
-            PageSize = pageSize,
-            PageIndex = pageIndex,
-            Filters = listCondition
-        };
+        PaginationParameter<Offer> paginationParameter = _mapper.Map<PaginationParameter<Offer>>(paginationRequest);
+        paginationParameter.Filters = filters;
 
 
-        string[] includeProperties = [nameof(Job.Skills), nameof(Job.Levels), nameof(Job.JobStatus)];
-        var pageResult = await _unitOfWork.JobRepository.GetByPageWithIncludeAsync(paginationParameter, includeProperties);
+
+        string[] includeProperties = [nameof(Offer.Candidate), nameof(Offer.Approver)];
+        var pageResult = await _unitOfWork.OfferRepository.GetByPageWithIncludeAsync(paginationParameter, includeProperties);
 
 
-        return new ApiResponse<PageResult<JobForRetrieveDTO>>
+
+        return new ApiResponse<PageResult<OfferForRetrieveDTO>>
         {
             Message = pageResult.Items.Count > 0 ? "List job found" : "No jobs found",
-            Data = _mapper.Map<PageResult<JobForRetrieveDTO>>(pageResult)
+            Data = _mapper.Map<PageResult<OfferForRetrieveDTO>>(pageResult)
         };
     }
+
 }

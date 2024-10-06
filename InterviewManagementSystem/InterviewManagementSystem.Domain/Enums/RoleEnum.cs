@@ -2,7 +2,7 @@
 
 public enum RoleEnum : short
 {
-    Admin,
+    Admin = 1,
     Manager,
     Candidate,
     Recruiter,
@@ -44,11 +44,41 @@ public static class RoleEnumExtension
         throw new ArgumentException($"No GUID mapping found for status {status}");
     }
 
-    public static string GetName(this RoleEnum status)
+    public static string GetRoleName(this RoleEnum status)
     {
         if (RoleNameEnumMap.TryGetValue(status, out string? name))
             return name.Trim();
 
         throw new ArgumentException($"No GUID mapping found for status {status}");
+    }
+
+
+
+
+
+    public static string GetRoleNameById(this Guid roleId)
+    {
+        var roleEnum = GetRoleEnumById(roleId);
+        if (roleEnum.HasValue)
+        {
+            return roleEnum.Value.GetRoleName();
+        }
+
+        throw new ArgumentException($"Invalid role ID {roleId}");
+    }
+
+
+
+
+    private static RoleEnum? GetRoleEnumById(Guid roleId)
+    {
+        foreach (var roleEnum in RoleIdEnumMap)
+        {
+            if (Guid.TryParse(roleEnum.Value, out var id) && id == roleId)
+            {
+                return roleEnum.Key;
+            }
+        }
+        return null;
     }
 }

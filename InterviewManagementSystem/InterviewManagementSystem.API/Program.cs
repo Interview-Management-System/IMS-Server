@@ -1,6 +1,7 @@
 global using InterviewManagementSystem.Application.DTOs;
 using InterviewManagementSystem.API.Configurations;
 using InterviewManagementSystem.API.Middlewares;
+using InterviewManagementSystem.Application.CustomClasses.Helpers;
 using System.Text.Json.Serialization;
 
 
@@ -30,7 +31,7 @@ builder.Services.AddFluentValidation();
 builder.Services.AddInjectionService();
 //builder.Services.AddExceptionHandlers();
 builder.Services.AddHttpContextAccessor();
-
+FilterHelper.service = builder.Services.BuildServiceProvider();
 
 
 var app = builder.Build();

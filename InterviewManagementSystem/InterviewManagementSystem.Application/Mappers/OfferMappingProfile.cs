@@ -1,5 +1,7 @@
-﻿using InterviewManagementSystem.Application.DTOs.OfferDTOs;
+﻿using InterviewManagementSystem.Application.CustomClasses.Utilities;
+using InterviewManagementSystem.Application.DTOs.OfferDTOs;
 using InterviewManagementSystem.Domain.Entities.Offers;
+using InterviewManagementSystem.Domain.Paginations;
 
 namespace InterviewManagementSystem.Application.Mappers;
 
@@ -34,6 +36,8 @@ public sealed class OfferMappingProfile : Profile
             .ForMember(dest => dest.Interviewers, opt => opt.MapFrom(src => src.InterviewSchedule!.AppUsers.Select(ap => ap.UserName).ToList()))
             .ReverseMap();
 
+
+        CreateMap<PageResult<Offer>, PageResult<OfferForRetrieveDTO>>().ReverseMap();
 
 
         CreateMap<Offer, OfferForCreateDTO>()

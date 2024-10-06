@@ -72,6 +72,13 @@ public partial class AppUser : IdentityUser<Guid>
     public virtual ICollection<InterviewSchedule> InterviewSchedules { get; set; } = new List<InterviewSchedule>();
 
     public virtual ICollection<AppRole> Roles { get; set; } = new List<AppRole>();
+
+
+
+    public AppUser()
+    {
+        GenerateId();
+    }
 }
 
 
@@ -79,6 +86,11 @@ public partial class AppUser : IdentityUser<Guid>
 
 public partial class AppUser
 {
+
+    public void GenerateId()
+    {
+        Id = Guid.NewGuid();
+    }
 
 
     public void Activate()
@@ -104,5 +116,11 @@ public partial class AppUser
     public void UnDoDelete()
     {
         IsDeleted = true;
+    }
+
+
+    public void SetUpdateAtIsNow()
+    {
+        UpdateAt = DateTime.Now;
     }
 }

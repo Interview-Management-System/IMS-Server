@@ -2,6 +2,8 @@
 using InterviewManagementSystem.Application.Features.AuthenticationFeatures.UseCases;
 using InterviewManagementSystem.Application.Features.JobFeature;
 using InterviewManagementSystem.Application.Features.JobFeature.UseCases;
+using InterviewManagementSystem.Application.Features.OfferFeature;
+using InterviewManagementSystem.Application.Features.OfferFeature.UseCases;
 using InterviewManagementSystem.Application.Features.UserFeature;
 using InterviewManagementSystem.Application.Features.UserFeature.UseCases;
 using InterviewManagementSystem.Domain.Entities.AppUsers;
@@ -33,6 +35,7 @@ internal static class InjectionService
 
         AddJobServices(services);
         AddUserServices(services);
+        AddOfferServices(services);
         AddAuthenticationServices(services);
     }
 
@@ -69,6 +72,14 @@ internal static class InjectionService
         services.AddScoped<JobUpdateUseCase>();
         //services.AddScoped<JobCreateUseCase>();
         services.AddScoped<JobFacade>();
+    }
+
+
+    private static void AddOfferServices(IServiceCollection services)
+    {
+        services.AddScoped<OfferRetrieveUseCase>();
+        services.AddScoped<OfferCreateUseCase>();
+        services.AddScoped<OfferFacade>();
     }
 }
 

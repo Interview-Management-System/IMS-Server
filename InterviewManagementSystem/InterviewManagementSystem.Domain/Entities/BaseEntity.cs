@@ -1,4 +1,4 @@
-﻿namespace InterviewManagementSystem.Domain
+﻿namespace InterviewManagementSystem.Domain.Entities
 {
     public abstract class BaseEntity
     {
