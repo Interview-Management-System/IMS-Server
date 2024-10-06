@@ -49,4 +49,31 @@ public sealed class OfferController : ControllerBase
         var apiResponse = await _offerFacade.CreateOfferAsync(offerForCreateDTO);
         return Created("", apiResponse);
     }
+
+
+
+    [HttpGet("detail")]
+    public async Task<IActionResult> GetOfferDetailAsync([FromQuery] Guid id)
+    {
+        var apiResponse = await _offerFacade.GetOfferDetailByIdAsync(id);
+        return Ok(apiResponse);
+    }
+
+
+
+    [HttpPatch("change-status")]
+    public async Task<IActionResult> ChangeOfferStatusAsync(Guid offerId, OfferStatusEnum offerStatusId)
+    {
+        var apiResponse = await _offerFacade.ChangeOfferStatusAsync(offerId, offerStatusId);
+        return Ok(apiResponse);
+    }
+
+
+
+    [HttpPut("update")]
+    public async Task<IActionResult> UpdateOfferAsync(OfferForUpdateDTO offerForUpdateDTO)
+    {
+        var apiResponse = await _offerFacade.UpdateOfferAsync(offerForUpdateDTO);
+        return Ok(apiResponse);
+    }
 }

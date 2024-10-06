@@ -1,6 +1,6 @@
 ﻿using InterviewManagementSystem.Domain.Entities.AppUsers;
 
-namespace InterviewManagementSystem.Application.Exceptions;
+namespace InterviewManagementSystem.Application.CustomClasses.Exceptions;
 
 internal class CandidateException(string errorMessage) : ApplicationException(errorMessage)
 {

@@ -21,26 +21,7 @@ public sealed class MasterDataMappingProfile : Profile
         CreateMap<SkillsEnum, short>().ReverseMap();
 
 
-        CreateMap(typeof(PaginationRequest), typeof(PaginationParameter<>))
-            .ReverseMap();
+        CreateMap(typeof(PaginationRequest), typeof(PaginationParameter<>)).ReverseMap();
     }
 
-
-    private static object CallGenericMethod(Type type)
-    {
-        // Define a generic method
-        var method = typeof(MasterDataMappingProfile).GetMethod(nameof(GenericMethod), System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
-
-        // Make it generic with the resolved type
-        var genericMethod = method.MakeGenericMethod(type);
-
-        // Invoke the generic method
-        return genericMethod.Invoke(null, null);
-    }
-
-    private static T GenericMethod<T>()
-    {
-        // For demonstration purposes, just return a new instance of T
-        return Activator.CreateInstance<T>();
-    }
 }

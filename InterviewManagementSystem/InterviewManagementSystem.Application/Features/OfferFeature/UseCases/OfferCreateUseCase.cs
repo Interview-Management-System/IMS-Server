@@ -16,6 +16,8 @@ public sealed class OfferCreateUseCase : BaseUseCase
     public async Task<string> CreateOfferAsync(OfferForCreateDTO offerForCreateDTO)
     {
 
+        // create need add interview id
+
         var offer = _mapper.Map<Offer>(offerForCreateDTO);
 
         await _unitOfWork.OfferRepository.AddAsync(offer);

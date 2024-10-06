@@ -1,6 +1,6 @@
 ﻿namespace InterviewManagementSystem.Domain.Enums;
 
-public enum ContractTypeEnum : byte
+public enum ContractTypeEnum : short
 {
     Trial2Months = 1,
     Trainee3Months,

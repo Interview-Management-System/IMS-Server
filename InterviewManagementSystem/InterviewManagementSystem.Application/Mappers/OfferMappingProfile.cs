@@ -1,5 +1,4 @@
-﻿using InterviewManagementSystem.Application.CustomClasses.Utilities;
-using InterviewManagementSystem.Application.DTOs.OfferDTOs;
+﻿using InterviewManagementSystem.Application.DTOs.OfferDTOs;
 using InterviewManagementSystem.Domain.Entities.Offers;
 using InterviewManagementSystem.Domain.Paginations;
 
@@ -30,19 +29,31 @@ public sealed class OfferMappingProfile : Profile
             .ForMember(dest => dest.InterviewTitle, opt => opt.MapFrom(src => src.InterviewSchedule!.Title))
             .ForMember(dest => dest.Position, opt => opt.MapFrom(src => src.PositionId!.Value.GetPositionNameById()))
             .ForMember(dest => dest.ContractType, opt => opt.MapFrom(src => src.ContractTypeId!.Value.GetContractTypeNameById()))
-            .ForMember(dest => dest.DueDate, opt => opt.MapFrom(src => src.DueDate!.Value.ToString(DateUtility.VieDateFormatWithTime)))
-            .ForMember(dest => dest.ContractTo, opt => opt.MapFrom(src => src.DatePeriod!.StartDate.ToString(DateUtility.VieDateFormatWithTime)))
-            .ForMember(dest => dest.ContractFrom, opt => opt.MapFrom(src => src.DatePeriod!.EndDate.ToString(DateUtility.VieDateFormatWithTime)))
-            .ForMember(dest => dest.Interviewers, opt => opt.MapFrom(src => src.InterviewSchedule!.AppUsers.Select(ap => ap.UserName).ToList()))
+            .ForMember(dest => dest.DueDate, opt => opt.MapFrom(src => src.DueDate!.Value.ToVieFormat()))
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.OfferStatusId!.Value.GetOfferStatusNameById()))
+            .ForMember(dest => dest.ContractTo, opt => opt.MapFrom(src => src.DatePeriod!.StartDate.ToVieFormat()))
+            .ForMember(dest => dest.ContractFrom, opt => opt.MapFrom(src => src.DatePeriod!.EndDate.ToVieFormat()))
+            .ForMember(dest => dest.Interviewers, opt => opt.MapFrom(src => src.InterviewSchedule!.Interviewers.Select(ap => ap.UserName).ToList()))
+            .ReverseMap();
+
+
+
+        CreateMap<Offer, OfferForUpdateDTO>()
+            .IncludeBase<Offer, OfferForCreateDTO>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ReverseMap();
 
 
         CreateMap<PageResult<Offer>, PageResult<OfferForRetrieveDTO>>().ReverseMap();
 
 
-        CreateMap<Offer, OfferForCreateDTO>()
-            .ForMember(dest => dest.ContractFrom, opt => opt.MapFrom(src => src.DatePeriod!.StartDate))
-            .ForMember(dest => dest.ContractTo, opt => opt.MapFrom(src => src.DatePeriod!.EndDate))
+        CreateMap<OfferForCreateDTO, Offer>()
+            .ForMember(dest => dest.LevelId, opt => opt.MapFrom(src => (short)src.LevelId))
+            .ForMember(dest => dest.PositionId, opt => opt.MapFrom(src => (short)src.PositionId))
+            .ForPath(dest => dest.DatePeriod!.EndDate, opt => opt.MapFrom(src => src.ContractTo))
+            .ForMember(dest => dest.DepartmentId, opt => opt.MapFrom(src => (short)src.DepartmentId))
+            .ForPath(dest => dest.DatePeriod!.StartDate, opt => opt.MapFrom(src => src.ContractFrom))
+            .ForMember(dest => dest.ContractTypeId, opt => opt.MapFrom(src => (short)src.ContractTypeId))
             .ReverseMap();
     }
 }

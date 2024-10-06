@@ -2,7 +2,7 @@
 using InterviewManagementSystem.Domain.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 using System.Text.RegularExpressions;
-using ApplicationException = InterviewManagementSystem.Application.Exceptions.ApplicationException;
+using ApplicationException = InterviewManagementSystem.Application.CustomClasses.Exceptions.ApplicationException;
 
 namespace InterviewManagementSystem.API.Exceptions;
 

@@ -1,5 +1,4 @@
-﻿using InterviewManagementSystem.Application.CustomClasses.Utilities;
-using InterviewManagementSystem.Application.DTOs.JobDTOs;
+﻿using InterviewManagementSystem.Application.DTOs.JobDTOs;
 using InterviewManagementSystem.Domain.CustomClasses;
 using InterviewManagementSystem.Domain.Entities.Jobs;
 using InterviewManagementSystem.Domain.Paginations;
@@ -18,10 +17,10 @@ public sealed class JobMappingProfile : Profile
             .ForMember(dest => dest.Benefits, opt => opt.MapFrom(src => src.Benefits.Select(l => l.Name).ToList()))
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.JobStatusId!.Value.GetJobStatusNameById()))
             .ForMember(dest => dest.RequiredSkills, opt => opt.MapFrom(src => src.Skills.Select(s => s.Name).ToList()))
-            .ForMember(dest => dest.CreateAt, opt => opt.MapFrom(src => src.CreateAt!.Value.ToString(DateUtility.VieDateFormatWithTime)))
-            .ForMember(dest => dest.UpdateAt, opt => opt.MapFrom(src => src.UpdateAt!.Value.ToString(DateUtility.VieDateFormatWithTime)))
-            .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.DatePeriod!.EndDate.ToString(DateUtility.VieDateFormatWithTime)))
-            .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.DatePeriod!.StartDate.ToString(DateUtility.VieDateFormatWithTime)))
+            .ForMember(dest => dest.CreateAt, opt => opt.MapFrom(src => src.CreateAt!.Value.ToVieFormat()))
+            .ForMember(dest => dest.UpdateAt, opt => opt.MapFrom(src => src.UpdateAt!.Value.ToVieFormat()))
+            .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.DatePeriod!.EndDate.ToVieFormat()))
+            .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.DatePeriod!.StartDate.ToVieFormat()))
             .ReverseMap();
 
 

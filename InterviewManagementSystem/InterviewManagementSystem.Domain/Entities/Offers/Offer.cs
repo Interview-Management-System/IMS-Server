@@ -1,4 +1,6 @@
-﻿namespace InterviewManagementSystem.Domain.Entities.Offers;
+﻿using InterviewManagementSystem.Domain.Enums;
+
+namespace InterviewManagementSystem.Domain.Entities.Offers;
 
 
 public partial class Offer : BaseEntity
@@ -52,4 +54,31 @@ public partial class Offer : BaseEntity
     public virtual AppUser? RecruiterOwner { get; set; }
 
     public virtual AppUser? UpdatedByNavigation { get; set; }
+
+
+    public Offer()
+    {
+        GenerateId();
+    }
+}
+
+
+
+
+public partial class Offer
+{
+
+
+    public void GenerateId()
+    {
+        Id = Guid.NewGuid();
+    }
+
+
+
+    public void ChangeStatus(OfferStatusEnum offerStatusEnum)
+    {
+        OfferStatusId = (short)offerStatusEnum;
+    }
+
 }

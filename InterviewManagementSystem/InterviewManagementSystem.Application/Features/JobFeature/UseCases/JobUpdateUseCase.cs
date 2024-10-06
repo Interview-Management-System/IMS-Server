@@ -1,5 +1,4 @@
-﻿
-using InterviewManagementSystem.Application.DTOs.JobDTOs;
+﻿using InterviewManagementSystem.Application.DTOs.JobDTOs;
 using InterviewManagementSystem.Domain.Aggregates;
 using InterviewManagementSystem.Domain.CustomClasses;
 using InterviewManagementSystem.Domain.Entities.Jobs;

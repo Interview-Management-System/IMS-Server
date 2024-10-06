@@ -45,5 +45,6 @@ public partial class InterviewSchedule : BaseEntity
 
     public virtual AppUser? UpdatedByNavigation { get; set; }
 
-    public virtual ICollection<AppUser> AppUsers { get; set; } = new List<AppUser>();
+
+    public virtual ICollection<AppUser> Interviewers { get; set; } = new List<AppUser>();
 }

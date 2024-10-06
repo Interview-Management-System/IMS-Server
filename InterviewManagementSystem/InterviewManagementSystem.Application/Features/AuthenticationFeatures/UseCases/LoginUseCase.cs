@@ -1,4 +1,4 @@
-﻿using InterviewManagementSystem.Application.Exceptions;
+﻿using InterviewManagementSystem.Application.CustomClasses.Exceptions;
 using InterviewManagementSystem.Domain.Entities.AppUsers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;

@@ -1,12 +1,12 @@
-﻿namespace InterviewManagementSystem.Application.Exceptions;
+﻿namespace InterviewManagementSystem.Application.CustomClasses.Exceptions;
 
 public class ApplicationException(string errorMessage) : Exception(errorMessage)
 {
 
 
-    internal static void ThrowIfOperationFail(bool isSuccess, string? errorMessage = null)
+    internal static void ThrowIfOperationFail(bool isOperationSuccess, string? errorMessage = null)
     {
-        if (isSuccess == false)
+        if (isOperationSuccess == false)
             throw new ApplicationException(errorMessage ?? "Operation fail");
     }
 

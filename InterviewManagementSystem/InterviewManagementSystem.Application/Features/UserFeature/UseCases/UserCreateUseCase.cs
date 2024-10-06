@@ -1,4 +1,5 @@
-﻿using InterviewManagementSystem.Application.DTOs.UserDTOs.CandidateDTOs;
+﻿using InterviewManagementSystem.Application.CustomClasses.Exceptions;
+using InterviewManagementSystem.Application.DTOs.UserDTOs.CandidateDTOs;
 using InterviewManagementSystem.Application.DTOs.UserDTOs.UserDTOs;
 using InterviewManagementSystem.Domain.Entities.AppUsers;
 

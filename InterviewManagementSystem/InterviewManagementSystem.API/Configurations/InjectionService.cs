@@ -1,5 +1,7 @@
 ﻿using InterviewManagementSystem.Application.Features.AuthenticationFeatures;
 using InterviewManagementSystem.Application.Features.AuthenticationFeatures.UseCases;
+using InterviewManagementSystem.Application.Features.InterviewScheduleFeature;
+using InterviewManagementSystem.Application.Features.InterviewScheduleFeature.UseCases;
 using InterviewManagementSystem.Application.Features.JobFeature;
 using InterviewManagementSystem.Application.Features.JobFeature.UseCases;
 using InterviewManagementSystem.Application.Features.OfferFeature;
@@ -25,7 +27,7 @@ internal static class InjectionService
         const string connection = "Host=localhost;Database=InterviewManagementSystem;Username=postgres;Password=sa";
         services.AddDbContext<InterviewManagementSystemContext>(options => options.UseNpgsql(connection));
 
-        //services.AddScoped<UserManager<Candidate>>();
+
         services.AddIdentity<AppUser, AppRole>()
             .AddEntityFrameworkStores<InterviewManagementSystemContext>()
             .AddDefaultTokenProviders();
@@ -33,10 +35,12 @@ internal static class InjectionService
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+
         AddJobServices(services);
         AddUserServices(services);
         AddOfferServices(services);
         AddAuthenticationServices(services);
+        AddInterviewScheduleServices(services);
     }
 
 
@@ -52,34 +56,45 @@ internal static class InjectionService
     }
 
 
+
     private static void AddUserServices(IServiceCollection services)
     {
+        services.AddScoped<UserFacade>();
         services.AddScoped<UserCreateUseCase>();
         services.AddScoped<UserStatusUseCase>();
         services.AddScoped<UserUpdateUseCase>();
         services.AddScoped<UserRetrieveUseCase>();
         services.AddScoped<CandidateStatusUseCase>();
-        services.AddScoped<UserFacade>();
     }
 
 
 
     private static void AddJobServices(IServiceCollection services)
     {
+        services.AddScoped<JobFacade>();
         services.AddScoped<JobCreateUseCase>();
         services.AddScoped<JobStatusUseCase>();
-        services.AddScoped<JobRetrieveUseCase>();
         services.AddScoped<JobUpdateUseCase>();
-        //services.AddScoped<JobCreateUseCase>();
-        services.AddScoped<JobFacade>();
+        services.AddScoped<JobRetrieveUseCase>();
     }
 
 
     private static void AddOfferServices(IServiceCollection services)
     {
-        services.AddScoped<OfferRetrieveUseCase>();
-        services.AddScoped<OfferCreateUseCase>();
         services.AddScoped<OfferFacade>();
+        services.AddScoped<OfferCreateUseCase>();
+        services.AddScoped<OfferUpdateUseCase>();
+        services.AddScoped<OfferRetrieveUseCase>();
+    }
+
+
+
+    private static void AddInterviewScheduleServices(IServiceCollection services)
+    {
+        services.AddScoped<InterviewScheduleFacade>();
+        services.AddScoped<InterviewScheduleUpdateUseCase>();
+        services.AddScoped<InterviewScheduleCreateUseCase>();
+        services.AddScoped<InterviewScheduleRetrieveUseCase>();
     }
 }
 

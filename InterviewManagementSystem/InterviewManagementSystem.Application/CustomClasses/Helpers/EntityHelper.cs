@@ -1,4 +1,5 @@
 ﻿using InterviewManagementSystem.Domain.Entities.AppUsers;
+using InterviewManagementSystem.Domain.Entities.Interviews;
 using InterviewManagementSystem.Domain.Entities.Jobs;
 using InterviewManagementSystem.Domain.Entities.Offers;
 using Microsoft.EntityFrameworkCore;
@@ -66,6 +67,15 @@ public static class EntityHelper
             };
         }
 
+
+
+        public static Dictionary<string, string?> BuildInterviewSearchFieldMapping(string? nameToSearch)
+        {
+            return new()
+            {
+                { $"{nameof(InterviewSchedule.Title)}", nameToSearch },
+            };
+        }
     }
 
 
@@ -103,6 +113,16 @@ public static class EntityHelper
             return new Dictionary<string, Enum>
             {
                 { nameof(Job.JobStatusId), jobStatusId ?? default }
+            };
+
+        }
+
+
+        public static Dictionary<string, Enum> BuildInterviewEnumFilter(InterviewStatusEnum? interviewStatusId)
+        {
+            return new Dictionary<string, Enum>
+            {
+                { nameof(InterviewSchedule.InterviewScheduleStatusId), interviewStatusId ?? default }
             };
 
         }

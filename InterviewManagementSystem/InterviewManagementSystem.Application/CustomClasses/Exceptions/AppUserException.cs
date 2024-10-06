@@ -1,6 +1,6 @@
 ﻿using InterviewManagementSystem.Domain.Entities.AppUsers;
 
-namespace InterviewManagementSystem.Application.Exceptions;
+namespace InterviewManagementSystem.Application.CustomClasses.Exceptions;
 
 internal sealed class AppUserException(string errorMessage) : ApplicationException(errorMessage)
 {

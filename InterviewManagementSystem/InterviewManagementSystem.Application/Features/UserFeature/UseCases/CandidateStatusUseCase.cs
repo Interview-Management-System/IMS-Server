@@ -1,4 +1,5 @@
-﻿using InterviewManagementSystem.Domain.Entities.AppUsers;
+﻿using InterviewManagementSystem.Application.CustomClasses.Exceptions;
+using InterviewManagementSystem.Domain.Entities.AppUsers;
 using Microsoft.AspNetCore.Identity;
 
 namespace InterviewManagementSystem.Application.Features.UserFeature.UseCases;

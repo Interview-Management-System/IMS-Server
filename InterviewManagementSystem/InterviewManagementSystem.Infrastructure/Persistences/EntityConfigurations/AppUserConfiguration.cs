@@ -59,7 +59,7 @@ internal static class AppUserConfiguration
                 .HasConstraintName("AppUsers_UpdatedBy_fkey");
 
 
-            entity.HasMany(d => d.InterviewSchedules).WithMany(p => p.AppUsers)
+            entity.HasMany(d => d.InterviewSchedules).WithMany(p => p.Interviewers)
                 .UsingEntity<Dictionary<string, object>>(
                     "Interviewer",
                     r => r.HasOne<InterviewSchedule>().WithMany()
