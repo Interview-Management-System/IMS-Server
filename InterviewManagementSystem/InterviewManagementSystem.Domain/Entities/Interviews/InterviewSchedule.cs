@@ -47,4 +47,34 @@ public partial class InterviewSchedule : BaseEntity
 
 
     public virtual ICollection<AppUser> Interviewers { get; set; } = new List<AppUser>();
+
+
+
+    public InterviewSchedule()
+    {
+        GenerateId();
+    }
+}
+
+
+
+public partial class InterviewSchedule
+{
+    public void GenerateId()
+    {
+        Id = Guid.NewGuid();
+    }
+
+
+
+    public void ClearAllInterviewers()
+    {
+        Interviewers.Clear();
+    }
+
+
+    public void SetInterviewers(List<AppUser> interviewers)
+    {
+        Interviewers = interviewers;
+    }
 }

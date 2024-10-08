@@ -1,4 +1,5 @@
 ﻿using InterviewManagementSystem.Application.CustomClasses;
+using InterviewManagementSystem.Application.DTOs.InterviewScheduleDTOs;
 using InterviewManagementSystem.Application.Features.InterviewScheduleFeature;
 using InterviewManagementSystem.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +26,7 @@ public sealed class InterviewScheduleController : ControllerBase
 
 
     [HttpGet("list-paging")]
-    public async Task<IActionResult> GetListJobPageResultAsync(string? interviewTitle, Guid? interviewerId, InterviewStatusEnum? interviewStatusId, int pageSize = 5, int pageIndex = 1)
+    public async Task<IActionResult> GetListInterviewPageResultAsync(string? interviewTitle, Guid? interviewerId, InterviewStatusEnum? interviewStatusId, int pageSize = 5, int pageIndex = 1)
     {
 
         var paginationRequest = new PaginationRequest()
@@ -41,4 +42,21 @@ public sealed class InterviewScheduleController : ControllerBase
         return Ok(apiResponse);
     }
 
+
+
+    [HttpPost("create")]
+    public async Task<IActionResult> CreateInterviewAsync([FromBody] InterviewScheduleForCreateDTO interviewScheduleForCreateDTO)
+    {
+        var apiResponse = await _interviewScheduleFacade.CreateInterviewScheduleAsync(interviewScheduleForCreateDTO);
+        return Created("", apiResponse);
+    }
+
+
+
+    [HttpGet("detail")]
+    public async Task<IActionResult> GetInterviewByIdAsync([FromQuery] Guid id)
+    {
+        //var apiResponse = await _interviewScheduleFacade.CreateInterviewScheduleAsync(interviewScheduleForCreateDTO);
+        return Created("", "");
+    }
 }

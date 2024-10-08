@@ -1,5 +1,4 @@
-﻿using InterviewManagementSystem.Application.DTOs.JobDTOs;
-using InterviewManagementSystem.Domain.Entities.AppUsers;
+﻿using InterviewManagementSystem.Domain.Entities.AppUsers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,7 +28,7 @@ namespace InterviewManagementSystem.API.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] JobForRetrieveDTO jobForRetrieveDTO)
+        public async Task<IActionResult> Post([FromBody] TimeOnly timeOnly)
         {
 
             return Ok("asdf");

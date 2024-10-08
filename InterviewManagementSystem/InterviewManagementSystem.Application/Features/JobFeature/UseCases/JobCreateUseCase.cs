@@ -16,11 +16,11 @@ public sealed class JobCreateUseCase : BaseUseCase
 
     internal async Task<string> CreateNewJobAsync(JobForCreateDTO jobForCreateDTO)
     {
-        var mappedJob = _mapper.Map<Job>(jobForCreateDTO);
+
         JobMasterData jobMasterData = _mapper.Map<JobMasterData>(jobForCreateDTO);
 
 
-        var jobAggregate = new JobAggregate(mappedJob, _unitOfWork);
+        var jobAggregate = new JobAggregate(_mapper.Map<Job>(jobForCreateDTO), _unitOfWork);
         var newJob = await jobAggregate.CreateJobAsync(jobMasterData);
 
 

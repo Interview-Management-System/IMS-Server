@@ -15,8 +15,11 @@ namespace InterviewManagementSystem.Domain.ValueObjects
         }
 
 
-        public static HourPeriod CreatePeriod(TimeOnly startHour, TimeOnly endHour)
+        public static HourPeriod CreatePeriod(string startHourString, string endHourString)
         {
+            TimeOnly startHour = TimeOnly.Parse(startHourString);
+            TimeOnly endHour = TimeOnly.Parse(endHourString);
+
             InvalidPeriodException.ThrowIfInvalidHourPeriod(startHour, endHour);
             return new HourPeriod(startHour, endHour);
         }

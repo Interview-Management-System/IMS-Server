@@ -33,6 +33,14 @@ public partial class Job : BaseEntity
     public virtual ICollection<Level> Levels { get; set; } = new List<Level>();
 
     public virtual ICollection<Skill> Skills { get; set; } = new List<Skill>();
+
+
+
+    public Job()
+    {
+        SaveDraft();
+        GenerateId();
+    }
 }
 
 
@@ -77,21 +85,53 @@ public partial class Job
     }
 
 
-    public void AddSkill(Skill skill)
+
+    public void AddSkills(List<Skill> skills)
     {
-        Skills.Add(skill);
+        ClearSkills();
+
+        if (skills.Count > 0)
+        {
+            Skills = skills;
+
+            foreach (var skill in skills)
+            {
+                skill.AssignJob(this);
+            }
+        }
     }
 
 
-    public void AddLevel(Level level)
+
+    public void AddLevels(List<Level> levels)
     {
-        Levels.Add(level);
+        ClearLevels();
+
+        if (levels.Count > 0)
+        {
+            Levels = levels;
+
+            foreach (var level in levels)
+            {
+                level.AssignJob(this);
+            }
+        }
     }
 
 
-    public void AddBenefit(Benefit benefit)
+    public void AddBenefits(List<Benefit> benefits)
     {
-        Benefits.Add(benefit);
+        ClearBenefits();
+
+        if (benefits.Count > 0)
+        {
+            Benefits = benefits;
+
+            foreach (var benefit in benefits)
+            {
+                benefit.AssignJob(this);
+            }
+        }
     }
 
 

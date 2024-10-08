@@ -7,8 +7,11 @@ namespace InterviewManagementSystem.Application.Mappers;
 
 public sealed class JobMappingProfile : Profile
 {
+
+
     public JobMappingProfile()
     {
+
 
         CreateMap<Job, JobForRetrieveDTO>()
             .ForMember(dest => dest.UpdatedBy, opt => opt.MapFrom(src => src.UpdatedByNavigation!.UserName))
@@ -24,10 +27,19 @@ public sealed class JobMappingProfile : Profile
             .ReverseMap();
 
 
-        CreateMap<Job, JobForCreateDTO>().ReverseMap();
-        CreateMap<Job, JobForUpdateDTO>().ReverseMap();
 
+        CreateMap<Job, JobForCreateDTO>().ReverseMap();
         CreateMap<PageResult<Job>, PageResult<JobForRetrieveDTO>>().ReverseMap();
+
+
+
+        CreateMap<Job, JobForUpdateDTO>()
+             .ForMember(dest => dest.Id, opt => opt.Ignore())
+             .ForMember(dest => dest.RequiredSkillId, opt => opt.Ignore())
+             .ForMember(dest => dest.LevelId, opt => opt.Ignore())
+             .ForMember(dest => dest.BenefitId, opt => opt.Ignore())
+            .ReverseMap();
+
 
 
         CreateMap<JobForCreateDTO, JobMasterData>()

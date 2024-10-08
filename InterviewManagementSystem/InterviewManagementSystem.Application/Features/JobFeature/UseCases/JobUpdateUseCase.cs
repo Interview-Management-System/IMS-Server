@@ -8,6 +8,8 @@ namespace InterviewManagementSystem.Application.Features.JobFeature.UseCases;
 
 public sealed class JobUpdateUseCase : BaseUseCase
 {
+
+
     public JobUpdateUseCase(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
     {
     }
@@ -29,13 +31,12 @@ public sealed class JobUpdateUseCase : BaseUseCase
         ApplicationException.ThrowIfGetDeletedRecord(jobFoundById.IsDeleted);
 
 
-
+        _mapper.Map(jobForUpdateDTO, jobFoundById);
         JobMasterData jobMasterData = _mapper.Map<JobMasterData>(jobForUpdateDTO);
 
 
         var jobAggregate = new JobAggregate(jobFoundById, _unitOfWork);
         await jobAggregate.UpdateJobAsync(jobMasterData);
-
 
 
         _unitOfWork.JobRepository.Update(jobFoundById);

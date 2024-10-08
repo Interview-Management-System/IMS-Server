@@ -3,24 +3,24 @@
   "WorkspaceRootPath": "G:\\FSA\\Project\\Interview Management System\\Source code\\IMS-Server\\InterviewManagementSystem\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{E847C85A-A165-4C23-87A5-31C35114CB46}|InterviewManagementSystem.Application\\InterviewManagementSystem.Application.csproj|g:\\fsa\\project\\interview management system\\source code\\ims-server\\interviewmanagementsystem\\interviewmanagementsystem.application\\features\\interviewschedulefeature\\usecases\\interviewscheduleretrieveusecase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E847C85A-A165-4C23-87A5-31C35114CB46}|InterviewManagementSystem.Application\\InterviewManagementSystem.Application.csproj|solutionrelative:interviewmanagementsystem.application\\features\\interviewschedulefeature\\usecases\\interviewscheduleretrieveusecase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{C0EA35A2-C025-46CB-A477-0C256A42433C}|InterviewManagementSystem.Infrastructure\\InterviewManagementSystem.Infrastructure.csproj|g:\\fsa\\project\\interview management system\\source code\\ims-server\\interviewmanagementsystem\\interviewmanagementsystem.infrastructure\\persistences\\interviewmanagementsystemcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C0EA35A2-C025-46CB-A477-0C256A42433C}|InterviewManagementSystem.Infrastructure\\InterviewManagementSystem.Infrastructure.csproj|solutionrelative:interviewmanagementsystem.infrastructure\\persistences\\interviewmanagementsystemcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E847C85A-A165-4C23-87A5-31C35114CB46}|InterviewManagementSystem.Application\\InterviewManagementSystem.Application.csproj|g:\\fsa\\project\\interview management system\\source code\\ims-server\\interviewmanagementsystem\\interviewmanagementsystem.application\\features\\interviewschedulefeature\\usecases\\interviewschedulecreateusecase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E847C85A-A165-4C23-87A5-31C35114CB46}|InterviewManagementSystem.Application\\InterviewManagementSystem.Application.csproj|solutionrelative:interviewmanagementsystem.application\\features\\interviewschedulefeature\\usecases\\interviewschedulecreateusecase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{F15C1FEF-C406-4A2D-AFC7-EA8B3C183975}|InterviewManagementSystem.Domain\\InterviewManagementSystem.Domain.csproj|g:\\fsa\\project\\interview management system\\source code\\ims-server\\interviewmanagementsystem\\interviewmanagementsystem.domain\\entities\\baseentity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F15C1FEF-C406-4A2D-AFC7-EA8B3C183975}|InterviewManagementSystem.Domain\\InterviewManagementSystem.Domain.csproj|solutionrelative:interviewmanagementsystem.domain\\entities\\baseentity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E847C85A-A165-4C23-87A5-31C35114CB46}|InterviewManagementSystem.Application\\InterviewManagementSystem.Application.csproj|g:\\fsa\\project\\interview management system\\source code\\ims-server\\interviewmanagementsystem\\interviewmanagementsystem.application\\features\\offerfeature\\usecases\\offercreateusecase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E847C85A-A165-4C23-87A5-31C35114CB46}|InterviewManagementSystem.Application\\InterviewManagementSystem.Application.csproj|solutionrelative:interviewmanagementsystem.application\\features\\offerfeature\\usecases\\offercreateusecase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{C0EA35A2-C025-46CB-A477-0C256A42433C}|InterviewManagementSystem.Infrastructure\\InterviewManagementSystem.Infrastructure.csproj|g:\\fsa\\project\\interview management system\\source code\\ims-server\\interviewmanagementsystem\\interviewmanagementsystem.infrastructure\\unitofworks\\unitofwork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C0EA35A2-C025-46CB-A477-0C256A42433C}|InterviewManagementSystem.Infrastructure\\InterviewManagementSystem.Infrastructure.csproj|solutionrelative:interviewmanagementsystem.infrastructure\\unitofworks\\unitofwork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E847C85A-A165-4C23-87A5-31C35114CB46}|InterviewManagementSystem.Application\\InterviewManagementSystem.Application.csproj|g:\\fsa\\project\\interview management system\\source code\\ims-server\\interviewmanagementsystem\\interviewmanagementsystem.application\\features\\interviewschedulefeature\\interviewschedulefacade.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E847C85A-A165-4C23-87A5-31C35114CB46}|InterviewManagementSystem.Application\\InterviewManagementSystem.Application.csproj|solutionrelative:interviewmanagementsystem.application\\features\\interviewschedulefeature\\interviewschedulefacade.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{F15C1FEF-C406-4A2D-AFC7-EA8B3C183975}|InterviewManagementSystem.Domain\\InterviewManagementSystem.Domain.csproj|g:\\fsa\\project\\interview management system\\source code\\ims-server\\interviewmanagementsystem\\interviewmanagementsystem.domain\\aggregates\\jobaggregate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F15C1FEF-C406-4A2D-AFC7-EA8B3C183975}|InterviewManagementSystem.Domain\\InterviewManagementSystem.Domain.csproj|solutionrelative:interviewmanagementsystem.domain\\aggregates\\jobaggregate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{5CF4E76A-A06D-446B-A997-70DF16531B3C}|InterviewManagementSystem.API\\InterviewManagementSystem.API.csproj|g:\\fsa\\project\\interview management system\\source code\\ims-server\\interviewmanagementsystem\\interviewmanagementsystem.api\\controllers\\interviewschedulecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5CF4E76A-A06D-446B-A997-70DF16531B3C}|InterviewManagementSystem.API\\InterviewManagementSystem.API.csproj|solutionrelative:interviewmanagementsystem.api\\controllers\\interviewschedulecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{C0EA35A2-C025-46CB-A477-0C256A42433C}|InterviewManagementSystem.Infrastructure\\InterviewManagementSystem.Infrastructure.csproj|g:\\fsa\\project\\interview management system\\source code\\ims-server\\interviewmanagementsystem\\interviewmanagementsystem.infrastructure\\persistences\\interceptors\\lastmodifieddateinterceptor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C0EA35A2-C025-46CB-A477-0C256A42433C}|InterviewManagementSystem.Infrastructure\\InterviewManagementSystem.Infrastructure.csproj|solutionrelative:interviewmanagementsystem.infrastructure\\persistences\\interceptors\\lastmodifieddateinterceptor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,7 +30,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 210,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
@@ -39,66 +39,66 @@
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "OfferCreateUseCase.cs",
-              "DocumentMoniker": "G:\\FSA\\Project\\Interview Management System\\Source code\\IMS-Server\\InterviewManagementSystem\\InterviewManagementSystem.Application\\Features\\OfferFeature\\UseCases\\OfferCreateUseCase.cs",
-              "RelativeDocumentMoniker": "InterviewManagementSystem.Application\\Features\\OfferFeature\\UseCases\\OfferCreateUseCase.cs",
-              "ToolTip": "G:\\FSA\\Project\\Interview Management System\\Source code\\IMS-Server\\InterviewManagementSystem\\InterviewManagementSystem.Application\\Features\\OfferFeature\\UseCases\\OfferCreateUseCase.cs",
-              "RelativeToolTip": "InterviewManagementSystem.Application\\Features\\OfferFeature\\UseCases\\OfferCreateUseCase.cs",
-              "ViewState": "AgIAAAUAAAAAAAAAAAAxwBIAAAAnAAAAAAAAAA==",
+              "Title": "UnitOfWork.cs",
+              "DocumentMoniker": "G:\\FSA\\Project\\Interview Management System\\Source code\\IMS-Server\\InterviewManagementSystem\\InterviewManagementSystem.Infrastructure\\UnitOfWorks\\UnitOfWork.cs",
+              "RelativeDocumentMoniker": "InterviewManagementSystem.Infrastructure\\UnitOfWorks\\UnitOfWork.cs",
+              "ToolTip": "G:\\FSA\\Project\\Interview Management System\\Source code\\IMS-Server\\InterviewManagementSystem\\InterviewManagementSystem.Infrastructure\\UnitOfWorks\\UnitOfWork.cs",
+              "RelativeToolTip": "InterviewManagementSystem.Infrastructure\\UnitOfWorks\\UnitOfWork.cs",
+              "ViewState": "AgIAAG8AAAAAAAAAAAAAAIEAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-06T16:14:11.027Z",
+              "WhenOpened": "2024-10-08T16:05:24.884Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "InterviewScheduleController.cs",
-              "DocumentMoniker": "G:\\FSA\\Project\\Interview Management System\\Source code\\IMS-Server\\InterviewManagementSystem\\InterviewManagementSystem.API\\Controllers\\InterviewScheduleController.cs",
-              "RelativeDocumentMoniker": "InterviewManagementSystem.API\\Controllers\\InterviewScheduleController.cs",
-              "ToolTip": "G:\\FSA\\Project\\Interview Management System\\Source code\\IMS-Server\\InterviewManagementSystem\\InterviewManagementSystem.API\\Controllers\\InterviewScheduleController.cs",
-              "RelativeToolTip": "InterviewManagementSystem.API\\Controllers\\InterviewScheduleController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAsAAAAAAAAAA==",
+              "Title": "LastModifiedDateInterceptor.cs",
+              "DocumentMoniker": "G:\\FSA\\Project\\Interview Management System\\Source code\\IMS-Server\\InterviewManagementSystem\\InterviewManagementSystem.Infrastructure\\Persistences\\Interceptors\\LastModifiedDateInterceptor.cs",
+              "RelativeDocumentMoniker": "InterviewManagementSystem.Infrastructure\\Persistences\\Interceptors\\LastModifiedDateInterceptor.cs",
+              "ToolTip": "G:\\FSA\\Project\\Interview Management System\\Source code\\IMS-Server\\InterviewManagementSystem\\InterviewManagementSystem.Infrastructure\\Persistences\\Interceptors\\LastModifiedDateInterceptor.cs",
+              "RelativeToolTip": "InterviewManagementSystem.Infrastructure\\Persistences\\Interceptors\\LastModifiedDateInterceptor.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-06T15:40:34.219Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "InterviewScheduleCreateUseCase.cs",
-              "DocumentMoniker": "G:\\FSA\\Project\\Interview Management System\\Source code\\IMS-Server\\InterviewManagementSystem\\InterviewManagementSystem.Application\\Features\\InterviewScheduleFeature\\UseCases\\InterviewScheduleCreateUseCase.cs",
-              "RelativeDocumentMoniker": "InterviewManagementSystem.Application\\Features\\InterviewScheduleFeature\\UseCases\\InterviewScheduleCreateUseCase.cs",
-              "ToolTip": "G:\\FSA\\Project\\Interview Management System\\Source code\\IMS-Server\\InterviewManagementSystem\\InterviewManagementSystem.Application\\Features\\InterviewScheduleFeature\\UseCases\\InterviewScheduleCreateUseCase.cs",
-              "RelativeToolTip": "InterviewManagementSystem.Application\\Features\\InterviewScheduleFeature\\UseCases\\InterviewScheduleCreateUseCase.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAhwBQAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-06T15:37:44.333Z",
+              "WhenOpened": "2024-10-08T16:01:01.26Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "InterviewScheduleRetrieveUseCase.cs",
-              "DocumentMoniker": "G:\\FSA\\Project\\Interview Management System\\Source code\\IMS-Server\\InterviewManagementSystem\\InterviewManagementSystem.Application\\Features\\InterviewScheduleFeature\\UseCases\\InterviewScheduleRetrieveUseCase.cs",
-              "RelativeDocumentMoniker": "InterviewManagementSystem.Application\\Features\\InterviewScheduleFeature\\UseCases\\InterviewScheduleRetrieveUseCase.cs",
-              "ToolTip": "G:\\FSA\\Project\\Interview Management System\\Source code\\IMS-Server\\InterviewManagementSystem\\InterviewManagementSystem.Application\\Features\\InterviewScheduleFeature\\UseCases\\InterviewScheduleRetrieveUseCase.cs",
-              "RelativeToolTip": "InterviewManagementSystem.Application\\Features\\InterviewScheduleFeature\\UseCases\\InterviewScheduleRetrieveUseCase.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAACMAAAAAAAAAAAAAAA==",
+              "Title": "InterviewManagementSystemContext.cs",
+              "DocumentMoniker": "G:\\FSA\\Project\\Interview Management System\\Source code\\IMS-Server\\InterviewManagementSystem\\InterviewManagementSystem.Infrastructure\\Persistences\\InterviewManagementSystemContext.cs",
+              "RelativeDocumentMoniker": "InterviewManagementSystem.Infrastructure\\Persistences\\InterviewManagementSystemContext.cs",
+              "ToolTip": "G:\\FSA\\Project\\Interview Management System\\Source code\\IMS-Server\\InterviewManagementSystem\\InterviewManagementSystem.Infrastructure\\Persistences\\InterviewManagementSystemContext.cs",
+              "RelativeToolTip": "InterviewManagementSystem.Infrastructure\\Persistences\\InterviewManagementSystemContext.cs",
+              "ViewState": "AgIAAFsAAAAAAAAAAAAcwGoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-06T14:13:57.864Z",
+              "WhenOpened": "2024-10-08T15:59:59.42Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "InterviewScheduleFacade.cs",
-              "DocumentMoniker": "G:\\FSA\\Project\\Interview Management System\\Source code\\IMS-Server\\InterviewManagementSystem\\InterviewManagementSystem.Application\\Features\\InterviewScheduleFeature\\InterviewScheduleFacade.cs",
-              "RelativeDocumentMoniker": "InterviewManagementSystem.Application\\Features\\InterviewScheduleFeature\\InterviewScheduleFacade.cs",
-              "ToolTip": "G:\\FSA\\Project\\Interview Management System\\Source code\\IMS-Server\\InterviewManagementSystem\\InterviewManagementSystem.Application\\Features\\InterviewScheduleFeature\\InterviewScheduleFacade.cs",
-              "RelativeToolTip": "InterviewManagementSystem.Application\\Features\\InterviewScheduleFeature\\InterviewScheduleFacade.cs",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAAABwAAABRAAAAAAAAAA==",
+              "Title": "JobAggregate.cs",
+              "DocumentMoniker": "G:\\FSA\\Project\\Interview Management System\\Source code\\IMS-Server\\InterviewManagementSystem\\InterviewManagementSystem.Domain\\Aggregates\\JobAggregate.cs",
+              "RelativeDocumentMoniker": "InterviewManagementSystem.Domain\\Aggregates\\JobAggregate.cs",
+              "ToolTip": "G:\\FSA\\Project\\Interview Management System\\Source code\\IMS-Server\\InterviewManagementSystem\\InterviewManagementSystem.Domain\\Aggregates\\JobAggregate.cs",
+              "RelativeToolTip": "InterviewManagementSystem.Domain\\Aggregates\\JobAggregate.cs",
+              "ViewState": "AgIAABcAAAAAAAAAAAA7wCcAAAA+AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-06T14:07:57.832Z",
+              "WhenOpened": "2024-10-08T15:57:36.89Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "BaseEntity.cs",
+              "DocumentMoniker": "G:\\FSA\\Project\\Interview Management System\\Source code\\IMS-Server\\InterviewManagementSystem\\InterviewManagementSystem.Domain\\Entities\\BaseEntity.cs",
+              "RelativeDocumentMoniker": "InterviewManagementSystem.Domain\\Entities\\BaseEntity.cs",
+              "ToolTip": "G:\\FSA\\Project\\Interview Management System\\Source code\\IMS-Server\\InterviewManagementSystem\\InterviewManagementSystem.Domain\\Entities\\BaseEntity.cs",
+              "RelativeToolTip": "InterviewManagementSystem.Domain\\Entities\\BaseEntity.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAuwAwAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-08T15:56:02.559Z",
               "EditorCaption": ""
             }
           ]

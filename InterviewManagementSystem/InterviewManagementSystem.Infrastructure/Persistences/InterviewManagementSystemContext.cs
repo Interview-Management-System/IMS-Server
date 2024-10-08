@@ -1,4 +1,5 @@
-﻿using InterviewManagementSystem.Domain.Entities.AppUsers;
+﻿using InterviewManagementSystem.Domain.Entities;
+using InterviewManagementSystem.Domain.Entities.AppUsers;
 using InterviewManagementSystem.Domain.Entities.Interviews;
 using InterviewManagementSystem.Domain.Entities.Jobs;
 using InterviewManagementSystem.Domain.Entities.MasterData;
@@ -71,11 +72,15 @@ public partial class InterviewManagementSystemContext : IdentityDbContext<AppUse
     {
         if (optionsBuilder.IsConfigured == false)
         {
+
+            const string connectionString = "Host=localhost;Database=InterviewManagementSystem;Username=postgres;Password=sa";
+
             optionsBuilder
-                .UseNpgsql("Host=localhost;Database=InterviewManagementSystem;Username=postgres;Password=sa")
+                .UseNpgsql(connectionString)
                 .AddInterceptors(new CustomCommandInterceptor());
 
         }
+        //optionsBuilder.AddInterceptors();
     }
 
 
@@ -94,5 +99,23 @@ public partial class InterviewManagementSystemContext : IdentityDbContext<AppUse
         OnModelCreatingPartial(modelBuilder);
     }
 
+
+
+
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+
+        var editedEntities = ChangeTracker.Entries().Where(E => E.State == EntityState.Modified).ToList();
+
+
+        if (editedEntities.Count > 0 && editedEntities.All(ae => ae.Entity is BaseEntity))
+            editedEntities.ForEach(E => E.Property(nameof(BaseEntity.UpdateAt)).CurrentValue = DateTime.Now);
+
+
+        return base.SaveChangesAsync(cancellationToken);
+    }
+
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+
 }

@@ -6,6 +6,7 @@ namespace InterviewManagementSystem.Application.Mappers;
 
 public sealed class InterviewScheduleMappingProfile : Profile
 {
+
     public InterviewScheduleMappingProfile()
     {
         CreateMap<PageResult<InterviewSchedule>, PageResult<InterviewScheduleForRetrieveDTO>>()
@@ -31,9 +32,7 @@ public sealed class InterviewScheduleMappingProfile : Profile
         CreateMap<InterviewSchedule, InterviewScheduleForDetailRetrieveDTO>().ReverseMap();
 
 
-        CreateMap<InterviewSchedule, InterviewScheduleForCreateDTO>()
-             .ForMember(dest => dest.StartHour, opt => opt.MapFrom(src => src.HourPeriod!.StartHour))
-             .ForMember(dest => dest.EndHour, opt => opt.MapFrom(src => src.HourPeriod!.EndHour))
+        CreateMap<InterviewScheduleForCreateDTO, InterviewSchedule>()
             .ReverseMap();
 
     }
