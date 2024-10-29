@@ -1,4 +1,5 @@
 ﻿using InterviewManagementSystem.Application.DTOs.InterviewScheduleDTOs;
+using InterviewManagementSystem.Domain.CustomClasses.EntityData.InterviewData;
 using InterviewManagementSystem.Domain.Entities.Interviews;
 using InterviewManagementSystem.Domain.Paginations;
 
@@ -13,27 +14,45 @@ public sealed class InterviewScheduleMappingProfile : Profile
             .ReverseMap();
 
 
-        CreateMap<InterviewSchedule, InterviewScheduleForRetrieveDTO>()
-            .ForMember(dest => dest.Schedule, opt => opt.MapFrom(src =>
-                                                                        src.ScheduleTime!.Value.ToVieFormat()
-                                                                        + " "
-                                                                        + src.HourPeriod!.StartHour.ToNewFormat()
-                                                                        + " - "
-                                                                        + src.HourPeriod!.EndHour.ToNewFormat()))
+        // Base mapping for interview
+        CreateMap<InterviewSchedule, BaseInterviewSchedule>()
+        .ForMember(dest => dest.Job, opt => opt.MapFrom(src => src.Job!.Title))
+        .ForMember(dest => dest.CandidateName, opt => opt.MapFrom(src => src.Candidate!.UserName))
+        .ForMember(dest => dest.Schedule, opt => opt.MapFrom(src => src.ScheduleTime!.Value.ToVieFormat()))
+        .ForMember(dest => dest.Interviewers, opt => opt.MapFrom(src => src.Interviewers.Select(u => u.UserName).ToList()))
+        .ForMember(dest => dest.Result, opt => opt.MapFrom(src => src.InterviewResultId!.Value.GetInterviewResultNameById()))
+        .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.InterviewScheduleStatusId!.Value.GetInterviewStatusNameById()))
+        .ReverseMap();
 
-            .ForMember(dest => dest.Job, opt => opt.MapFrom(src => src.Job!.Title))
-            .ForMember(dest => dest.CandidateName, opt => opt.MapFrom(src => src.Candidate!.UserName))
-            .ForMember(dest => dest.Interviewers, opt => opt.MapFrom(src => src.Interviewers.Select(u => u.UserName).ToList()))
-            .ForMember(dest => dest.Result, opt => opt.MapFrom(src => src.InterviewResultId!.Value.GetInterviewResultNameById()))
-            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.InterviewScheduleStatusId!.Value.GetInterviewStatusNameById()))
+
+        CreateMap<InterviewSchedule, InterviewScheduleForRetrieveDTO>()
+            .IncludeBase<InterviewSchedule, BaseInterviewSchedule>()
+            .ForMember(dest => dest.EndHour, opt => opt.MapFrom(src => src.HourPeriod!.EndHour.ToNewFormat()))
+            .ForMember(dest => dest.StartHour, opt => opt.MapFrom(src => src.HourPeriod!.StartHour.ToNewFormat()))
             .ReverseMap();
 
 
-        CreateMap<InterviewSchedule, InterviewScheduleForDetailRetrieveDTO>().ReverseMap();
+        CreateMap<InterviewSchedule, InterviewScheduleForDetailRetrieveDTO>()
+            .IncludeBase<InterviewSchedule, BaseInterviewSchedule>()
+            .ForMember(dest => dest.EndHour, opt => opt.MapFrom(src => src.HourPeriod!.EndHour.ToString()))
+            .ForMember(dest => dest.StartHour, opt => opt.MapFrom(src => src.HourPeriod!.StartHour.ToString()))
+            .ReverseMap();
 
 
         CreateMap<InterviewScheduleForCreateDTO, InterviewSchedule>()
             .ReverseMap();
 
+
+        CreateMap<InterviewScheduleForCreateDTO, DataForCreateInterview>()
+            .ForMember(dest => dest.StartHourString, opt => opt.MapFrom(src => src.StartHour))
+            .ForMember(dest => dest.EndHourString, opt => opt.MapFrom(src => src.EndHour))
+            .ReverseMap();
+
+
+        CreateMap<InterviewScheduleForUpdateDTO, DataForUpdateInterview>()
+            .ForMember(dest => dest.StartHourString, opt => opt.MapFrom(src => src.StartHour))
+            .ForMember(dest => dest.EndHourString, opt => opt.MapFrom(src => src.EndHour))
+            .ForMember(dest => dest.CandidateStatusId, opt => opt.MapFrom(src => (short)src.CandidateStatusId))
+            .ReverseMap();
     }
 }

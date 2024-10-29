@@ -1,9 +1,11 @@
-﻿using InterviewManagementSystem.Domain.Enums;
+﻿using InterviewManagementSystem.Domain.Aggregates;
+using InterviewManagementSystem.Domain.CustomClasses;
+using InterviewManagementSystem.Domain.Enums;
 
 namespace InterviewManagementSystem.Domain.Entities.Offers;
 
 
-public partial class Offer : BaseEntity
+public partial class Offer : BaseEntity, IAggregate<Guid>
 {
     public string? Note { get; set; }
 
@@ -55,8 +57,10 @@ public partial class Offer : BaseEntity
 
     public virtual AppUser? UpdatedByNavigation { get; set; }
 
+    public virtual CandidateOfferStatus CandidateOfferStatus { get; set; } = null!;
 
-    public Offer()
+
+    private Offer()
     {
         GenerateId();
     }
@@ -69,16 +73,65 @@ public partial class Offer
 {
 
 
-    public void GenerateId()
+    private void GenerateId()
     {
         Id = Guid.NewGuid();
     }
 
 
+    public void SetCandidateOfferStatus(CandidateOfferStatus candidateOfferStatus)
+    {
+        CandidateOfferStatus = candidateOfferStatus;
+    }
 
-    public void ChangeStatus(OfferStatusEnum offerStatusEnum)
+
+
+    public void SetStatus(OfferStatusEnum offerStatusEnum)
     {
         OfferStatusId = (short)offerStatusEnum;
     }
+
+
+
+    public static Offer Create(DataForCreateOffer dataToCreate)
+    {
+
+        var associatedCandidate = dataToCreate.AssociatedCandidate;
+        var associatedInterviewSchedule = dataToCreate.AssociatedInterviewSchedule;
+
+
+        var newOffer = new Offer()
+        {
+            Note = dataToCreate.Note,
+            LevelId = dataToCreate.LevelId,
+            ApproverId = dataToCreate.ApproverId,
+            CandidateId = dataToCreate.CandidateId,
+            DueDate = dataToCreate.DueDate,
+            PositionId = dataToCreate.PositionId,
+            DepartmentId = dataToCreate.DepartmentId,
+            BasicSalary = dataToCreate.BasicSalary,
+            ContractTypeId = dataToCreate.ContractTypeId,
+            RecruiterOwnerId = dataToCreate.RecruiterOwnerId,
+            InterviewScheduleId = dataToCreate.InterviewScheduleId,
+            DatePeriod = dataToCreate.DatePeriod,
+            Candidate = associatedCandidate,
+            InterviewSchedule = associatedInterviewSchedule,
+        };
+
+
+        var candidateOfferStatus = CandidateOfferStatus.Create(dataToCreate.CandidateId, newOffer.Id);
+
+        // Ensure transactional business logic
+        associatedInterviewSchedule.SetOffer(newOffer);
+        newOffer.SetCandidateOfferStatus(candidateOfferStatus);
+        newOffer.SetStatus(OfferStatusEnum.WaitingForApproval);
+        associatedCandidate.AddCandidateOfferStatus(candidateOfferStatus);
+
+
+        return newOffer;
+    }
+
+
+
 
 }

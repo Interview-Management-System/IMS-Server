@@ -32,7 +32,7 @@ public sealed class JobStatusUseCase(IUnitOfWork unitOfWork)
         ArgumentNullException.ThrowIfNull(jobFoundById, "Job not found to save draft");
         ApplicationException.ThrowIfGetDeletedRecord(jobFoundById.IsDeleted);
 
-        jobFoundById.SaveDraft();
+        jobFoundById.SaveAsDraft();
 
         bool deleteSuccess = await _unitOfWork.SaveChangesAsync();
         ApplicationException.ThrowIfOperationFail(deleteSuccess, "Fail to save draft");

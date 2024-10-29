@@ -33,6 +33,15 @@ public sealed class UserController : ControllerBase
 
 
 
+    [HttpGet("list-candidate")]
+    public async Task<IActionResult> GetListCandidateAsync()
+    {
+        var apiResponse = await _userFacade.GetListUserAsync();
+        return Ok(apiResponse);
+    }
+
+
+
     [HttpGet("list-paging")]
     public async Task<IActionResult> GetListUserPagingAsync(string? searchName, RoleEnum? roleId, int pageSize = 5, int pageIndex = 1)
     {
@@ -88,7 +97,7 @@ public sealed class UserController : ControllerBase
 
 
     [HttpPatch("candidate-set-status")]
-    public async Task<IActionResult> BanCandidateAsync([FromQuery] Guid id, [FromQuery] CandidateStatusEnum candidateStatusEnum)
+    public async Task<IActionResult> SetCandidateStatusAsync([FromQuery] Guid id, [FromQuery] CandidateStatusEnum candidateStatusEnum)
     {
         var apiResponse = await _userFacade.SetCandidateStatus(id, candidateStatusEnum);
         return Ok(apiResponse);

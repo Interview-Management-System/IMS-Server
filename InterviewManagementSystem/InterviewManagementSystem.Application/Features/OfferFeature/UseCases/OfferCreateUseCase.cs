@@ -1,4 +1,6 @@
 ﻿using InterviewManagementSystem.Application.DTOs.OfferDTOs;
+using InterviewManagementSystem.Domain.Entities.AppUsers;
+using InterviewManagementSystem.Domain.Entities.Interviews;
 using InterviewManagementSystem.Domain.Entities.Offers;
 
 namespace InterviewManagementSystem.Application.Features.OfferFeature.UseCases;
@@ -11,20 +13,38 @@ public sealed class OfferCreateUseCase : BaseUseCase
     }
 
 
-
-
     public async Task<string> CreateOfferAsync(OfferForCreateDTO offerForCreateDTO)
     {
 
-        // create need add interview id
+        var candidate = await _unitOfWork.GetBaseRepository<Candidate>()
+            .GetWithInclude(c => c.Id == offerForCreateDTO.CandidateId, isTracking: true)
+            .SingleOrDefaultAsync();
 
-        var offer = _mapper.Map<Offer>(offerForCreateDTO);
+        ArgumentNullException.ThrowIfNull(candidate, "Candidate not found");
 
-        await _unitOfWork.OfferRepository.AddAsync(offer);
+
+
+        var interviewSchedule = await _unitOfWork
+            .GetBaseRepository<InterviewSchedule>()
+            .GetByIdAsync(offerForCreateDTO.InterviewScheduleId, true);
+
+        ArgumentNullException.ThrowIfNull(interviewSchedule, "Interview schedule not found");
+
+
+
+        var dataForCreateOffer = _mapper.Map<DataForCreateOffer>(offerForCreateDTO);
+        dataForCreateOffer.AssociatedCandidate = candidate;
+        dataForCreateOffer.AssociatedInterviewSchedule = interviewSchedule;
+
+
+        var newOffer = Offer.Create(dataForCreateOffer);
+
+
+        await _unitOfWork.OfferRepository.AddAsync(newOffer);
         bool createSuccess = await _unitOfWork.SaveChangesAsync();
 
-        ApplicationException.ThrowIfOperationFail(createSuccess, "Create offer failed");
 
+        ApplicationException.ThrowIfOperationFail(createSuccess, "Create offer failed");
         return "Offer created successfully";
     }
 }

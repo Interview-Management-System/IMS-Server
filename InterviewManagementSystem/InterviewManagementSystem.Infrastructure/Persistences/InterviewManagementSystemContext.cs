@@ -5,11 +5,11 @@ using InterviewManagementSystem.Domain.Entities.Jobs;
 using InterviewManagementSystem.Domain.Entities.MasterData;
 using InterviewManagementSystem.Domain.Entities.Offers;
 using InterviewManagementSystem.Infrastructure.Persistences.EntityConfigurations;
-using InterviewManagementSystem.Infrastructure.Persistences.Interceptors;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace InterviewManagementSystem.Infrastructure.Persistences;
+
 
 public partial class InterviewManagementSystemContext : IdentityDbContext<AppUser, AppRole, Guid>
 {
@@ -22,6 +22,7 @@ public partial class InterviewManagementSystemContext : IdentityDbContext<AppUse
     {
     }
 
+    #region Db Sets
     public virtual DbSet<AppRole> AppRoles { get; set; }
 
     public virtual DbSet<AppRoleClaim> AppRoleClaims { get; set; }
@@ -37,6 +38,8 @@ public partial class InterviewManagementSystemContext : IdentityDbContext<AppUse
     public virtual DbSet<Benefit> Benefits { get; set; }
 
     public virtual DbSet<Candidate> Candidates { get; set; }
+
+    public virtual DbSet<CandidateOfferStatus> CandidateOfferStatuses { get; set; }
 
     public virtual DbSet<CandidateStatus> CandidateStatuses { get; set; }
 
@@ -66,21 +69,27 @@ public partial class InterviewManagementSystemContext : IdentityDbContext<AppUse
 
     public virtual DbSet<Skill> Skills { get; set; }
 
+    #endregion
 
+
+}
+
+
+
+
+/// <summary>
+/// For methods
+/// </summary>
+public partial class InterviewManagementSystemContext
+{
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (optionsBuilder.IsConfigured == false)
         {
-
             const string connectionString = "Host=localhost;Database=InterviewManagementSystem;Username=postgres;Password=sa";
-
-            optionsBuilder
-                .UseNpgsql(connectionString)
-                .AddInterceptors(new CustomCommandInterceptor());
-
+            optionsBuilder.UseNpgsql(connectionString);
         }
-        //optionsBuilder.AddInterceptors();
     }
 
 
@@ -108,14 +117,24 @@ public partial class InterviewManagementSystemContext : IdentityDbContext<AppUse
         var editedEntities = ChangeTracker.Entries().Where(E => E.State == EntityState.Modified).ToList();
 
 
-        if (editedEntities.Count > 0 && editedEntities.All(ae => ae.Entity is BaseEntity))
-            editedEntities.ForEach(E => E.Property(nameof(BaseEntity.UpdateAt)).CurrentValue = DateTime.Now);
+        const string updateAtPropertyName = nameof(BaseEntity.UpdateAt);
+
+        var entitiesWithUpdateAtProperty = editedEntities
+            .Where(ee => ee.Entity.GetType().GetProperty(updateAtPropertyName)?.Name == updateAtPropertyName)
+            .ToList();
+
+
+        if (entitiesWithUpdateAtProperty.Count > 0)
+        {
+            entitiesWithUpdateAtProperty.ForEach(E => E.Property(updateAtPropertyName).CurrentValue = DateTime.Now);
+        }
 
 
         return base.SaveChangesAsync(cancellationToken);
     }
 
-    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 
+
+    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 
 }

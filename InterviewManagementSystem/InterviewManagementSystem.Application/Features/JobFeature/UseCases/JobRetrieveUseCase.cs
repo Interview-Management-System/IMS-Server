@@ -1,8 +1,8 @@
-﻿using InterviewManagementSystem.Application.CustomClasses.Helpers;
-using InterviewManagementSystem.Application.DTOs.JobDTOs;
+﻿using InterviewManagementSystem.Application.DTOs.JobDTOs;
 using InterviewManagementSystem.Domain.Entities.Jobs;
 using InterviewManagementSystem.Domain.Paginations;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace InterviewManagementSystem.Application.Features.JobFeature.UseCases;
 
@@ -53,7 +53,7 @@ public sealed class JobRetrieveUseCase : BaseUseCase
 
         var jobFoundById = await _unitOfWork.JobRepository
             .GetWithInclude(j => j.Id.Equals(id), includeProperties: includeProperties)
-            .FirstOrDefaultAsync();
+            .SingleOrDefaultAsync();
 
 
         ArgumentNullException.ThrowIfNull(jobFoundById, "Job not found to view detail");
@@ -63,6 +63,24 @@ public sealed class JobRetrieveUseCase : BaseUseCase
         {
             Message = "Job detail found",
             Data = _mapper.Map<JobForRetrieveDTO>(jobFoundById)
+        };
+    }
+
+
+
+
+    public async Task<ApiResponse<List<JobOpenForRetrieveDTO>>> GetListOpenJobAsync()
+    {
+
+        Expression<Func<Job, bool>>? filter = j => j.JobStatusId == (short)JobStatusEnum.Open && j.IsDeleted == false;
+
+        var listOpenJob = await _unitOfWork.JobRepository.GetAllAsync(filter);
+
+
+        return new ApiResponse<List<JobOpenForRetrieveDTO>>
+        {
+            Message = listOpenJob.Count > 0 ? string.Empty : "No jobs found to display",
+            Data = _mapper.Map<List<JobOpenForRetrieveDTO>>(listOpenJob)
         };
     }
 }

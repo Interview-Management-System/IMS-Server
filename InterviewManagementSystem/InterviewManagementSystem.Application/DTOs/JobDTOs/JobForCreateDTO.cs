@@ -6,5 +6,6 @@
         public BenefitEnum[] BenefitId { get; set; } = [];
         public LevelEnum[] LevelId { get; set; } = [];
         public string? Description { get; set; }
+        public bool IsSaveAsDraft { get; set; } = true;
     }
 }

@@ -20,6 +20,8 @@ internal sealed class ExceptionHandler : IExceptionHandler
 
 
         int statusCode;
+        Match? match = null;
+
         switch (exception)
         {
             case DomainException:
@@ -27,18 +29,30 @@ internal sealed class ExceptionHandler : IExceptionHandler
                 statusCode = StatusCodes.Status400BadRequest;
                 break;
 
-            case ArgumentNullException:
-                statusCode = StatusCodes.Status404NotFound;
-                Match match = Regex.Match(exception.Message, MESSAGE_PATTERN);
 
-                if (match.Success)
-                    apiResponse.Message = match.Groups[1].Value;
+            case ArgumentNullException:
+
+                statusCode = StatusCodes.Status404NotFound;
+                match = Regex.Match(exception.Message, MESSAGE_PATTERN);
+                break;
+
+
+            case InvalidOperationException:
+
+                statusCode = StatusCodes.Status500InternalServerError;
+                match = Regex.Match(exception.Message, MESSAGE_PATTERN);
                 break;
 
 
             default:
                 statusCode = StatusCodes.Status500InternalServerError;
                 break;
+        }
+
+
+        if (match?.Success == true)
+        {
+            apiResponse.Message = match.Groups[1].Value;
         }
 
         //apiResponse.StatusCode = statusCode;

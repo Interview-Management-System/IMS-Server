@@ -14,8 +14,14 @@ public partial class Benefit
 
 public partial class Benefit
 {
-    public void AssignJob(Job job)
+    public void AddJob(Job job)
     {
         Jobs.Add(job);
+    }
+
+
+    public void RemoveJob(Job job)
+    {
+        Jobs.Remove(job);
     }
 }

@@ -24,7 +24,7 @@ public static class InterviewResultEnumExtension
 
 
 
-    public static string GetInterviewResultName(this InterviewResultEnum status)
+    public static string GetName(this InterviewResultEnum status)
     {
         if (InterviewResultEnumMap.TryGetValue(status, out string? name))
             return name.Trim();
@@ -40,7 +40,7 @@ public static class InterviewResultEnumExtension
         if (Enum.IsDefined(typeof(InterviewResultEnum), status))
         {
             var interviewResult = (InterviewResultEnum)status;
-            return interviewResult.GetInterviewResultName();
+            return interviewResult.GetName();
         }
         throw new ArgumentException($"Invalid Job status ID {status}");
     }

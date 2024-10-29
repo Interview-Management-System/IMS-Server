@@ -103,7 +103,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 
 
 
-    public async Task<T?> GetByIdAsync(object id, bool isTracking = false)
+    public async Task<T?> GetByIdAsync<TId>(TId id, bool isTracking = false)
     {
 
         var entity = await _dbSet.FindAsync(id);
@@ -232,9 +232,9 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 
 
 
-    public IQueryable<T> GetWithInclude(Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, bool canLoadDeleted = false, bool isNoTracking = false, params string[] includeProperties)
+    public IQueryable<T> GetWithInclude(Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, bool canLoadDeleted = false, bool isTracking = false, params string[] includeProperties)
     {
-        IQueryable<T> query = _dbSet;
+        IQueryable<T> query = isTracking ? _dbSet : _dbSet.AsNoTracking();
 
 
         if (filter != null)

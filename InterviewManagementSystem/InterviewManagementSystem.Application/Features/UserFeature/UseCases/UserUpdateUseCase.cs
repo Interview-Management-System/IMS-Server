@@ -26,9 +26,6 @@ public sealed class UserUpdateUseCase : BaseUserUseCase
 
 
         _mapper.Map(userForUpdateDTO, userFoundById);
-        userFoundById.SetUpdateAtIsNow();
-
-
         await UpdateUserRoleAsync(userFoundById, userForUpdateDTO.RoleId);
 
 
@@ -66,10 +63,8 @@ public sealed class UserUpdateUseCase : BaseUserUseCase
 
 
         _mapper.Map(candidateForUpdateDTO, candidate);
-        userFoundById.SetUpdateAtIsNow();
-
-
         await UpdateUserRoleAsync(userFoundById, candidateForUpdateDTO.RoleId);
+
 
 
         var result = await _userManager.UpdateAsync(candidate!);
@@ -92,7 +87,6 @@ public sealed class UserUpdateUseCase : BaseUserUseCase
         ApplicationException.ThrowIfGetDeletedRecord(userFoundById.IsDeleted);
 
 
-        userFoundById.SetUpdateAtIsNow();
         await UpdateUserRoleAsync(userFoundById, roleId);
 
 

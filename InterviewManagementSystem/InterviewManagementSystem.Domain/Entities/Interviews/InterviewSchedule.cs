@@ -1,6 +1,11 @@
-﻿namespace InterviewManagementSystem.Domain.Entities.Interviews;
+﻿using InterviewManagementSystem.Domain.Aggregates;
+using InterviewManagementSystem.Domain.CustomClasses.EntityData.InterviewData;
+using InterviewManagementSystem.Domain.CustomClasses.Utilities;
+using InterviewManagementSystem.Domain.Enums;
 
-public partial class InterviewSchedule : BaseEntity
+namespace InterviewManagementSystem.Domain.Entities.Interviews;
+
+public partial class InterviewSchedule : BaseEntity, IAggregate<Guid>
 {
 
     public string? Title { get; set; }
@@ -45,36 +50,169 @@ public partial class InterviewSchedule : BaseEntity
 
     public virtual AppUser? UpdatedByNavigation { get; set; }
 
-
     public virtual ICollection<AppUser> Interviewers { get; set; } = new List<AppUser>();
+
+    public short? CandidateStatusId { get; set; }
+
+    public virtual CandidateStatus? CandidateStatus { get; set; }
 
 
 
     public InterviewSchedule()
     {
         GenerateId();
+        SetStatus(InterviewStatusEnum.New);
+    }
+
+
+    private void GenerateId()
+    {
+        Id = Guid.NewGuid();
     }
 }
 
 
 
+#region Aggregate methods
 public partial class InterviewSchedule
 {
-    public void GenerateId()
+    public static InterviewSchedule Create(DataForCreateInterview dataForCreateInterview)
     {
-        Id = Guid.NewGuid();
+
+
+
+        var newInterviewSchedule = new InterviewSchedule()
+        {
+            Title = dataForCreateInterview.Title,
+            CandidateId = dataForCreateInterview.CandidateId,
+            ScheduleTime = dataForCreateInterview.ScheduleTime,
+            Note = dataForCreateInterview.Note,
+            Location = dataForCreateInterview.Location,
+            JobId = dataForCreateInterview.JobId,
+            MeetingUrl = dataForCreateInterview.MeetingUrl,
+            RecruiterOwnerId = dataForCreateInterview.RecruiterOwnerId,
+            CandidateStatusId = (short)CandidateStatusEnum.WaitingForInterview,
+        };
+
+
+        var hourPeriod = HourPeriod.CreatePeriod(dataForCreateInterview.StartHourString, dataForCreateInterview.EndHourString);
+
+        newInterviewSchedule.SetHourPeriod(hourPeriod);
+        newInterviewSchedule.SetInterviewers(dataForCreateInterview.Interviews);
+
+        return newInterviewSchedule;
     }
 
 
 
-    public void ClearAllInterviewers()
+
+    public static void Update(InterviewSchedule interviewSchedule, DataForUpdateInterview dataForUpdateInterview)
     {
-        Interviewers.Clear();
+
+
+        interviewSchedule.Note = dataForUpdateInterview.Note;
+        interviewSchedule.Title = dataForUpdateInterview.Title;
+        interviewSchedule.JobId = dataForUpdateInterview.JobId;
+        interviewSchedule.Location = dataForUpdateInterview.Location;
+        interviewSchedule.MeetingUrl = dataForUpdateInterview.MeetingUrl;
+        interviewSchedule.CandidateId = dataForUpdateInterview.CandidateId;
+        interviewSchedule.ScheduleTime = dataForUpdateInterview.ScheduleTime;
+        interviewSchedule.RecruiterOwnerId = dataForUpdateInterview.RecruiterOwnerId;
+        interviewSchedule.CandidateStatusId = dataForUpdateInterview.CandidateStatusId;
+
+
+        var hourPeriod = HourPeriod.CreatePeriod(dataForUpdateInterview.StartHourString, dataForUpdateInterview.EndHourString);
+
+        interviewSchedule.SetHourPeriod(hourPeriod);
+        interviewSchedule.SetInterviewers(dataForUpdateInterview.Interviews);
+
     }
+}
+#endregion
+
+
+
+
+#region Support methods
+public partial class InterviewSchedule
+{
+
+
+    public void MarkAsPassed()
+    {
+        SetResult(InterviewResultEnum.Pass);
+        CandidateStatusId = (short)CandidateStatusEnum.PassedInterview;
+        SetStatus(InterviewStatusEnum.Closed);
+    }
+
+
+
+    public void MarkAsFailed()
+    {
+        SetResult(InterviewResultEnum.Failed);
+        CandidateStatusId = (short)CandidateStatusEnum.FailedInterview;
+        SetStatus(InterviewStatusEnum.Closed);
+    }
+
+
+
+
+
+
 
 
     public void SetInterviewers(List<AppUser> interviewers)
     {
-        Interviewers = interviewers;
+
+        if (interviewers.Count == 0)
+        {
+            Interviewers.Clear();
+            return;
+        }
+
+
+
+        var interviewersToRemove = EntityComparer.GetNonMatchingEntities(Interviewers, interviewers);
+        foreach (var interviewer in interviewersToRemove)
+        {
+            Interviewers.Remove(interviewer);
+            interviewer.RemoveInterviewSchedule(this);
+        }
+
+
+
+        var interviewersToAdd = EntityComparer.GetNonMatchingEntities(interviewers, Interviewers);
+        foreach (var newInterviewer in interviewersToAdd)
+        {
+            Interviewers.Add(newInterviewer);
+            newInterviewer.AddInterviewSchedule(this);
+        }
+
     }
+
+
+    public void SetStatus(InterviewStatusEnum interviewStatusEnum)
+    {
+        InterviewScheduleStatusId = (short)interviewStatusEnum;
+    }
+
+
+    public void SetResult(InterviewResultEnum interviewResultEnum)
+    {
+        InterviewResultId = (short)interviewResultEnum;
+    }
+
+
+    public void SetOffer(Offer offer)
+    {
+        Offer = offer;
+    }
+
+
+    public void SetHourPeriod(HourPeriod hourPeriod)
+    {
+        HourPeriod = hourPeriod;
+    }
+
 }
+#endregion

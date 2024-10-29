@@ -13,11 +13,5 @@
         public DateTime? UpdateAt { get; set; }
 
         public bool IsDeleted { get; set; } = false;
-
-
-        public void SetLastModifiedDateIsNow()
-        {
-            UpdateAt = DateTime.Now;
-        }
     }
 }

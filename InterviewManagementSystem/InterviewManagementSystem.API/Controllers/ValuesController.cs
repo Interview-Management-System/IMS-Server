@@ -1,6 +1,9 @@
 ﻿using InterviewManagementSystem.Domain.Entities.AppUsers;
+using InterviewManagementSystem.Domain.Entities.Interviews;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace InterviewManagementSystem.API.Controllers
 {
@@ -8,21 +11,28 @@ namespace InterviewManagementSystem.API.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
-        UserManager<AppUser> a;
+        UserManager<AppUser> _userManager;
 
         public ValuesController(UserManager<AppUser> a)
         {
-            this.a = a;
+            this._userManager = a;
         }
 
 
 
         [HttpGet]
         //[Authorize(Policy = AuthorizationPolicy.RequiredAdmin)]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            TimeOnly a = new(10, 22, 43);
-            return Ok(a.ToString("HH:mm"));
+
+            var i = new InterviewSchedule();
+
+
+            Stopwatch stopwatch = Stopwatch.StartNew();
+            i.SetInterviewers(await _userManager.Users.ToListAsync());
+
+            stopwatch.Stop();
+            return Ok(stopwatch.ElapsedMilliseconds);
         }
 
 
@@ -33,12 +43,29 @@ namespace InterviewManagementSystem.API.Controllers
 
             return Ok("asdf");
         }
+
+
+        private void Tessss(Test test)
+        {
+            test.MyProperty = 0;
+            test.Candidate.UserName = "ohla";
+        }
     }
 
 
 
 
 
+
+
+
+
+
+    internal struct Test
+    {
+        public int MyProperty { get; set; }
+        public Candidate Candidate { get; set; }
+    }
 }
 
 

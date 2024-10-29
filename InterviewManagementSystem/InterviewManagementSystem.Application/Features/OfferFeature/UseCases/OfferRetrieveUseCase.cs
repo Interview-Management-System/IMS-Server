@@ -21,15 +21,12 @@ public sealed class OfferRetrieveUseCase : BaseUseCase
 
         var filters = FilterHelper.BuildFilters<Offer>(paginationRequest, nameof(Offer.Candidate.UserName));
 
-
         PaginationParameter<Offer> paginationParameter = _mapper.Map<PaginationParameter<Offer>>(paginationRequest);
         paginationParameter.Filters = filters;
 
 
-
         string[] includeProperties = [nameof(Offer.Candidate), nameof(Offer.Approver)];
         var pageResult = await _unitOfWork.OfferRepository.GetByPageWithIncludeAsync(paginationParameter, includeProperties);
-
 
 
         return new ApiResponse<PageResult<OfferForRetrieveDTO>>
@@ -57,7 +54,7 @@ public sealed class OfferRetrieveUseCase : BaseUseCase
 
         var offerFoundById = await _unitOfWork.OfferRepository
            .GetWithInclude(offer => offer.Id.Equals(id), includes)
-           .FirstOrDefaultAsync();
+           .SingleOrDefaultAsync();
 
         ArgumentNullException.ThrowIfNull(offerFoundById, "Offer not found");
 

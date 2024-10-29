@@ -1,4 +1,5 @@
 ﻿using InterviewManagementSystem.Application.DTOs.OfferDTOs;
+using InterviewManagementSystem.Domain.CustomClasses;
 using InterviewManagementSystem.Domain.Entities.Offers;
 using InterviewManagementSystem.Domain.Paginations;
 
@@ -48,6 +49,17 @@ public sealed class OfferMappingProfile : Profile
 
 
         CreateMap<OfferForCreateDTO, Offer>()
+            .ForMember(dest => dest.LevelId, opt => opt.MapFrom(src => (short)src.LevelId))
+            .ForMember(dest => dest.PositionId, opt => opt.MapFrom(src => (short)src.PositionId))
+            .ForPath(dest => dest.DatePeriod!.EndDate, opt => opt.MapFrom(src => src.ContractTo))
+            .ForMember(dest => dest.DepartmentId, opt => opt.MapFrom(src => (short)src.DepartmentId))
+            .ForPath(dest => dest.DatePeriod!.StartDate, opt => opt.MapFrom(src => src.ContractFrom))
+            .ForMember(dest => dest.ContractTypeId, opt => opt.MapFrom(src => (short)src.ContractTypeId))
+            .ReverseMap();
+
+
+
+        CreateMap<OfferForCreateDTO, DataForCreateOffer>()
             .ForMember(dest => dest.LevelId, opt => opt.MapFrom(src => (short)src.LevelId))
             .ForMember(dest => dest.PositionId, opt => opt.MapFrom(src => (short)src.PositionId))
             .ForPath(dest => dest.DatePeriod!.EndDate, opt => opt.MapFrom(src => src.ContractTo))

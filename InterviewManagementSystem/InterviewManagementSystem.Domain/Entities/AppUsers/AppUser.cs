@@ -27,11 +27,17 @@ public partial class AppUser : IdentityUser<Guid>
 
     public Guid? UpdatedBy { get; set; }
 
+
+
+    // k
     public virtual ICollection<AppUserClaim> AppUserClaims { get; set; } = new List<AppUserClaim>();
 
     public virtual ICollection<AppUserLogin> AppUserLogins { get; set; } = new List<AppUserLogin>();
 
     public virtual ICollection<AppUserToken> AppUserTokens { get; set; } = new List<AppUserToken>();
+
+
+
 
     public virtual Candidate? CandidateIdNavigation { get; set; }
 
@@ -41,6 +47,9 @@ public partial class AppUser : IdentityUser<Guid>
 
     public virtual Department? Department { get; set; }
 
+
+
+    // k
     public virtual ICollection<InterviewSchedule> InterviewScheduleCandidates { get; set; } = new List<InterviewSchedule>();
 
     public virtual ICollection<InterviewSchedule> InterviewScheduleCreatedByNavigations { get; set; } = new List<InterviewSchedule>();
@@ -48,17 +57,27 @@ public partial class AppUser : IdentityUser<Guid>
     public virtual ICollection<InterviewSchedule> InterviewScheduleRecruiterOwners { get; set; } = new List<InterviewSchedule>();
 
     public virtual ICollection<InterviewSchedule> InterviewScheduleUpdatedByNavigations { get; set; } = new List<InterviewSchedule>();
+    public virtual ICollection<InterviewSchedule> InterviewSchedules { get; set; } = new List<InterviewSchedule>();
+
+
+
 
     public virtual ICollection<AppUser> InverseCreatedByNavigation { get; set; } = new List<AppUser>();
 
     public virtual ICollection<AppUser> InverseUpdatedByNavigation { get; set; } = new List<AppUser>();
 
-    public virtual ICollection<Job> JobAppUsers { get; set; } = new List<Job>();
+
+
+
+    // k
+    //public virtual ICollection<Job> Jobs { get; set; } = new List<Job>();
 
     public virtual ICollection<Job> JobCreatedByNavigations { get; set; } = new List<Job>();
 
     public virtual ICollection<Job> JobUpdatedByNavigations { get; set; } = new List<Job>();
 
+
+    //
     public virtual ICollection<Offer> OfferApprovers { get; set; } = new List<Offer>();
 
     public virtual ICollection<Offer> OfferCreatedByNavigations { get; set; } = new List<Offer>();
@@ -67,9 +86,11 @@ public partial class AppUser : IdentityUser<Guid>
 
     public virtual ICollection<Offer> OfferUpdatedByNavigations { get; set; } = new List<Offer>();
 
+
+
+
     public virtual AppUser? UpdatedByNavigation { get; set; }
 
-    public virtual ICollection<InterviewSchedule> InterviewSchedules { get; set; } = new List<InterviewSchedule>();
 
     public virtual ICollection<AppRole> Roles { get; set; } = new List<AppRole>();
 
@@ -119,8 +140,15 @@ public partial class AppUser
     }
 
 
-    public void SetUpdateAtIsNow()
+
+    public void AddInterviewSchedule(InterviewSchedule interviewSchedule)
     {
-        UpdateAt = DateTime.Now;
+        InterviewSchedules.Add(interviewSchedule);
+    }
+
+
+    public void RemoveInterviewSchedule(InterviewSchedule interviewSchedule)
+    {
+        InterviewSchedules.Remove(interviewSchedule);
     }
 }

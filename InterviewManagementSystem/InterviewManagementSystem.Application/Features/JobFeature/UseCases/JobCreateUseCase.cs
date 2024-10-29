@@ -1,6 +1,6 @@
-﻿using InterviewManagementSystem.Application.DTOs.JobDTOs;
-using InterviewManagementSystem.Domain.Aggregates;
-using InterviewManagementSystem.Domain.CustomClasses;
+﻿using InterviewManagementSystem.Application.CustomClasses.Utilities;
+using InterviewManagementSystem.Application.DTOs.JobDTOs;
+using InterviewManagementSystem.Domain.CustomClasses.EntityData.JobData;
 using InterviewManagementSystem.Domain.Entities.Jobs;
 
 namespace InterviewManagementSystem.Application.Features.JobFeature.UseCases;
@@ -10,18 +10,27 @@ public sealed class JobCreateUseCase : BaseUseCase
 
     public JobCreateUseCase(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
     {
-
+        MasterDataUtility.UnitOfWork = unitOfWork;
     }
 
 
     internal async Task<string> CreateNewJobAsync(JobForCreateDTO jobForCreateDTO)
     {
 
-        JobMasterData jobMasterData = _mapper.Map<JobMasterData>(jobForCreateDTO);
+        var levelList = await MasterDataUtility.GetListLevelByIdList(jobForCreateDTO.LevelId);
+        var benefitList = await MasterDataUtility.GetListBenefitByIdList(jobForCreateDTO.BenefitId);
+        var skillList = await MasterDataUtility.GetListSkillByIdList(jobForCreateDTO.RequiredSkillId);
 
 
-        var jobAggregate = new JobAggregate(_mapper.Map<Job>(jobForCreateDTO), _unitOfWork);
-        var newJob = await jobAggregate.CreateJobAsync(jobMasterData);
+        DataForCreateJob dataForCreateJob = _mapper.Map<DataForCreateJob>(jobForCreateDTO, opt =>
+        {
+            opt.Items[nameof(Job.Skills)] = skillList;
+            opt.Items[nameof(Job.Levels)] = levelList;
+            opt.Items[nameof(Job.Benefits)] = benefitList;
+        });
+
+
+        Job newJob = Job.Create(dataForCreateJob);
 
 
         await _unitOfWork.JobRepository.AddAsync(newJob);

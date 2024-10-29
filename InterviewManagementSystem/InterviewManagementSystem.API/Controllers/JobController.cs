@@ -22,13 +22,12 @@ public class JobController : ControllerBase
 
 
 
-    [HttpGet("list")]
-    public async Task<IActionResult> GetListUserAsync()
+    [HttpGet("list-open-job")]
+    public async Task<IActionResult> GetListOpenJobAsync()
     {
-
-        return Ok("");
+        var apiResponse = await _jobFacade.GetListOpenJobAsync();
+        return Ok(apiResponse);
     }
-
 
 
 

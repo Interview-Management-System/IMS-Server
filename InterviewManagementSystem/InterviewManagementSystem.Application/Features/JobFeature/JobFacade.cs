@@ -24,6 +24,12 @@ public sealed class JobFacade
     }
 
 
+    public async Task<ApiResponse<List<JobOpenForRetrieveDTO>>> GetListOpenJobAsync()
+    {
+        return await JobRetrieveUseCase.GetListOpenJobAsync();
+    }
+
+
     public async Task<ApiResponse<PageResult<JobForRetrieveDTO>>> GetListJobPagingAsync(PaginationRequest paginationRequest)
     {
         return await JobRetrieveUseCase.GetListJobPagingAsync(paginationRequest);

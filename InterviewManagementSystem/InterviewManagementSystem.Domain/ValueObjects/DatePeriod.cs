@@ -10,7 +10,7 @@ public sealed record DatePeriod
 
 
 
-    public DatePeriod()
+    private DatePeriod()
     {
 
     }

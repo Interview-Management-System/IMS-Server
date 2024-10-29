@@ -1,8 +1,7 @@
-﻿using InterviewManagementSystem.Application.DTOs.JobDTOs;
-using InterviewManagementSystem.Domain.Aggregates;
-using InterviewManagementSystem.Domain.CustomClasses;
+﻿using InterviewManagementSystem.Application.CustomClasses.Utilities;
+using InterviewManagementSystem.Application.DTOs.JobDTOs;
+using InterviewManagementSystem.Domain.CustomClasses.EntityData.JobData;
 using InterviewManagementSystem.Domain.Entities.Jobs;
-using Microsoft.EntityFrameworkCore;
 
 namespace InterviewManagementSystem.Application.Features.JobFeature.UseCases;
 
@@ -12,6 +11,7 @@ public sealed class JobUpdateUseCase : BaseUseCase
 
     public JobUpdateUseCase(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
     {
+        MasterDataUtility.UnitOfWork = unitOfWork;
     }
 
 
@@ -19,27 +19,37 @@ public sealed class JobUpdateUseCase : BaseUseCase
     internal async Task<string> UpdateJobAsync(JobForUpdateDTO jobForUpdateDTO)
     {
 
-        string[] includeProperties = [nameof(Job.Skills), nameof(Job.Levels), nameof(Job.Benefits)];
+        const string jobSkillString = nameof(Job.Skills);
+        const string jobLevelString = nameof(Job.Levels);
+        const string jobBenefitString = nameof(Job.Benefits);
+
+        string[] includeProperties = [jobSkillString, jobLevelString, jobBenefitString];
 
 
-        var jobFoundById = await _unitOfWork.JobRepository
-            .GetWithInclude(j => j.Id.Equals(jobForUpdateDTO.Id), includeProperties: includeProperties)
-            .FirstOrDefaultAsync();
-
+        var jobFoundById = await _unitOfWork
+            .GetBaseRepository<Job>()
+            .GetWithInclude(j => j.Id.Equals(jobForUpdateDTO.Id), includeProperties: includeProperties, isTracking: true)
+            .SingleOrDefaultAsync();
 
         ArgumentNullException.ThrowIfNull(jobFoundById, "Job not found to update");
         ApplicationException.ThrowIfGetDeletedRecord(jobFoundById.IsDeleted);
 
 
-        _mapper.Map(jobForUpdateDTO, jobFoundById);
-        JobMasterData jobMasterData = _mapper.Map<JobMasterData>(jobForUpdateDTO);
+
+        var levelList = await MasterDataUtility.GetListLevelByIdList(jobForUpdateDTO.LevelId);
+        var benefitList = await MasterDataUtility.GetListBenefitByIdList(jobForUpdateDTO.BenefitId);
+        var skillList = await MasterDataUtility.GetListSkillByIdList(jobForUpdateDTO.RequiredSkillId);
 
 
-        var jobAggregate = new JobAggregate(jobFoundById, _unitOfWork);
-        await jobAggregate.UpdateJobAsync(jobMasterData);
+        DataForUpdateJob dataForUpdateJob = _mapper.Map<DataForUpdateJob>(jobForUpdateDTO, opt =>
+        {
+            opt.Items[jobSkillString] = skillList;
+            opt.Items[jobLevelString] = levelList;
+            opt.Items[jobBenefitString] = benefitList;
+        });
 
 
-        _unitOfWork.JobRepository.Update(jobFoundById);
+        Job.Update(jobFoundById, dataForUpdateJob);
 
 
         bool updateSuccess = await _unitOfWork.SaveChangesAsync();

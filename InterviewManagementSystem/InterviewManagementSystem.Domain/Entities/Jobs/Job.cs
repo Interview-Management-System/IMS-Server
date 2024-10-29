@@ -1,7 +1,12 @@
-﻿using InterviewManagementSystem.Domain.Enums;
+﻿using InterviewManagementSystem.Domain.Aggregates;
+using InterviewManagementSystem.Domain.CustomClasses.EntityData.JobData;
+using InterviewManagementSystem.Domain.CustomClasses.Utilities;
+using InterviewManagementSystem.Domain.Enums;
 
 namespace InterviewManagementSystem.Domain.Entities.Jobs;
 
+
+#region Poperties
 public partial class Job : BaseEntity
 {
     public string? Title { get; set; }
@@ -14,15 +19,9 @@ public partial class Job : BaseEntity
 
     public DatePeriod? DatePeriod { get; set; }
 
-    public Guid? AppUserId { get; set; }
-
     public short? JobStatusId { get; set; }
 
-    public virtual AppUser? AppUser { get; set; }
-
     public virtual AppUser? CreatedByNavigation { get; set; }
-
-    public virtual ICollection<InterviewSchedule> InterviewSchedules { get; set; } = new List<InterviewSchedule>();
 
     public virtual JobStatus? JobStatus { get; set; }
 
@@ -34,24 +33,112 @@ public partial class Job : BaseEntity
 
     public virtual ICollection<Skill> Skills { get; set; } = new List<Skill>();
 
+    public virtual ICollection<Candidate> Candidates { get; set; } = new List<Candidate>();
+
+    public virtual ICollection<InterviewSchedule> InterviewSchedules { get; set; } = new List<InterviewSchedule>();
 
 
-    public Job()
+
+    private Job()
     {
-        SaveDraft();
         GenerateId();
     }
-}
 
 
 
-
-
-public partial class Job
-{
-    public void GenerateId()
+    private void GenerateId()
     {
         Id = Guid.NewGuid();
+    }
+}
+#endregion
+
+
+
+
+
+#region Transactional methods
+public partial class Job : IAggregate<Guid>
+{
+
+
+    public static Job Create(DataForCreateJob dataForCreateJob)
+    {
+
+        var salaryRange = SalaryRange.Create(dataForCreateJob.From, dataForCreateJob.To);
+        var datePeriod = DatePeriod.Create(dataForCreateJob.StartDate, dataForCreateJob.EndDate);
+
+
+        var newJob = new Job()
+        {
+            DatePeriod = datePeriod,
+            SalaryRange = salaryRange,
+            Title = dataForCreateJob.Title,
+            Description = dataForCreateJob.Description,
+            WorkingAddress = dataForCreateJob.WorkingAddress,
+        };
+
+
+
+        if (dataForCreateJob.IsSaveAsDraft)
+        {
+            newJob.SaveAsDraft();
+        }
+        else
+        {
+            newJob.OpenJob();
+        }
+
+
+        newJob.AddLevels(dataForCreateJob.Levels);
+        newJob.AddSkills(dataForCreateJob.Skills);
+        newJob.AddBenefits(dataForCreateJob.Benefits);
+
+
+        return newJob;
+    }
+
+
+
+
+    public static void Update(Job jobToUpdate, DataForUpdateJob dataForCreateJob)
+    {
+
+        var salaryRange = SalaryRange.Create(dataForCreateJob.From, dataForCreateJob.To);
+        var datePeriod = DatePeriod.Create(dataForCreateJob.StartDate, dataForCreateJob.EndDate);
+
+
+        jobToUpdate.SetDatePeriod(datePeriod);
+        jobToUpdate.SetSalaryRange(salaryRange);
+
+
+        jobToUpdate.Title = dataForCreateJob.Title;
+        jobToUpdate.Description = dataForCreateJob.Description;
+        jobToUpdate.WorkingAddress = dataForCreateJob.WorkingAddress;
+
+
+        jobToUpdate.AddLevels(dataForCreateJob.Levels);
+        jobToUpdate.AddSkills(dataForCreateJob.Skills);
+        jobToUpdate.AddBenefits(dataForCreateJob.Benefits);
+    }
+
+
+}
+#endregion
+
+
+
+
+
+#region Support methods
+public partial class Job
+{
+
+
+
+    public void AddCandidate(Candidate candidate)
+    {
+        Candidates.Add(candidate);
     }
 
 
@@ -67,108 +154,124 @@ public partial class Job
     }
 
 
-    public void ClearSkills()
-    {
-        Skills.Clear();
-    }
-
-
-    public void ClearLevels()
-    {
-        Levels.Clear();
-    }
-
-
-    public void ClearBenefits()
-    {
-        Benefits.Clear();
-    }
-
 
 
     public void AddSkills(List<Skill> skills)
     {
-        ClearSkills();
 
-        if (skills.Count > 0)
+        if (skills.Count == 0)
         {
-            Skills = skills;
+            Skills.Clear();
+            return;
+        }
 
-            foreach (var skill in skills)
-            {
-                skill.AssignJob(this);
-            }
+
+
+        var skillsToRemove = EntityComparer.GetNonMatchingEntities(Skills, skills);
+        foreach (var skill in skillsToRemove)
+        {
+            Skills.Remove(skill);
+            skill.RemoveJob(this);
+        }
+
+
+
+        var skillsToAdd = EntityComparer.GetNonMatchingEntities(skills, Skills);
+        foreach (var skill in skillsToAdd)
+        {
+            Skills.Add(skill);
+            skill.AddJob(this);
         }
     }
+
 
 
 
     public void AddLevels(List<Level> levels)
     {
-        ClearLevels();
 
-        if (levels.Count > 0)
+
+        if (levels.Count == 0)
         {
-            Levels = levels;
+            Levels.Clear();
+            return;
+        }
 
-            foreach (var level in levels)
-            {
-                level.AssignJob(this);
-            }
+
+        var levelsToRemove = EntityComparer.GetNonMatchingEntities(Levels, levels);
+        foreach (var level in levelsToRemove)
+        {
+            Levels.Remove(level);
+            level.RemoveJob(this);
+        }
+
+
+
+        var levelsToAdd = EntityComparer.GetNonMatchingEntities(levels, Levels);
+        foreach (var newLevel in levelsToAdd)
+        {
+            Levels.Add(newLevel);
+            newLevel.AddJob(this);
         }
     }
+
+
 
 
     public void AddBenefits(List<Benefit> benefits)
     {
-        ClearBenefits();
-
-        if (benefits.Count > 0)
+        if (benefits.Count == 0)
         {
-            Benefits = benefits;
-
-            foreach (var benefit in benefits)
-            {
-                benefit.AssignJob(this);
-            }
+            Benefits.Clear();
+            return;
         }
+
+
+
+        var benefitsToRemove = EntityComparer.GetNonMatchingEntities(Benefits, benefits);
+        foreach (var benefit in benefitsToRemove)
+        {
+            Benefits.Remove(benefit);
+            benefit.RemoveJob(this);
+        }
+
+
+
+        var benefitsToAdd = EntityComparer.GetNonMatchingEntities(benefits, Benefits);
+        foreach (var benefit in benefitsToAdd)
+        {
+            Benefits.Add(benefit);
+            benefit.AddJob(this);
+        }
+
     }
 
 
-    public bool HasLevel(short levelId)
+
+
+
+    public void SaveAsDraft()
     {
-        return Levels.Any(l => l.Id == levelId);
-    }
-
-
-    public bool HasSkill(short skillId)
-    {
-        return Skills.Any(l => l.Id == skillId);
-    }
-
-
-    public bool HasBenefit(short benefitId)
-    {
-        return Benefits.Any(l => l.Id == benefitId);
-    }
-
-
-    public void SaveDraft()
-    {
-        JobStatusId = (short)JobStatusEnum.Draft;
+        SetJobStatus(JobStatusEnum.Draft);
     }
 
 
     public void OpenJob()
     {
-        JobStatusId = (short)JobStatusEnum.Open;
+        SetJobStatus(JobStatusEnum.Open);
     }
 
 
 
     public void CloseJob()
     {
-        JobStatusId = (short)JobStatusEnum.Closed;
+        SetJobStatus(JobStatusEnum.Closed);
+    }
+
+
+    private void SetJobStatus(JobStatusEnum jobStatusEnum)
+    {
+        JobStatusId = (short)jobStatusEnum;
     }
 
 
@@ -176,4 +279,21 @@ public partial class Job
     {
         IsDeleted = true;
     }
+
+
+
+    public void AddInterviewSchedule(InterviewSchedule interviewSchedule)
+    {
+        InterviewSchedules.Add(interviewSchedule);
+    }
+
+
+
+
+
+    public void RemoveLevel(Level level)
+    {
+        Levels.Remove(level);
+    }
 }
+#endregion

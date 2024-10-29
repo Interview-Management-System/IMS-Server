@@ -23,7 +23,7 @@ namespace InterviewManagementSystem.Domain.ValueObjects
         }
 
 
-        public static SalaryRange CreateSalaryRange(decimal from, decimal to)
+        public static SalaryRange Create(decimal from, decimal to)
         {
             //CheckValidSalaryRange(from, to);
             return new SalaryRange(from, to);

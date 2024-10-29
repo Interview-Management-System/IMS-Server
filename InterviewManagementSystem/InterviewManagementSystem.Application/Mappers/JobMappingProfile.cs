@@ -1,6 +1,7 @@
 ﻿using InterviewManagementSystem.Application.DTOs.JobDTOs;
-using InterviewManagementSystem.Domain.CustomClasses;
+using InterviewManagementSystem.Domain.CustomClasses.EntityData.JobData;
 using InterviewManagementSystem.Domain.Entities.Jobs;
+using InterviewManagementSystem.Domain.Entities.MasterData;
 using InterviewManagementSystem.Domain.Paginations;
 
 namespace InterviewManagementSystem.Application.Mappers;
@@ -28,10 +29,6 @@ public sealed class JobMappingProfile : Profile
 
 
 
-        CreateMap<Job, JobForCreateDTO>().ReverseMap();
-        CreateMap<PageResult<Job>, PageResult<JobForRetrieveDTO>>().ReverseMap();
-
-
 
         CreateMap<Job, JobForUpdateDTO>()
              .ForMember(dest => dest.Id, opt => opt.Ignore())
@@ -42,10 +39,34 @@ public sealed class JobMappingProfile : Profile
 
 
 
-        CreateMap<JobForCreateDTO, JobMasterData>()
-             .ForMember(dest => dest.LevelIdList, opt => opt.MapFrom(src => src.LevelId.Select(status => (short)status).ToArray()))
-             .ForMember(dest => dest.BenefitIdList, opt => opt.MapFrom(src => src.BenefitId.Select(status => (short)status).ToArray()))
-             .ForMember(dest => dest.SkillIdList, opt => opt.MapFrom(src => src.RequiredSkillId.Select(status => (short)status).ToArray()))
+
+        CreateMap<JobForCreateDTO, DataForCreateJob>()
+            .ForMember(dest => dest.Skills, opt => opt.MapFrom((src, dest, destMember, context)
+                    => MappingHelper.GetListFromContext<Skill>(context, nameof(Job.Skills))))
+
+            .ForMember(dest => dest.Benefits, opt => opt.MapFrom((src, dest, destMember, context)
+                    => MappingHelper.GetListFromContext<Benefit>(context, nameof(Job.Benefits))))
+
+            .ForMember(dest => dest.Levels, opt => opt.MapFrom((src, dest, destMember, context)
+                    => MappingHelper.GetListFromContext<Level>(context, nameof(Job.Levels))))
             .ReverseMap();
+
+
+
+        CreateMap<JobForUpdateDTO, DataForUpdateJob>()
+          .ForMember(dest => dest.Skills, opt => opt.MapFrom((src, dest, destMember, context)
+                    => MappingHelper.GetListFromContext<Skill>(context, nameof(Job.Skills))))
+
+          .ForMember(dest => dest.Benefits, opt => opt.MapFrom((src, dest, destMember, context)
+                    => MappingHelper.GetListFromContext<Benefit>(context, nameof(Job.Benefits))))
+
+          .ForMember(dest => dest.Levels, opt => opt.MapFrom((src, dest, destMember, context)
+                    => MappingHelper.GetListFromContext<Level>(context, nameof(Job.Levels))))
+          .ReverseMap();
+
+
+
+
+        CreateMap<PageResult<Job>, PageResult<JobForRetrieveDTO>>().ReverseMap();
     }
 }

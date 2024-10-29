@@ -8,5 +8,7 @@
         public string? MeetingURL { get; set; }
         public string? Location { get; set; }
         public string? RecruiterOwner { get; set; }
+        public string? StartHour { get; set; }
+        public string? EndHour { get; set; }
     }
 }

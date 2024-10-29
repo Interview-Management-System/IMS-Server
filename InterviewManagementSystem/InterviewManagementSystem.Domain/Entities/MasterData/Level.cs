@@ -15,7 +15,13 @@ public partial class Level
 
 public partial class Level
 {
-    public void AssignJob(Job job)
+    public void AddJob(Job job)
+    {
+        Jobs.Add(job);
+    }
+
+
+    public void RemoveJob(Job job)
     {
         Jobs.Add(job);
     }

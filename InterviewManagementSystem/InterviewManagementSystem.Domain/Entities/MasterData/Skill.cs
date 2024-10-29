@@ -16,8 +16,17 @@ public partial class Skill
 
 public partial class Skill
 {
-    public void AssignJob(Job job)
+
+
+    public void AddJob(Job job)
     {
         Jobs.Add(job);
+    }
+
+
+
+    public void RemoveJob(Job job)
+    {
+        Jobs.Remove(job);
     }
 }

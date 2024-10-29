@@ -12,8 +12,10 @@ using System.Data.Common;
 
 namespace InterviewManagementSystem.Infrastructure.UnitOfWorks;
 
-public sealed class UnitOfWork : IUnitOfWork
+public sealed class UnitOfWork : IUnitOfWork, IDisposable
 {
+
+
     #region Fields
     private DbConnection? _connection;
     private readonly DbContext _dbContext;
@@ -131,13 +133,12 @@ public sealed class UnitOfWork : IUnitOfWork
     }
 
 
-    /*
+
     public void Dispose()
     {
         GC.SuppressFinalize(this);
         //_interviewManagementSystemContext.Database.EnsureDeleted();
     }
-    */
 
 
 

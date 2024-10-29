@@ -1,4 +1,5 @@
-﻿using InterviewManagementSystem.Application.Features.AuthenticationFeatures;
+﻿using InterviewManagementSystem.Application.CustomClasses.BackgroundServices;
+using InterviewManagementSystem.Application.Features.AuthenticationFeatures;
 using InterviewManagementSystem.Application.Features.AuthenticationFeatures.UseCases;
 using InterviewManagementSystem.Application.Features.InterviewScheduleFeature;
 using InterviewManagementSystem.Application.Features.InterviewScheduleFeature.UseCases;
@@ -34,7 +35,7 @@ internal static class InjectionService
 
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
-
+        services.AddHostedService<JobAutoCloserService>();
 
         AddJobServices(services);
         AddUserServices(services);

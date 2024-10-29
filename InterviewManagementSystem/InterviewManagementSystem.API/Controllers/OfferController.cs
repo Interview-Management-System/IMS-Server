@@ -9,17 +9,8 @@ namespace InterviewManagementSystem.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public sealed class OfferController : ControllerBase
+public sealed class OfferController(OfferFacade offerFacade) : ControllerBase
 {
-
-
-    private readonly OfferFacade _offerFacade;
-
-
-    public OfferController(OfferFacade offerFacade)
-    {
-        _offerFacade = offerFacade;
-    }
 
 
 
@@ -36,7 +27,7 @@ public sealed class OfferController : ControllerBase
         };
 
 
-        var apiResponse = await _offerFacade.GetListOfferPagingAsync(pagingRequest);
+        var apiResponse = await offerFacade.GetListOfferPagingAsync(pagingRequest);
         return Ok(apiResponse);
 
     }
@@ -46,7 +37,7 @@ public sealed class OfferController : ControllerBase
     [HttpPost("create")]
     public async Task<IActionResult> CreateOfferAsync([FromBody] OfferForCreateDTO offerForCreateDTO)
     {
-        var apiResponse = await _offerFacade.CreateOfferAsync(offerForCreateDTO);
+        var apiResponse = await offerFacade.CreateOfferAsync(offerForCreateDTO);
         return Created("", apiResponse);
     }
 
@@ -55,7 +46,7 @@ public sealed class OfferController : ControllerBase
     [HttpGet("detail")]
     public async Task<IActionResult> GetOfferDetailAsync([FromQuery] Guid id)
     {
-        var apiResponse = await _offerFacade.GetOfferDetailByIdAsync(id);
+        var apiResponse = await offerFacade.GetOfferDetailByIdAsync(id);
         return Ok(apiResponse);
     }
 
@@ -64,7 +55,7 @@ public sealed class OfferController : ControllerBase
     [HttpPatch("change-status")]
     public async Task<IActionResult> ChangeOfferStatusAsync(Guid offerId, OfferStatusEnum offerStatusId)
     {
-        var apiResponse = await _offerFacade.ChangeOfferStatusAsync(offerId, offerStatusId);
+        var apiResponse = await offerFacade.ChangeOfferStatusAsync(offerId, offerStatusId);
         return Ok(apiResponse);
     }
 
@@ -73,7 +64,7 @@ public sealed class OfferController : ControllerBase
     [HttpPut("update")]
     public async Task<IActionResult> UpdateOfferAsync(OfferForUpdateDTO offerForUpdateDTO)
     {
-        var apiResponse = await _offerFacade.UpdateOfferAsync(offerForUpdateDTO);
+        var apiResponse = await offerFacade.UpdateOfferAsync(offerForUpdateDTO);
         return Ok(apiResponse);
     }
 }

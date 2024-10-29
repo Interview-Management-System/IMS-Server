@@ -112,7 +112,7 @@ internal static class AppUserConfiguration
 
 
             entity.Property(e => e.Id).ValueGeneratedNever();
-            entity.Property(e => e.Attachment).HasColumnType("oid");
+            entity.Property(e => e.Attachment).HasColumnType("bytea");
 
 
             entity.HasOne(d => d.CandidateStatus).WithMany(p => p.Candidates)
@@ -129,6 +129,11 @@ internal static class AppUserConfiguration
                 .HasForeignKey<Candidate>(d => d.Id)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Candidates_Id_fkey");
+
+
+            entity.HasOne(d => d.Job).WithMany(p => p.Candidates)
+                .HasForeignKey(d => d.JobId)
+                .HasConstraintName("Candidates_JobId_fkey");
 
 
             entity.HasOne(d => d.Position).WithMany(p => p.Candidates)
@@ -157,6 +162,7 @@ internal static class AppUserConfiguration
                         j.HasKey("CandidateId", "SkillId").HasName("CandidateSkills_pkey");
                         j.ToTable("CandidateSkills", "IMS");
                     });
+
         });
 
 

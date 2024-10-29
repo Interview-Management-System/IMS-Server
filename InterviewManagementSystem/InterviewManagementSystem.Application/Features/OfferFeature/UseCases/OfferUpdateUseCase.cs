@@ -22,7 +22,7 @@ public sealed class OfferUpdateUseCase : BaseUseCase
         ApplicationException.ThrowIfGetDeletedRecord(offerFoundById.IsDeleted);
 
 
-        offerFoundById.ChangeStatus(offerStatusId);
+        offerFoundById.SetStatus(offerStatusId);
 
 
         bool changeStatusSuccess = await _unitOfWork.SaveChangesAsync();
