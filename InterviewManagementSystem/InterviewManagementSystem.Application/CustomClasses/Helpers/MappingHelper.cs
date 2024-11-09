@@ -13,4 +13,10 @@ internal static class MappingHelper
         return [];
     }
 
+
+    internal static T GetContextItem<T>(ResolutionContext context, string key)
+    {
+        return context.Items.TryGetValue(key, out object? value) ? (T)value : default!;
+    }
+
 }

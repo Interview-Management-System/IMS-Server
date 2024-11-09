@@ -32,7 +32,7 @@ builder.Services.AddFluentValidation();
 builder.Services.AddInjectionService();
 //builder.Services.AddExceptionHandlers();
 builder.Services.AddHttpContextAccessor();
-FilterHelper.service = builder.Services.BuildServiceProvider();
+FilterHelper.Service = builder.Services.BuildServiceProvider();
 
 
 var app = builder.Build();

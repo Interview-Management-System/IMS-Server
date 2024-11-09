@@ -7,7 +7,7 @@ public static class FilterHelper
 {
 
 
-    public static IServiceProvider service { get; set; }
+    public static IServiceProvider? Service { get; set; }
 
 
     public static List<Expression<Func<TEntity, bool>>> BuildFilters<TEntity>(PaginationRequest paginationRequest, string searchFieldName)
@@ -123,7 +123,7 @@ public static class FilterHelper
         var dicProperties = EntityHelper.EntitySearchFieldMappings[entityType];
         //var properties = new List<PropertyInfo>(entityType.GetProperties(BindingFlags.Public | BindingFlags.Instance));
 
-        var s = service.GetRequiredService<IUnitOfWork>().InterviewManagementSystemContext;
+        var s = Service.GetRequiredService<IUnitOfWork>().InterviewManagementSystemContext;
 
 
         foreach (var item in dicProperties)

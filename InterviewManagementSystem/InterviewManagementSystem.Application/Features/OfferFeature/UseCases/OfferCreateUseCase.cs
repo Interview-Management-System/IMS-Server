@@ -1,4 +1,5 @@
 ﻿using InterviewManagementSystem.Application.DTOs.OfferDTOs;
+using InterviewManagementSystem.Domain.CustomClasses.OfferData;
 using InterviewManagementSystem.Domain.Entities.AppUsers;
 using InterviewManagementSystem.Domain.Entities.Interviews;
 using InterviewManagementSystem.Domain.Entities.Offers;
@@ -32,9 +33,12 @@ public sealed class OfferCreateUseCase : BaseUseCase
 
 
 
-        var dataForCreateOffer = _mapper.Map<DataForCreateOffer>(offerForCreateDTO);
-        dataForCreateOffer.AssociatedCandidate = candidate;
-        dataForCreateOffer.AssociatedInterviewSchedule = interviewSchedule;
+        var dataForCreateOffer = _mapper.Map<DataForCreateOffer>(offerForCreateDTO, opts =>
+        {
+            opts.Items[nameof(Candidate)] = candidate;
+            opts.Items[nameof(InterviewSchedule)] = interviewSchedule;
+        });
+
 
 
         var newOffer = Offer.Create(dataForCreateOffer);

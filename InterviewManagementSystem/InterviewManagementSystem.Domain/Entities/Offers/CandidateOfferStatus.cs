@@ -26,6 +26,12 @@ public partial class CandidateOfferStatus
 public partial class CandidateOfferStatus
 {
 
+    public void SetCandidateId(Guid candidateId)
+    {
+        if (CandidateId != candidateId)
+            CandidateId = candidateId;
+    }
+
 
     public static CandidateOfferStatus Create(Guid candidateId, Guid offerId)
     {
@@ -35,4 +41,5 @@ public partial class CandidateOfferStatus
             OfferId = offerId,
         };
     }
+
 }

@@ -1,7 +1,12 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "G:\\FSA\\Project\\Interview Management System\\Source code\\IMS-Server\\InterviewManagementSystem\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{F15C1FEF-C406-4A2D-AFC7-EA8B3C183975}|InterviewManagementSystem.Domain\\InterviewManagementSystem.Domain.csproj|g:\\fsa\\project\\interview management system\\source code\\ims-server\\interviewmanagementsystem\\interviewmanagementsystem.domain\\entities\\offers\\offer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F15C1FEF-C406-4A2D-AFC7-EA8B3C183975}|InterviewManagementSystem.Domain\\InterviewManagementSystem.Domain.csproj|solutionrelative:interviewmanagementsystem.domain\\entities\\offers\\offer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,11 +14,24 @@
       "DocumentGroups": [
         {
           "DockedWidth": 306,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Offer.cs",
+              "DocumentMoniker": "G:\\FSA\\Project\\Interview Management System\\Source code\\IMS-Server\\InterviewManagementSystem\\InterviewManagementSystem.Domain\\Entities\\Offers\\Offer.cs",
+              "RelativeDocumentMoniker": "InterviewManagementSystem.Domain\\Entities\\Offers\\Offer.cs",
+              "ToolTip": "G:\\FSA\\Project\\Interview Management System\\Source code\\IMS-Server\\InterviewManagementSystem\\InterviewManagementSystem.Domain\\Entities\\Offers\\Offer.cs",
+              "RelativeToolTip": "InterviewManagementSystem.Domain\\Entities\\Offers\\Offer.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-02T12:46:02.463Z",
+              "EditorCaption": ""
             }
           ]
         }

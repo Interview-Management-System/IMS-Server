@@ -89,7 +89,7 @@ public sealed class UserFacade
 
 
 
-    public async Task<ApiResponse<CandidateForRetrieveDTO>> UpdateCandidateAsync()
+    public async Task<ApiResponse<CandidateForRetrieveDTO>> GetListCandidatePagingAsync()
     {
         return null;
     }

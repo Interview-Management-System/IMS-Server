@@ -22,7 +22,7 @@ public sealed class AuthenticationController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> LoginAsync([FromBody] UserLoginRequest userLoginRequest)
     {
-        var apiResponse = await _authenticationManagementFacade.LoginUseCase.LoginAsync(userLoginRequest);
+        var apiResponse = await _authenticationManagementFacade.BasicLoginAsync(userLoginRequest);
         return Ok(apiResponse);
     }
 
@@ -31,7 +31,7 @@ public sealed class AuthenticationController : ControllerBase
     [HttpPost("reset-password")]
     public async Task<IActionResult> ResetPasswordAsync([FromBody] ResetPasswordRequest resetPasswordRequest)
     {
-        var apiResponse = await _authenticationManagementFacade.PasswordUseCase.ResetPasswordAsync(resetPasswordRequest);
+        var apiResponse = await _authenticationManagementFacade.ResetPasswordAsync(resetPasswordRequest);
         return Ok(apiResponse);
     }
 }

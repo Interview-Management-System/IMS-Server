@@ -17,5 +17,14 @@ public sealed class AuthenticationFacade
     }
 
 
+    public async Task<ApiResponse<object>> BasicLoginAsync(UserLoginRequest userLoginRequest)
+    {
+        return await LoginUseCase.LoginAsync(userLoginRequest);
+    }
 
+
+    public async Task<string> ResetPasswordAsync(ResetPasswordRequest resetPasswordRequest)
+    {
+        return await PasswordUseCase.ResetPasswordAsync(resetPasswordRequest);
+    }
 }

@@ -1,6 +1,4 @@
-﻿using InterviewManagementSystem.Application.CustomClasses.Exceptions;
-using InterviewManagementSystem.Domain.Entities.AppUsers;
-using Microsoft.AspNetCore.Identity;
+﻿using InterviewManagementSystem.Domain.Entities.AppUsers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -24,7 +22,7 @@ public sealed class LoginUseCase : BaseAuthenticationUseCase
 
 
 
-    public async Task<ApiResponse<object>> LoginAsync(UserLoginRequest userLoginRequest)
+    internal async Task<ApiResponse<object>> LoginAsync(UserLoginRequest userLoginRequest)
     {
         AppUser? user = await _userManager.FindByEmailAsync(userLoginRequest.Email);
 

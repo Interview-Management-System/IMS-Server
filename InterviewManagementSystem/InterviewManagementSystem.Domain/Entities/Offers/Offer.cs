@@ -1,5 +1,5 @@
 ﻿using InterviewManagementSystem.Domain.Aggregates;
-using InterviewManagementSystem.Domain.CustomClasses;
+using InterviewManagementSystem.Domain.CustomClasses.OfferData;
 using InterviewManagementSystem.Domain.Enums;
 
 namespace InterviewManagementSystem.Domain.Entities.Offers;
@@ -122,7 +122,7 @@ public partial class Offer
         var candidateOfferStatus = CandidateOfferStatus.Create(dataToCreate.CandidateId, newOffer.Id);
 
         // Ensure transactional business logic
-        associatedInterviewSchedule.SetOffer(newOffer);
+        //associatedInterviewSchedule.SetOffer(newOffer);
         newOffer.SetCandidateOfferStatus(candidateOfferStatus);
         newOffer.SetStatus(OfferStatusEnum.WaitingForApproval);
         associatedCandidate.AddCandidateOfferStatus(candidateOfferStatus);
@@ -133,5 +133,30 @@ public partial class Offer
 
 
 
+    public static void Update(Offer offerToUpdate, DataForUpdateOffer dataForUpdateOffer)
+    {
 
+        var associatedCandidate = dataForUpdateOffer.AssociatedCandidate;
+        var associatedInterviewSchedule = dataForUpdateOffer.AssociatedInterviewSchedule;
+
+
+        offerToUpdate.Note = dataForUpdateOffer.Note;
+        offerToUpdate.LevelId = dataForUpdateOffer.LevelId;
+        offerToUpdate.ApproverId = dataForUpdateOffer.ApproverId;
+        offerToUpdate.CandidateId = dataForUpdateOffer.CandidateId;
+        offerToUpdate.DueDate = dataForUpdateOffer.DueDate;
+        offerToUpdate.PositionId = dataForUpdateOffer.PositionId;
+        offerToUpdate.DepartmentId = dataForUpdateOffer.DepartmentId;
+        offerToUpdate.BasicSalary = dataForUpdateOffer.BasicSalary;
+        offerToUpdate.ContractTypeId = dataForUpdateOffer.ContractTypeId;
+        offerToUpdate.RecruiterOwnerId = dataForUpdateOffer.RecruiterOwnerId;
+        offerToUpdate.InterviewScheduleId = dataForUpdateOffer.InterviewScheduleId;
+        offerToUpdate.DatePeriod = dataForUpdateOffer.DatePeriod;
+        offerToUpdate.Candidate = associatedCandidate;
+        offerToUpdate.InterviewSchedule = associatedInterviewSchedule;
+
+
+        associatedInterviewSchedule.SetOffer(offerToUpdate);
+        offerToUpdate.CandidateOfferStatus.SetCandidateId(associatedCandidate.Id);
+    }
 }
