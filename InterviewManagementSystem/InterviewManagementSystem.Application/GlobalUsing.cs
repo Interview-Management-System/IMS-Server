@@ -5,7 +5,7 @@ global using InterviewManagementSystem.Application.CustomClasses.Exceptions;
 global using InterviewManagementSystem.Application.CustomClasses.Extensions;
 global using InterviewManagementSystem.Application.CustomClasses.Helpers;
 global using InterviewManagementSystem.Application.DTOs;
-global using InterviewManagementSystem.Domain.CustomClasses;
+global using InterviewManagementSystem.Domain.Entities.MasterData;
 global using InterviewManagementSystem.Domain.Enums;
 global using InterviewManagementSystem.Domain.Interfaces;
 global using Microsoft.AspNetCore.Identity;

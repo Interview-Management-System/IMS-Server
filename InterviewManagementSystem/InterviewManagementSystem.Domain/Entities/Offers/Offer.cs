@@ -1,5 +1,5 @@
 ﻿using InterviewManagementSystem.Domain.Aggregates;
-using InterviewManagementSystem.Domain.CustomClasses.OfferData;
+using InterviewManagementSystem.Domain.CustomClasses.EntityData.OfferData;
 using InterviewManagementSystem.Domain.Enums;
 
 namespace InterviewManagementSystem.Domain.Entities.Offers;
@@ -15,9 +15,9 @@ public partial class Offer : BaseEntity, IAggregate<Guid>
 
     public DatePeriod? DatePeriod { get; set; }
 
-    public short? OfferStatusId { get; set; }
+    public OfferStatusEnum OfferStatusId { get; set; }
 
-    public short? PositionId { get; set; }
+    public PositionEnum PositionId { get; set; }
 
     public Guid? CandidateId { get; set; }
 
@@ -25,11 +25,11 @@ public partial class Offer : BaseEntity, IAggregate<Guid>
 
     public Guid? RecruiterOwnerId { get; set; }
 
-    public short? ContractTypeId { get; set; }
+    public ContractTypeEnum ContractTypeId { get; set; }
 
-    public short? LevelId { get; set; }
+    public LevelEnum LevelId { get; set; }
 
-    public short? DepartmentId { get; set; }
+    public DepartmentEnum DepartmentId { get; set; }
 
     public Guid? InterviewScheduleId { get; set; }
 
@@ -45,7 +45,7 @@ public partial class Offer : BaseEntity, IAggregate<Guid>
 
     public virtual InterviewSchedule? InterviewSchedule { get; set; }
 
-    public virtual ICollection<InterviewSchedule> InterviewSchedules { get; set; } = new List<InterviewSchedule>();
+    public virtual ICollection<InterviewSchedule> InterviewSchedules { get; set; } = [];
 
     public virtual Level? Level { get; set; }
 
@@ -88,12 +88,12 @@ public partial class Offer
 
     public void SetStatus(OfferStatusEnum offerStatusEnum)
     {
-        OfferStatusId = (short)offerStatusEnum;
+        OfferStatusId = offerStatusEnum;
     }
 
 
 
-    public static Offer Create(DataForCreateOffer dataToCreate)
+    public static Offer Create(BaseOfferData dataToCreate)
     {
 
         var associatedCandidate = dataToCreate.AssociatedCandidate;
@@ -145,7 +145,7 @@ public partial class Offer
         offerToUpdate.ApproverId = dataForUpdateOffer.ApproverId;
         offerToUpdate.CandidateId = dataForUpdateOffer.CandidateId;
         offerToUpdate.DueDate = dataForUpdateOffer.DueDate;
-        offerToUpdate.PositionId = dataForUpdateOffer.PositionId;
+        offerToUpdate.PositionId = PositionEnum.BackendDeveloper;
         offerToUpdate.DepartmentId = dataForUpdateOffer.DepartmentId;
         offerToUpdate.BasicSalary = dataForUpdateOffer.BasicSalary;
         offerToUpdate.ContractTypeId = dataForUpdateOffer.ContractTypeId;

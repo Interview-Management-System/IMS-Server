@@ -13,7 +13,7 @@ internal static class MasterDataUtility
     {
         return await UnitOfWork
               .GetBaseRepository<Skill>()
-              .GetAllAsync(s => skillsEnums.Select(s => (short)s).Contains(s.Id), true);
+              .GetAllAsync(s => skillsEnums.Select(s => s).Contains(s.Id), true);
     }
 
 
@@ -21,7 +21,7 @@ internal static class MasterDataUtility
     {
         return await UnitOfWork
               .GetBaseRepository<Level>()
-              .GetAllAsync(s => levelEnums.Select(s => (short)s).Contains(s.Id), true);
+              .GetAllAsync(s => levelEnums.Select(s => s).Contains(s.Id), true);
     }
 
 
@@ -29,6 +29,6 @@ internal static class MasterDataUtility
     {
         return await UnitOfWork
               .GetBaseRepository<Benefit>()
-              .GetAllAsync(s => benefitEnums.Select(s => (short)s).Contains(s.Id), true);
+              .GetAllAsync(s => benefitEnums.Select(s => s).Contains(s.Id), true);
     }
 }

@@ -3,6 +3,7 @@ using InterviewManagementSystem.Application.DTOs.UserDTOs.CandidateDTOs;
 using InterviewManagementSystem.Application.DTOs.UserDTOs.UserDTOs;
 using InterviewManagementSystem.Application.Features.UserFeature;
 using InterviewManagementSystem.Domain.Enums;
+using InterviewManagementSystem.Infrastructure.Persistences;
 using Microsoft.AspNetCore.Mvc;
 using static InterviewManagementSystem.Application.CustomClasses.Helpers.EntityHelper;
 
@@ -36,7 +37,7 @@ public sealed class UserController : ControllerBase
     [HttpGet("list-candidate")]
     public async Task<IActionResult> GetListCandidateAsync()
     {
-        var apiResponse = await _userFacade.GetListUserAsync();
+        var apiResponse = await _userFacade.GetListCandidateAsync();
         return Ok(apiResponse);
     }
 
@@ -170,5 +171,32 @@ public sealed class UserController : ControllerBase
     {
         var apiResponse = await _userFacade.ChangeUserRoleAsync(id, roleId);
         return Ok(apiResponse);
+    }
+
+
+    [HttpPost("download-pdf")]
+    public async Task<IActionResult> DownloadPdf(IFormFile file)
+    {
+
+        // Read the PDF file bytes
+        byte[] fileBytes = [];
+
+
+        using (var memoryStream = new MemoryStream())
+        {
+            await file.CopyToAsync(memoryStream);
+            fileBytes = memoryStream.ToArray();
+        }
+
+        // Return the file as a response with the appropriate content type
+        return Ok(fileBytes);
+    }
+
+    [HttpGet("geteeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")]
+    public async Task<IActionResult> Get()
+    {
+
+        var a = new InterviewManagementSystemContext();
+        return Ok(a.Positions.ToList());
     }
 }

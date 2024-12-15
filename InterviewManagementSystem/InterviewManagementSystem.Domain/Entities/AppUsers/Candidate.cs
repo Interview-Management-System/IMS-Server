@@ -13,13 +13,13 @@ public partial class Candidate : AppUser
 
     public Guid? RecruiterId { get; set; }
 
-    public short? PositionId { get; set; }
+    public PositionEnum PositionId { get; set; }
 
-    public short? HighestLevelId { get; set; }
+    public HighestLevelEnum HighestLevelId { get; set; }
 
     public Guid? JobId { get; set; }
 
-    public short? CandidateStatusId { get; set; }
+    public CandidateStatusEnum CandidateStatusId { get; set; }
 
     public virtual CandidateStatus? CandidateStatus { get; set; }
 
@@ -61,10 +61,10 @@ public partial class Candidate
     public void SetCandidateStatus(CandidateStatusEnum candidateStatusEnum)
     {
 
-        bool isInvalidStatus = CandidateStatusId == (short)candidateStatusEnum;
+        bool isInvalidStatus = CandidateStatusId == candidateStatusEnum;
         DomainException.ThrowIfInvalidOperation(isInvalidStatus, "Current candidate has the same status");
 
-        CandidateStatusId = (short)candidateStatusEnum;
+        CandidateStatusId = candidateStatusEnum;
     }
 
 

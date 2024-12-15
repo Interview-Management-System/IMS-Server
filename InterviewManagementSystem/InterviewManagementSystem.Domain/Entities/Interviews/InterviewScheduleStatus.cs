@@ -1,8 +1,10 @@
-﻿namespace InterviewManagementSystem.Domain.Entities.Interviews;
+﻿using InterviewManagementSystem.Domain.Enums;
+
+namespace InterviewManagementSystem.Domain.Entities.Interviews;
 
 public partial class InterviewScheduleStatus
 {
-    public short Id { get; set; }
+    public InterviewStatusEnum Id { get; set; }
 
     public string? Name { get; set; }
 

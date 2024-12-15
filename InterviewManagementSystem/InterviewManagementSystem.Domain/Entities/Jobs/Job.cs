@@ -19,7 +19,7 @@ public partial class Job : BaseEntity
 
     public DatePeriod? DatePeriod { get; set; }
 
-    public short? JobStatusId { get; set; }
+    public JobStatusEnum JobStatusId { get; set; }
 
     public virtual AppUser? CreatedByNavigation { get; set; }
 
@@ -271,7 +271,7 @@ public partial class Job
 
     private void SetJobStatus(JobStatusEnum jobStatusEnum)
     {
-        JobStatusId = (short)jobStatusEnum;
+        JobStatusId = jobStatusEnum;
     }
 
 

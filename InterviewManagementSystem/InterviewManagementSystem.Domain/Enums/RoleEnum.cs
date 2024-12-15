@@ -1,6 +1,6 @@
 ﻿namespace InterviewManagementSystem.Domain.Enums;
 
-public enum RoleEnum : short
+public enum RoleEnum
 {
     Admin = 1,
     Manager,
@@ -36,7 +36,7 @@ public static class RoleEnumExtension
     };
 
 
-    public static string GetId(this RoleEnum status)
+    public static string GetRoleId(this RoleEnum status)
     {
         if (RoleIdEnumMap.TryGetValue(status, out string? name))
             return name.Trim();
@@ -53,9 +53,6 @@ public static class RoleEnumExtension
     }
 
 
-
-
-
     public static string GetRoleNameById(this Guid roleId)
     {
         var roleEnum = GetRoleEnumById(roleId);
@@ -66,8 +63,6 @@ public static class RoleEnumExtension
 
         throw new ArgumentException($"Invalid role ID {roleId}");
     }
-
-
 
 
     private static RoleEnum? GetRoleEnumById(Guid roleId)

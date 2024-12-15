@@ -1,7 +1,6 @@
 ﻿using InterviewManagementSystem.Application.DTOs.JobDTOs;
 using InterviewManagementSystem.Domain.Entities.Jobs;
 using InterviewManagementSystem.Domain.Paginations;
-using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace InterviewManagementSystem.Application.Features.JobFeature.UseCases;
@@ -72,7 +71,7 @@ public sealed class JobRetrieveUseCase : BaseUseCase
     public async Task<ApiResponse<List<JobOpenForRetrieveDTO>>> GetListOpenJobAsync()
     {
 
-        Expression<Func<Job, bool>>? filter = j => j.JobStatusId == (short)JobStatusEnum.Open && j.IsDeleted == false;
+        Expression<Func<Job, bool>>? filter = j => j.JobStatusId == JobStatusEnum.Open && j.IsDeleted == false;
 
         var listOpenJob = await _unitOfWork.JobRepository.GetAllAsync(filter);
 

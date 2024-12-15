@@ -1,4 +1,5 @@
 ﻿using InterviewManagementSystem.Domain.Entities.AppUsers;
+using InterviewManagementSystem.Domain.Enums.Extensions;
 
 namespace InterviewManagementSystem.Application.CustomClasses.Exceptions;
 
@@ -10,14 +11,9 @@ internal class CandidateException(string errorMessage) : ApplicationException(er
         var candidateStatusId = candidate.CandidateStatusId;
 
 
-        if (candidateStatusId.HasValue is false)
-            throw new InvalidOperationException("Status has no value");
-
-
-
-        var isTheSameStatus = candidateStatusId == (short)statusToSet;
+        var isTheSameStatus = candidateStatusId == statusToSet;
 
         if (isTheSameStatus)
-            throw new CandidateException($"Candidate status is already {((short)candidateStatusId).GetCandidateStatusNameById()}");
+            throw new CandidateException($"Candidate status is already {statusToSet.GetEnumName()}");
     }
 }

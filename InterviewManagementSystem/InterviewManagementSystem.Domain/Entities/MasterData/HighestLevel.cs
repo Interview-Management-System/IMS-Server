@@ -1,8 +1,10 @@
-﻿namespace InterviewManagementSystem.Domain.Entities.MasterData;
+﻿using InterviewManagementSystem.Domain.Enums;
+
+namespace InterviewManagementSystem.Domain.Entities.MasterData;
 
 public partial class HighestLevel
 {
-    public short Id { get; set; }
+    public HighestLevelEnum Id { get; set; }
 
     public string? Name { get; set; }
 

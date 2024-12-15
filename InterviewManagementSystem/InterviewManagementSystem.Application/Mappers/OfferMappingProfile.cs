@@ -1,8 +1,9 @@
 ﻿using InterviewManagementSystem.Application.DTOs.OfferDTOs;
-using InterviewManagementSystem.Domain.CustomClasses.OfferData;
+using InterviewManagementSystem.Domain.CustomClasses.EntityData.OfferData;
 using InterviewManagementSystem.Domain.Entities.AppUsers;
 using InterviewManagementSystem.Domain.Entities.Interviews;
 using InterviewManagementSystem.Domain.Entities.Offers;
+using InterviewManagementSystem.Domain.Enums.Extensions;
 using InterviewManagementSystem.Domain.Paginations;
 
 namespace InterviewManagementSystem.Application.Mappers;
@@ -19,8 +20,8 @@ public sealed class OfferMappingProfile : Profile
             .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Candidate!.Email))
             .ForMember(dest => dest.Approver, opt => opt.MapFrom(src => src.Approver!.UserName))
             .ForMember(dest => dest.CandidateName, opt => opt.MapFrom(src => src.Candidate!.UserName))
-            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.OfferStatusId!.Value.GetOfferStatusNameById()))
-            .ForMember(dest => dest.Department, opt => opt.MapFrom(src => src.DepartmentId!.Value.GetDepartmentNameById()))
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.OfferStatusId!.GetEnumName()))
+            .ForMember(dest => dest.Department, opt => opt.MapFrom(src => src.DepartmentId!.GetEnumName()))
             .ReverseMap();
 
 
@@ -29,13 +30,13 @@ public sealed class OfferMappingProfile : Profile
         CreateMap<Offer, OfferForDetailRetrieveDTO>()
             .IncludeBase<Offer, OfferForRetrieveDTO>()
             .ForMember(dest => dest.InterviewNote, opt => opt.MapFrom(src => src.InterviewSchedule!.Note))
-            .ForMember(dest => dest.Level, opt => opt.MapFrom(src => src.LevelId!.Value.GetLevelNameById()))
+            .ForMember(dest => dest.Level, opt => opt.MapFrom(src => src.LevelId!.GetEnumName()))
             .ForMember(dest => dest.RecruiterOwner, opt => opt.MapFrom(src => src.RecruiterOwner!.UserName))
             .ForMember(dest => dest.InterviewTitle, opt => opt.MapFrom(src => src.InterviewSchedule!.Title))
-            .ForMember(dest => dest.Position, opt => opt.MapFrom(src => src.PositionId!.Value.GetPositionNameById()))
-            .ForMember(dest => dest.ContractType, opt => opt.MapFrom(src => src.ContractTypeId!.Value.GetContractTypeNameById()))
+            .ForMember(dest => dest.Position, opt => opt.MapFrom(src => src.PositionId!.GetEnumName()))
+            .ForMember(dest => dest.ContractType, opt => opt.MapFrom(src => src.ContractTypeId!.GetEnumName()))
             .ForMember(dest => dest.DueDate, opt => opt.MapFrom(src => src.DueDate!.Value.ToVieFormat()))
-            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.OfferStatusId!.Value.GetOfferStatusNameById()))
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.OfferStatusId!.GetEnumName()))
             .ForMember(dest => dest.ContractTo, opt => opt.MapFrom(src => src.DatePeriod!.StartDate.ToVieFormat()))
             .ForMember(dest => dest.ContractFrom, opt => opt.MapFrom(src => src.DatePeriod!.EndDate.ToVieFormat()))
             .ForMember(dest => dest.Interviewers, opt => opt.MapFrom(src => src.InterviewSchedule!.Interviewers.Select(ap => ap.UserName).ToList()))
@@ -94,11 +95,11 @@ public sealed class OfferMappingProfile : Profile
     {
 
 
-        const string levelIdString = nameof(IBaseOfferData.LevelId);
-        const string positionIdString = nameof(IBaseOfferData.PositionId);
-        const string contractTypeIdString = nameof(IBaseOfferData.ContractTypeId);
-        const string associatedCandidate = nameof(IBaseOfferData.AssociatedCandidate);
-        const string associatedInterviewSchedule = nameof(IBaseOfferData.AssociatedInterviewSchedule);
+        const string levelIdString = nameof(BaseOfferData.LevelId);
+        const string positionIdString = nameof(BaseOfferData.PositionId);
+        const string contractTypeIdString = nameof(BaseOfferData.ContractTypeId);
+        const string associatedCandidate = nameof(BaseOfferData.AssociatedCandidate);
+        const string associatedInterviewSchedule = nameof(BaseOfferData.AssociatedInterviewSchedule);
 
 
         // Dynamically set properties using inline lambda if properties exist

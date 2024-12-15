@@ -2,6 +2,7 @@
 using InterviewManagementSystem.Domain.CustomClasses.EntityData.JobData;
 using InterviewManagementSystem.Domain.Entities.Jobs;
 using InterviewManagementSystem.Domain.Entities.MasterData;
+using InterviewManagementSystem.Domain.Enums.Extensions;
 using InterviewManagementSystem.Domain.Paginations;
 
 namespace InterviewManagementSystem.Application.Mappers;
@@ -19,7 +20,7 @@ public sealed class JobMappingProfile : Profile
             .ForMember(dest => dest.CreatedBy, opt => opt.MapFrom(src => src.CreatedByNavigation!.UserName))
             .ForMember(dest => dest.Levels, opt => opt.MapFrom(src => src.Levels.Select(l => l.Name).ToList()))
             .ForMember(dest => dest.Benefits, opt => opt.MapFrom(src => src.Benefits.Select(l => l.Name).ToList()))
-            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.JobStatusId!.Value.GetJobStatusNameById()))
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.JobStatusId!.GetEnumName()))
             .ForMember(dest => dest.RequiredSkills, opt => opt.MapFrom(src => src.Skills.Select(s => s.Name).ToList()))
             .ForMember(dest => dest.CreateAt, opt => opt.MapFrom(src => src.CreateAt!.Value.ToVieFormat()))
             .ForMember(dest => dest.UpdateAt, opt => opt.MapFrom(src => src.UpdateAt!.Value.ToVieFormat()))

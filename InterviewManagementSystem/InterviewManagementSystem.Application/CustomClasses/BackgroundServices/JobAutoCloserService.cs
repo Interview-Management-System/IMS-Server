@@ -52,7 +52,7 @@ public sealed class JobAutoCloserService : BackgroundService
 
 
         Expression<Func<Job, bool>> expression = j =>
-            j.JobStatusId == (short)JobStatusEnum.Open
+            j.JobStatusId == JobStatusEnum.Open
             && j.DatePeriod!.EndDate < DateTime.UtcNow;
 
 

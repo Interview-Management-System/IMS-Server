@@ -10,6 +10,8 @@
         public string? PhoneNumber { get; set; }
         public string? Gender { get; set; }
         public string? Role { get; set; }
+
+        public DepartmentEnum DepartmentId { get; set; }
         public string? Department { get; set; }
         public string? Status { get; set; }
         public bool IsDeleted { get; set; }

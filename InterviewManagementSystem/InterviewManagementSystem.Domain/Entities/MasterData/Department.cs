@@ -1,10 +1,10 @@
-﻿using InterviewManagementSystem.Domain.Entities.Offers;
+﻿using InterviewManagementSystem.Domain.Enums;
 
 namespace InterviewManagementSystem.Domain.Entities.MasterData;
 
 public partial class Department
 {
-    public short Id { get; set; }
+    public DepartmentEnum Id { get; set; }
 
     public string? Name { get; set; }
 

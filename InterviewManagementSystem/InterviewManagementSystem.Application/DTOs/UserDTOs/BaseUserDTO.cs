@@ -11,7 +11,7 @@
         public Guid RoleId { get; set; }
         public Guid CreatedBy { get; set; }
         public DepartmentEnum DepartmentId { get; set; }
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
         public string? Note { get; set; }
     }
 }

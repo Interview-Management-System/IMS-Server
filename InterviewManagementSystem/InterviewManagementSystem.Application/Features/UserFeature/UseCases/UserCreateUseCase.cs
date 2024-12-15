@@ -1,4 +1,4 @@
-﻿using InterviewManagementSystem.Application.CustomClasses.Exceptions;
+﻿using InterviewManagementSystem.Application.CustomClasses.Utilities;
 using InterviewManagementSystem.Application.DTOs.UserDTOs.CandidateDTOs;
 using InterviewManagementSystem.Application.DTOs.UserDTOs.UserDTOs;
 using InterviewManagementSystem.Domain.Entities.AppUsers;
@@ -53,7 +53,7 @@ public sealed class UserCreateUseCase : BaseUserUseCase
 
 
         var candidate = _mapper.Map<Candidate>(candidateForCreateDTO);
-
+        candidate.Attachment = await FileUtility.ConvertFileToBytes(candidateForCreateDTO.Attachment);
 
         var createUserResult = await _userManager.CreateAsync(candidate, DEFAULT_PASSWORD);
         ApplicationException.ThrowIfOperationFail(createUserResult.Succeeded, "Create candidate failed");

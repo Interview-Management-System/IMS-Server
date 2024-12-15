@@ -1,5 +1,5 @@
 ﻿using InterviewManagementSystem.Application.DTOs.OfferDTOs;
-using InterviewManagementSystem.Domain.CustomClasses.OfferData;
+using InterviewManagementSystem.Domain.CustomClasses.EntityData.OfferData;
 using InterviewManagementSystem.Domain.Entities.AppUsers;
 using InterviewManagementSystem.Domain.Entities.Interviews;
 using InterviewManagementSystem.Domain.Entities.Offers;

@@ -1,8 +1,10 @@
-﻿namespace InterviewManagementSystem.Domain.Entities.MasterData;
+﻿using InterviewManagementSystem.Domain.Enums;
+
+namespace InterviewManagementSystem.Domain.Entities.MasterData;
 
 public partial class Skill
 {
-    public short Id { get; set; }
+    public SkillsEnum Id { get; set; }
 
     public string? Name { get; set; }
 

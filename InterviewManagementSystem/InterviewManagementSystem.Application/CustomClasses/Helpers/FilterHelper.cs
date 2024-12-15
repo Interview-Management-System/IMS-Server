@@ -92,22 +92,19 @@ public static class FilterHelper
 
             var enumValue = enumFilter.Value;
 
-            if (enumValue.HasValidValue())
-            {
-                var enumFieldName = enumFilter.Key;
+            var enumFieldName = enumFilter.Key;
 
 
-                var enumField = Expression.PropertyOrField(parameter, enumFieldName);
-                var enumFieldAsNullable = Expression.Convert(enumField, typeof(short?));
+            var enumField = Expression.PropertyOrField(parameter, enumFieldName);
+            var enumFieldAsNullable = Expression.Convert(enumField, typeof(short?));
 
 
-                var enumId = (short?)Convert.ToInt16(enumValue);
-                var enumValueAsNullable = Expression.Constant(enumId, typeof(short?));
+            var enumId = (short?)Convert.ToInt16(enumValue);
+            var enumValueAsNullable = Expression.Constant(enumId, typeof(short?));
 
 
-                var enumComparison = Expression.Equal(enumFieldAsNullable, enumValueAsNullable);
-                listCondition.Add(Expression.Lambda<Func<TEntity, bool>>(enumComparison, parameter));
-            }
+            var enumComparison = Expression.Equal(enumFieldAsNullable, enumValueAsNullable);
+            listCondition.Add(Expression.Lambda<Func<TEntity, bool>>(enumComparison, parameter));
         }
     }
 

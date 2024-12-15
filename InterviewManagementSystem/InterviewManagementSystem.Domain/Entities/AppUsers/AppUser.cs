@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using InterviewManagementSystem.Domain.Enums;
+using Microsoft.AspNetCore.Identity;
 
 namespace InterviewManagementSystem.Domain.Entities.AppUsers;
 
@@ -21,7 +22,7 @@ public partial class AppUser : IdentityUser<Guid>
 
     public bool IsDeleted { get; set; }
 
-    public short? DepartmentId { get; set; }
+    public DepartmentEnum? DepartmentId { get; set; }
 
     public Guid? CreatedBy { get; set; }
 

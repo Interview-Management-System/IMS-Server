@@ -26,9 +26,9 @@ public partial class InterviewSchedule : BaseEntity, IAggregate<Guid>
 
     public Guid? JobId { get; set; }
 
-    public short? InterviewScheduleStatusId { get; set; }
+    public InterviewStatusEnum? InterviewScheduleStatusId { get; set; }
 
-    public short? InterviewResultId { get; set; }
+    public InterviewResultEnum? InterviewResultId { get; set; }
 
     public Guid? OfferId { get; set; }
 
@@ -52,7 +52,7 @@ public partial class InterviewSchedule : BaseEntity, IAggregate<Guid>
 
     public virtual ICollection<AppUser> Interviewers { get; set; } = new List<AppUser>();
 
-    public short? CandidateStatusId { get; set; }
+    public CandidateStatusEnum? CandidateStatusId { get; set; }
 
     public virtual CandidateStatus? CandidateStatus { get; set; }
 
@@ -91,7 +91,7 @@ public partial class InterviewSchedule
             JobId = dataForCreateInterview.JobId,
             MeetingUrl = dataForCreateInterview.MeetingUrl,
             RecruiterOwnerId = dataForCreateInterview.RecruiterOwnerId,
-            CandidateStatusId = (short)CandidateStatusEnum.WaitingForInterview,
+            CandidateStatusId = CandidateStatusEnum.WaitingForInterview,
         };
 
 
@@ -141,7 +141,7 @@ public partial class InterviewSchedule
     public void MarkAsPassed()
     {
         SetResult(InterviewResultEnum.Pass);
-        CandidateStatusId = (short)CandidateStatusEnum.PassedInterview;
+        CandidateStatusId = CandidateStatusEnum.PassedInterview;
         SetStatus(InterviewStatusEnum.Closed);
     }
 
@@ -150,26 +150,19 @@ public partial class InterviewSchedule
     public void MarkAsFailed()
     {
         SetResult(InterviewResultEnum.Failed);
-        CandidateStatusId = (short)CandidateStatusEnum.FailedInterview;
+        CandidateStatusId = CandidateStatusEnum.FailedInterview;
         SetStatus(InterviewStatusEnum.Closed);
     }
 
 
-
-
-
-
-
-
-    public void SetInterviewers(List<AppUser> interviewers)
+    public void SetInterviewers(List<AppUser>? interviewers)
     {
 
-        if (interviewers.Count == 0)
+        if (interviewers is null || interviewers.Count == 0)
         {
             Interviewers.Clear();
             return;
         }
-
 
 
         var interviewersToRemove = EntityComparer.GetNonMatchingEntities(Interviewers, interviewers);
@@ -178,7 +171,6 @@ public partial class InterviewSchedule
             Interviewers.Remove(interviewer);
             interviewer.RemoveInterviewSchedule(this);
         }
-
 
 
         var interviewersToAdd = EntityComparer.GetNonMatchingEntities(interviewers, Interviewers);
@@ -193,13 +185,13 @@ public partial class InterviewSchedule
 
     public void SetStatus(InterviewStatusEnum interviewStatusEnum)
     {
-        InterviewScheduleStatusId = (short)interviewStatusEnum;
+        InterviewScheduleStatusId = interviewStatusEnum;
     }
 
 
     public void SetResult(InterviewResultEnum interviewResultEnum)
     {
-        InterviewResultId = (short)interviewResultEnum;
+        InterviewResultId = interviewResultEnum;
     }
 
 

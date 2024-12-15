@@ -1,10 +1,12 @@
-﻿namespace InterviewManagementSystem.Domain.Entities.Offers;
+﻿using InterviewManagementSystem.Domain.Enums;
+
+namespace InterviewManagementSystem.Domain.Entities.Offers;
 
 public partial class OfferStatus
 {
-    public short Id { get; set; }
+    public OfferStatusEnum Id { get; set; }
 
     public string? Name { get; set; }
 
-    public virtual ICollection<Offer> Offers { get; set; } = new List<Offer>();
+    public virtual ICollection<Offer> Offers { get; set; } = [];
 }

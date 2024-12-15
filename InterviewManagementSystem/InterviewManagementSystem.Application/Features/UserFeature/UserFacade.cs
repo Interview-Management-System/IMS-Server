@@ -89,6 +89,13 @@ public sealed class UserFacade
 
 
 
+
+    public async Task<ApiResponse<List<CandidateForRetrieveDTO>>> GetListCandidateAsync()
+    {
+        return await UserRetrieveUseCase.GetCandidateListAsync();
+    }
+
+
     public async Task<ApiResponse<CandidateForRetrieveDTO>> GetListCandidatePagingAsync()
     {
         return null;

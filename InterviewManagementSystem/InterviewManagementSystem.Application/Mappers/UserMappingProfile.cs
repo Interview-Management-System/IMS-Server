@@ -2,6 +2,7 @@
 using InterviewManagementSystem.Application.DTOs.UserDTOs.CandidateDTOs;
 using InterviewManagementSystem.Application.DTOs.UserDTOs.UserDTOs;
 using InterviewManagementSystem.Domain.Entities.AppUsers;
+using InterviewManagementSystem.Domain.Enums.Extensions;
 using InterviewManagementSystem.Domain.Paginations;
 
 namespace InterviewManagementSystem.Application.Mappers;
@@ -20,11 +21,8 @@ public sealed class UserMappingProfile : Profile
         CreateMap<AppUser, UserForRetrieveDTO>()
             .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender! ? "Male" : "Female"))
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.IsActive! ? "Active" : "In-Active"))
-            .ForMember(dest => dest.IsDeleted, opt => opt.MapFrom(src => src.IsDeleted!))
-            .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Roles.Count > 0 ? src.Roles.FirstOrDefault()!.Name : null))
-            .ForMember(dest => dest.Department, opt => opt.MapFrom(src =>
-                                src.DepartmentId.HasValue ? src.DepartmentId.Value.GetDepartmentNameById() : null));
-
+            .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Roles.FirstOrDefault()!.Name ?? null))
+            .ForMember(dest => dest.Department, opt => opt.MapFrom(src => src.DepartmentId.HasValue ? src.DepartmentId.Value.GetEnumName() : ""));
 
 
         CreateMap<BaseUserDTO, AppUser>()
@@ -33,11 +31,7 @@ public sealed class UserMappingProfile : Profile
             .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
 
 
-        CreateMap<UserForCreateDTO, AppUser>()
-            .ForMember(dest => dest.DepartmentId, opt => opt.MapFrom(src => (short)src.DepartmentId))
-            .ReverseMap();
-
-
+        CreateMap<UserForCreateDTO, AppUser>().ReverseMap();
         CreateMap<PageResult<AppUser>, PageResult<UserForRetrieveDTO>>().ReverseMap();
     }
 
@@ -46,27 +40,19 @@ public sealed class UserMappingProfile : Profile
     private void CandidateMapping()
     {
         CreateMap<Candidate, CandidateForRetrieveDTO>()
-            .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender! ? "Male" : "Female"))
-            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.IsActive! ? "Active" : "In-Active"))
-            .ForMember(dest => dest.IsDeleted, opt => opt.MapFrom(src => src.IsDeleted!))
-            .ForMember(dest => dest.RecruiterName, opt => opt.MapFrom(src => src.Recruiter!.UserName))
-            .ForMember(dest => dest.Position, opt => opt.MapFrom(src => src.Position!.Name))
-
-            .ForMember(dest => dest.HighestLevel, opt => opt.MapFrom(src =>
-                                src.HighestLevelId.HasValue ? src.HighestLevelId.Value.GetHighestLevelNameById() : null))
-
-            .ForMember(dest => dest.CandidateStatus, opt => opt.MapFrom(src =>
-                               src.CandidateStatusId.HasValue ? src.CandidateStatusId.Value.GetCandidateStatusNameById() : null))
-            ;
+           .IncludeBase<AppUser, UserForRetrieveDTO>()
+           .ForMember(dest => dest.Department, opt => opt.Ignore())
+           .ForMember(dest => dest.DepartmentId, opt => opt.Ignore())
+           .ForMember(dest => dest.RecruiterName, opt => opt.MapFrom(src => src.Recruiter!.UserName))
+           .ForMember(dest => dest.Position, opt => opt.MapFrom(src => src.PositionId!.GetEnumName()))
+           .ForMember(dest => dest.HighestLevel, opt => opt.MapFrom(src => src.HighestLevelId.GetEnumName()))
+           .ForMember(dest => dest.CandidateStatus, opt => opt.MapFrom(src => src.CandidateStatusId.GetEnumName()))
+           //.ForMember(dest => dest.CV, opt => opt.MapFrom(src => FileUtility.CreateFileContentResultFromBytes(src.Attachment)))
+           ;
 
 
         // aggre for skills
-        CreateMap<CandidateForCreateDTO, Candidate>()
-            .ForMember(dest => dest.DepartmentId, opt => opt.MapFrom(src => (short)src.DepartmentId))
-            .ForMember(dest => dest.PositionId, opt => opt.MapFrom(src => (short)src.PositionId))
-            .ForMember(dest => dest.HighestLevelId, opt => opt.MapFrom(src => (short)src.HighestLevelId))
-            .ReverseMap();
-
+        CreateMap<CandidateForCreateDTO, Candidate>().ReverseMap();
         CreateMap<Candidate, CandidateForUpdateDTO>().ReverseMap();
     }
 }

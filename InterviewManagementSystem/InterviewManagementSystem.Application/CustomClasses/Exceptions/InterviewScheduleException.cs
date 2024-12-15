@@ -1,4 +1,5 @@
 ﻿using InterviewManagementSystem.Domain.Entities.Interviews;
+using InterviewManagementSystem.Domain.Enums.Extensions;
 
 namespace InterviewManagementSystem.Application.CustomClasses.Exceptions;
 
@@ -15,10 +16,10 @@ internal sealed class InterviewScheduleException(string errorMessage) : Applicat
 
 
 
-        var isTheSameStatus = interviewStatusId == (short)statusToSet;
+        var isTheSameStatus = interviewStatusId == statusToSet;
 
         if (isTheSameStatus)
-            throw new CandidateException($"The status is already {((short)interviewStatusId).GetInterviewStatusNameById()}");
+            throw new CandidateException($"The status is already {statusToSet.GetEnumName()}");
     }
 
 
@@ -33,9 +34,9 @@ internal sealed class InterviewScheduleException(string errorMessage) : Applicat
 
 
 
-        var isTheSameStatus = interviewResultId == (short)resultToSet;
+        var isTheSameStatus = interviewResultId == resultToSet;
 
         if (isTheSameStatus)
-            throw new CandidateException($"The result is already {((short)interviewResultId).GetInterviewResultNameById()}");
+            throw new CandidateException($"The result is already {resultToSet.GetEnumName()}");
     }
 }
