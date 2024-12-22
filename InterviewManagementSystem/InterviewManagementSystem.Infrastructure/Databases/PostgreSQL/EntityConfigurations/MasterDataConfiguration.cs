@@ -2,7 +2,7 @@
 using InterviewManagementSystem.Domain.Entities.Offers;
 using Microsoft.EntityFrameworkCore;
 
-namespace InterviewManagementSystem.Infrastructure.Persistences.EntityConfigurations;
+namespace InterviewManagementSystem.Infrastructure.Databases.PostgreSQL.EntityConfigurations;
 
 public static class MasterDataConfiguration
 {

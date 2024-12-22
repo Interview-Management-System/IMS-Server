@@ -1,9 +1,6 @@
-﻿using InterviewManagementSystem.Application.CustomClasses;
-using InterviewManagementSystem.Application.DTOs.JobDTOs;
+﻿using InterviewManagementSystem.Application.DTOs.JobDTOs;
 using InterviewManagementSystem.Application.Features.JobFeature;
-using InterviewManagementSystem.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
-using static InterviewManagementSystem.Application.CustomClasses.Helpers.EntityHelper;
 
 namespace InterviewManagementSystem.API.Controllers;
 
@@ -32,19 +29,9 @@ public class JobController : ControllerBase
 
 
     [HttpGet("list-paging")]
-    public async Task<IActionResult> GetListJobPageResultAsync(string? jobTitle, JobStatusEnum? jobStatusId, int pageSize = 5, int pageIndex = 1)
+    public async Task<IActionResult> GetListJobPageResultAsync(JobPaginatedSearchRequest request)
     {
-
-        var paginationRequest = new PaginationRequest()
-        {
-            PageSize = pageSize,
-            PageIndex = pageIndex,
-            EnumsToFilter = EntityEnumMapping.BuildJobEnumFilter(jobStatusId),
-            FieldNamesToSearch = EntityPropertyMapping.BuildJobSearchFieldMapping(jobTitle)
-        };
-
-
-        var apiResponse = await _jobFacade.GetListJobPagingAsync(paginationRequest);
+        var apiResponse = await _jobFacade.GetListJobPagingAsync(request);
         return Ok(apiResponse);
     }
 

@@ -45,16 +45,16 @@ public sealed class OfferMappingProfile : Profile
 
 
         var createOfferMap = CreateMap<OfferForCreateDTO, DataForCreateOffer>()
-        .ForPath(dest => dest.DatePeriod!.EndDate, opt => opt.MapFrom(src => src.ContractTo))
-        .ForPath(dest => dest.DatePeriod!.StartDate, opt => opt.MapFrom(src => src.ContractFrom));
+            .ForPath(dest => dest.DatePeriod!.EndDate, opt => opt.MapFrom(src => src.ContractTo))
+            .ForPath(dest => dest.DatePeriod!.StartDate, opt => opt.MapFrom(src => src.ContractFrom));
 
         CreateFlexibleMap(createOfferMap);
 
 
 
         var updateOfferMap = CreateMap<OfferForUpdateDTO, DataForUpdateOffer>()
-        .ForPath(dest => dest.DatePeriod!.EndDate, opt => opt.MapFrom(src => src.ContractTo))
-        .ForPath(dest => dest.DatePeriod!.StartDate, opt => opt.MapFrom(src => src.ContractFrom));
+            .ForPath(dest => dest.DatePeriod!.EndDate, opt => opt.MapFrom(src => src.ContractTo))
+            .ForPath(dest => dest.DatePeriod!.StartDate, opt => opt.MapFrom(src => src.ContractFrom));
 
         CreateFlexibleMap(updateOfferMap);
 

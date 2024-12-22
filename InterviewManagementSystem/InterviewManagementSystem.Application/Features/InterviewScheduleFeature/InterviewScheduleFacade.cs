@@ -31,9 +31,9 @@ public sealed class InterviewScheduleFacade
 
 
 
-    public async Task<ApiResponse<PageResult<InterviewScheduleForRetrieveDTO>>> GetInterviewSchedulePagingAsync(PaginationRequest paginationRequest, Guid? interviewerId)
+    public async Task<ApiResponse<PageResult<InterviewScheduleForRetrieveDTO>>> GetInterviewSchedulePagingAsync(InterviewSchedulePaginatedSearchRequest request)
     {
-        return await _interviewScheduleRetrieveUseCase.GetListInterviewPagingAsync(paginationRequest, interviewerId);
+        return await _interviewScheduleRetrieveUseCase.GetListInterviewPagingAsync(request);
     }
 
 

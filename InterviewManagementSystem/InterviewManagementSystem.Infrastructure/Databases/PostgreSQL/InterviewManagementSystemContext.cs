@@ -4,7 +4,7 @@ using InterviewManagementSystem.Domain.Entities.Interviews;
 using InterviewManagementSystem.Domain.Entities.Jobs;
 using InterviewManagementSystem.Domain.Entities.MasterData;
 using InterviewManagementSystem.Domain.Entities.Offers;
-using InterviewManagementSystem.Infrastructure.Persistences.EntityConfigurations;
+using InterviewManagementSystem.Infrastructure.Databases.PostgreSQL.EntityConfigurations;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

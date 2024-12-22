@@ -1,9 +1,7 @@
 ﻿using InterviewManagementSystem.Domain.Entities.AppUsers;
-using InterviewManagementSystem.Domain.Entities.Interviews;
+using InterviewManagementSystem.Infrastructure.Persistences;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
 
 namespace InterviewManagementSystem.API.Controllers
 {
@@ -20,52 +18,33 @@ namespace InterviewManagementSystem.API.Controllers
 
 
 
-        [HttpGet]
-        //[Authorize(Policy = AuthorizationPolicy.RequiredAdmin)]
+        [HttpPost("download-pdf")]
+        public async Task<IActionResult> DownloadPdf(IFormFile file)
+        {
+
+            // Read the PDF file bytes
+            byte[] fileBytes = [];
+
+
+            using (var memoryStream = new MemoryStream())
+            {
+                await file.CopyToAsync(memoryStream);
+                fileBytes = memoryStream.ToArray();
+            }
+
+            // Return the file as a response with the appropriate content type
+            return Ok(fileBytes);
+        }
+
+        [HttpGet("geteeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")]
         public async Task<IActionResult> Get()
         {
 
-            var i = new InterviewSchedule();
-
-
-            Stopwatch stopwatch = Stopwatch.StartNew();
-            i.SetInterviewers(await _userManager.Users.ToListAsync());
-
-            stopwatch.Stop();
-            return Ok(stopwatch.ElapsedMilliseconds);
-        }
-
-
-
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] TimeOnly timeOnly)
-        {
-
-            return Ok("asdf");
-        }
-
-
-        private void Tessss(Test test)
-        {
-            test.MyProperty = 0;
-            test.Candidate.UserName = "ohla";
+            var a = new InterviewManagementSystemContext();
+            return Ok(a.Positions.ToList());
         }
     }
 
-
-
-
-
-
-
-
-
-
-    internal struct Test
-    {
-        public int MyProperty { get; set; }
-        public Candidate Candidate { get; set; }
-    }
 }
 
 

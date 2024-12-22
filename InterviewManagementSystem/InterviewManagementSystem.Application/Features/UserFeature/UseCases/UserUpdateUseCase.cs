@@ -1,6 +1,7 @@
 ﻿using InterviewManagementSystem.Application.DTOs.UserDTOs.CandidateDTOs;
 using InterviewManagementSystem.Application.DTOs.UserDTOs.UserDTOs;
 using InterviewManagementSystem.Domain.Entities.AppUsers;
+using InterviewManagementSystem.Domain.Enums.Extensions;
 
 
 

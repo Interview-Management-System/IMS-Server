@@ -12,7 +12,7 @@ internal static class MapperConfiguration
             typeof(JobMappingProfile),
             typeof(UserMappingProfile),
             typeof(OfferMappingProfile),
-            typeof(MasterDataMappingProfile),
+            typeof(PaginationMappingProfile),
             typeof(InterviewScheduleMappingProfile),
         ];
 

@@ -1,28 +1,17 @@
 ﻿using InterviewManagementSystem.Application.DTOs.OfferDTOs;
 using InterviewManagementSystem.Domain.Entities.Offers;
 using InterviewManagementSystem.Domain.Paginations;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 
 namespace InterviewManagementSystem.Application.Features.OfferFeature.UseCases;
 
-public sealed class OfferRetrieveUseCase : BaseUseCase
+public sealed class OfferRetrieveUseCase(IMapper mapper, IUnitOfWork unitOfWork) : BaseUseCase(mapper, unitOfWork)
 {
-
-
-    public OfferRetrieveUseCase(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
-    {
-    }
-
-
-    internal async Task<ApiResponse<PageResult<OfferForRetrieveDTO>>> GetListOfferPagingAsync(PaginationRequest paginationRequest)
+    internal async Task<ApiResponse<PageResult<OfferForRetrieveDTO>>> GetListOfferPagingAsync(OfferPaginatedSearchRequest paginatedSearchRequest)
     {
 
-        var filters = FilterHelper.BuildFilters<Offer>(paginationRequest, nameof(Offer.Candidate.UserName));
-
-        PaginationParameter<Offer> paginationParameter = _mapper.Map<PaginationParameter<Offer>>(paginationRequest);
-        paginationParameter.Filters = filters;
+        PaginationParameter<Offer> paginationParameter = _mapper.Map<PaginationParameter<Offer>>(paginatedSearchRequest);
 
 
         string[] includeProperties = [nameof(Offer.Candidate), nameof(Offer.Approver)];
@@ -31,7 +20,7 @@ public sealed class OfferRetrieveUseCase : BaseUseCase
 
         return new ApiResponse<PageResult<OfferForRetrieveDTO>>
         {
-            Message = pageResult.Items.Count > 0 ? "List job found" : "No jobs found",
+            Message = pageResult.Items.Count > 0 ? "List offer found" : "No offer found",
             Data = _mapper.Map<PageResult<OfferForRetrieveDTO>>(pageResult)
         };
     }

@@ -1,6 +1,6 @@
 ﻿namespace InterviewManagementSystem.Domain.Enums;
 
-public enum OfferStatusEnum : short
+public enum OfferStatusEnum
 {
     WaitingForApproval = 1,
     Approved,

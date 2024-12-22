@@ -2,11 +2,12 @@
 using InterviewManagementSystem.Domain.Entities;
 using InterviewManagementSystem.Domain.Interfaces;
 using InterviewManagementSystem.Domain.Paginations;
+using InterviewManagementSystem.Infrastructure.Persistences;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 
-namespace InterviewManagementSystem.Infrastructure.Persistences.Repositories;
+namespace InterviewManagementSystem.Infrastructure.Databases.PostgreSQL.Repositories;
 
 public class BaseRepository<T> : IBaseRepository<T> where T : class
 {

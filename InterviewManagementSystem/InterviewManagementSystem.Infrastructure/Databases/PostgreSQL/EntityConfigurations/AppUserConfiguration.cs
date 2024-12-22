@@ -3,7 +3,7 @@ using InterviewManagementSystem.Domain.Entities.Interviews;
 using InterviewManagementSystem.Domain.Entities.MasterData;
 using Microsoft.EntityFrameworkCore;
 
-namespace InterviewManagementSystem.Infrastructure.Persistences.EntityConfigurations;
+namespace InterviewManagementSystem.Infrastructure.Databases.PostgreSQL.EntityConfigurations;
 
 internal static class AppUserConfiguration
 {

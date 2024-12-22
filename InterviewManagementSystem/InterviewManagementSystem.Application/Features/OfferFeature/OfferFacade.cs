@@ -23,9 +23,9 @@ public sealed class OfferFacade
 
 
 
-    public async Task<ApiResponse<PageResult<OfferForRetrieveDTO>>> GetListOfferPagingAsync(PaginationRequest paginationRequest)
+    public async Task<ApiResponse<PageResult<OfferForRetrieveDTO>>> GetListOfferPagingAsync(OfferPaginatedSearchRequest paginatedSearchRequest)
     {
-        return await _offerRetrieveUseCase.GetListOfferPagingAsync(paginationRequest);
+        return await _offerRetrieveUseCase.GetListOfferPagingAsync(paginatedSearchRequest);
     }
 
 

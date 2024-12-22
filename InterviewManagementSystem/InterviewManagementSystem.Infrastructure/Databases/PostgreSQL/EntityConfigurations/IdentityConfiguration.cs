@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace InterviewManagementSystem.Infrastructure.Persistences.EntityConfigurations;
+namespace InterviewManagementSystem.Infrastructure.Databases.PostgreSQL.EntityConfigurations;
 
 public static class IdentityConfiguration
 {

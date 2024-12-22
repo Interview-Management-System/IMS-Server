@@ -1,6 +1,7 @@
 ﻿using InterviewManagementSystem.Application.DTOs.UserDTOs.CandidateDTOs;
 using InterviewManagementSystem.Application.DTOs.UserDTOs.UserDTOs;
 using InterviewManagementSystem.Domain.Entities.AppUsers;
+using InterviewManagementSystem.Domain.Enums.Extensions;
 using InterviewManagementSystem.Domain.Paginations;
 
 namespace InterviewManagementSystem.Application.Features.UserFeature.UseCases;
@@ -65,30 +66,21 @@ public sealed class UserRetrieveUseCase : BaseUserUseCase
     }
 
 
-
-
-    internal async Task<ApiResponse<PageResult<UserForRetrieveDTO>>> GetListUserPagingAsync(PaginationRequest paginationRequest, RoleEnum? roleId)
+    internal async Task<ApiResponse<PageResult<UserForRetrieveDTO>>> GetListUserPagingAsync(UserPaginatedSearchRequest request)
     {
 
-        var filters = FilterHelper.BuildFilters<AppUser>(paginationRequest, nameof(AppUser.UserName));
+        PaginationParameter<AppUser> paginationParameter = _mapper.Map<PaginationParameter<AppUser>>(request);
 
-
-        PaginationParameter<AppUser> paginationParameter = _mapper.Map<PaginationParameter<AppUser>>(paginationRequest);
-        paginationParameter.Filters = filters;
-
-
+        RoleEnum roleId = request.RoleId ?? default;
 
         // Filter by role
-        if (roleId != null)
-        {
-
-            AppRole? role = await _roleManager.FindByIdAsync(roleId.Value.GetRoleId().ToString());
-            ArgumentNullException.ThrowIfNull(role, "Role not found to filter");
+        AppRole? role = await _roleManager.FindByIdAsync(roleId.GetRoleId());
+        ArgumentNullException.ThrowIfNull(role, "Role not found to filter");
 
 
-            List<Guid> userWithRole = (await _userManager.GetUsersInRoleAsync(role.Name!)).Select(x => x.Id).ToList();
-            paginationParameter.Filters.Add(x => userWithRole.Contains(x.Id));
-        }
+        List<Guid> userWithRole = (await _userManager.GetUsersInRoleAsync(role.Name!)).Select(x => x.Id).ToList();
+        paginationParameter.Filters.Add(x => userWithRole.Contains(x.Id));
+
 
         var pageResult = await _unitOfWork.AppUserRepository.GetByPageWithIncludeAsync(paginationParameter);
 

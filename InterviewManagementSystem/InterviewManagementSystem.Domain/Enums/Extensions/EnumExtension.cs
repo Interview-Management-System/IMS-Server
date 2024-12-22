@@ -2,6 +2,17 @@
 
 public static class EnumExtension
 {
+
+    private static readonly Dictionary<RoleEnum, string> RoleIdEnumMap = new()
+    {
+        { RoleEnum.Admin, "5900eab6-e2e1-4160-83ee-b985ac709f46" },
+        { RoleEnum.Candidate, "83926601-feef-4371-8fbe-40a68fbe8ef6" },
+        { RoleEnum.Manager, "60de2025-9b80-4ce2-920c-4628860ccfce" },
+        { RoleEnum.Recruiter, "b13ce32b-05a7-480b-817f-099106c463a7" },
+        { RoleEnum.Interviewer, "9360eb9d-3aa2-4448-ba57-920cb69043af" },
+    };
+
+
     // Centralized dictionary to store mappings for multiple enums
     private static readonly Dictionary<Type, Dictionary<Enum, string>> EnumMappings = new()
     {
@@ -25,8 +36,6 @@ public static class EnumExtension
             }
         },
 
-
-
         {
             typeof(BenefitEnum), new Dictionary<Enum, string>
             {
@@ -37,7 +46,6 @@ public static class EnumExtension
                 {  BenefitEnum.Travel, "Travel" },
             }
         },
-
 
         {
             typeof(ContractTypeEnum), new Dictionary<Enum, string>
@@ -50,7 +58,6 @@ public static class EnumExtension
             }
         },
 
-
         {
             typeof(DepartmentEnum), new Dictionary<Enum, string>
             {
@@ -62,7 +69,6 @@ public static class EnumExtension
                 {  DepartmentEnum.Accounting, "Accounting" },
             }
         },
-
 
         {
             typeof(HighestLevelEnum), new Dictionary<Enum, string>
@@ -85,7 +91,6 @@ public static class EnumExtension
             }
         },
 
-
         {
             typeof(InterviewStatusEnum), new Dictionary<Enum, string>
             {
@@ -96,7 +101,6 @@ public static class EnumExtension
             }
         },
 
-
         {
             typeof(JobStatusEnum), new Dictionary<Enum, string>
             {
@@ -105,7 +109,6 @@ public static class EnumExtension
                 {  JobStatusEnum.Closed, nameof(JobStatusEnum.Closed)  },
             }
         },
-
 
         {
             typeof(LevelEnum), new Dictionary<Enum, string>
@@ -118,7 +121,6 @@ public static class EnumExtension
                 {  LevelEnum.ViceHead, "Vice Head" },
             }
         },
-
 
         {
             typeof(OfferStatusEnum), new Dictionary<Enum, string>
@@ -133,7 +135,6 @@ public static class EnumExtension
             }
         },
 
-
         {
             typeof(PositionEnum), new Dictionary<Enum, string>
             {
@@ -146,7 +147,6 @@ public static class EnumExtension
             }
         },
 
-
         {
             typeof(RoleEnum), new Dictionary<Enum, string>
             {
@@ -157,7 +157,6 @@ public static class EnumExtension
                 {  RoleEnum.Interviewer, "Interviewer" },
             }
         },
-
 
         {
             typeof(SkillsEnum), new Dictionary<Enum, string>
@@ -185,5 +184,32 @@ public static class EnumExtension
             return name ?? "";
 
         throw new ArgumentException($"No mapping found for enum value '{enumValue}' in type '{enumType.Name}'");
+    }
+
+
+
+    // Get RoleId for RoleEnum
+    public static string GetRoleId(this RoleEnum role)
+    {
+        if (RoleIdEnumMap.TryGetValue(role, out var id))
+        {
+            return id;
+        }
+
+        throw new ArgumentException($"No GUID mapping found for role {role}");
+    }
+
+    // Get RoleName by RoleId (GUID)
+    public static string GetRoleNameById(this Guid roleId)
+    {
+        foreach (var (roleEnum, guidString) in RoleIdEnumMap)
+        {
+            if (Guid.TryParse(guidString, out var guid) && guid == roleId)
+            {
+                return roleEnum.GetEnumName();
+            }
+        }
+
+        throw new ArgumentException($"Invalid role ID {roleId}");
     }
 }

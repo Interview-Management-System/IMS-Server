@@ -5,25 +5,13 @@ using System.Linq.Expressions;
 
 namespace InterviewManagementSystem.Application.Features.JobFeature.UseCases;
 
-public sealed class JobRetrieveUseCase : BaseUseCase
+public sealed class JobRetrieveUseCase(IMapper mapper, IUnitOfWork unitOfWork) : BaseUseCase(mapper, unitOfWork)
 {
 
-
-    public JobRetrieveUseCase(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
-    {
-    }
-
-
-
-    public async Task<ApiResponse<PageResult<JobForRetrieveDTO>>> GetListJobPagingAsync(PaginationRequest paginationRequest)
+    public async Task<ApiResponse<PageResult<JobForRetrieveDTO>>> GetListJobPagingAsync(JobPaginatedSearchRequest request)
     {
 
-        var filters = FilterHelper.BuildFilters<Job>(paginationRequest, nameof(Job.Title));
-
-
-        PaginationParameter<Job> paginationParameter = _mapper.Map<PaginationParameter<Job>>(paginationRequest);
-        paginationParameter.Filters = filters;
-
+        PaginationParameter<Job> paginationParameter = _mapper.Map<PaginationParameter<Job>>(request);
 
         string[] includeProperties = [nameof(Job.Skills), nameof(Job.Levels), nameof(Job.JobStatus)];
         var pageResult = await _unitOfWork.JobRepository.GetByPageWithIncludeAsync(paginationParameter, includeProperties);

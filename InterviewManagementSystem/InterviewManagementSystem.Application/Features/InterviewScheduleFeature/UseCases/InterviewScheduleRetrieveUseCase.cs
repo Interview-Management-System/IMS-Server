@@ -2,39 +2,20 @@
 using InterviewManagementSystem.Application.DTOs.InterviewScheduleDTOs;
 using InterviewManagementSystem.Domain.Entities.Interviews;
 using InterviewManagementSystem.Domain.Paginations;
-using Microsoft.EntityFrameworkCore;
 
 namespace InterviewManagementSystem.Application.Features.InterviewScheduleFeature.UseCases;
 
-public sealed class InterviewScheduleRetrieveUseCase : BaseUseCase
+public sealed class InterviewScheduleRetrieveUseCase(IMapper mapper, IUnitOfWork unitOfWork) : BaseUseCase(mapper, unitOfWork)
 {
 
 
-    public InterviewScheduleRetrieveUseCase(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
-    {
-    }
-
-
-
-
-    public async Task<ApiResponse<PageResult<InterviewScheduleForRetrieveDTO>>> GetListInterviewPagingAsync(PaginationRequest paginationRequest, Guid? interviewerId)
+    public async Task<ApiResponse<PageResult<InterviewScheduleForRetrieveDTO>>> GetListInterviewPagingAsync(InterviewSchedulePaginatedSearchRequest request)
     {
 
-        var filters = FilterHelper.BuildFilters<InterviewSchedule>(paginationRequest, nameof(InterviewSchedule.Title));
-
-
-        PaginationParameter<InterviewSchedule> paginationParameter = _mapper.Map<PaginationParameter<InterviewSchedule>>(paginationRequest);
-        paginationParameter.Filters = filters;
-
-
-        if (interviewerId != null)
-        {
-            filters.Add(i => i.Interviewers.Any(interviewer => interviewer.Id == interviewerId.Value));
-        }
+        PaginationParameter<InterviewSchedule> paginationParameter = _mapper.Map<PaginationParameter<InterviewSchedule>>(request);
 
 
         string[] includeProperties = [nameof(InterviewSchedule.Interviewers), nameof(InterviewSchedule.Job)];
-
 
         var pageResult = await _unitOfWork
             .InterviewScheduleRepository
@@ -47,8 +28,6 @@ public sealed class InterviewScheduleRetrieveUseCase : BaseUseCase
             Data = _mapper.Map<PageResult<InterviewScheduleForRetrieveDTO>>(pageResult)
         };
     }
-
-
 
 
     public async Task<ApiResponse<InterviewScheduleForDetailRetrieveDTO>> GetInterviewByIdAsync(Guid interviewerId)

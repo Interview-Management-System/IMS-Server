@@ -17,13 +17,13 @@ public sealed class InterviewScheduleMappingProfile : Profile
 
         // Base mapping for interview
         CreateMap<InterviewSchedule, BaseInterviewSchedule>()
-        .ForMember(dest => dest.Job, opt => opt.MapFrom(src => src.Job!.Title))
-        .ForMember(dest => dest.CandidateName, opt => opt.MapFrom(src => src.Candidate!.UserName))
-        .ForMember(dest => dest.Schedule, opt => opt.MapFrom(src => src.ScheduleTime!.Value.ToVieFormat()))
-        .ForMember(dest => dest.Interviewers, opt => opt.MapFrom(src => src.Interviewers.Select(u => u.UserName).ToList()))
-        .ForMember(dest => dest.Result, opt => opt.MapFrom(src => src.InterviewResultId!.Value.GetEnumName()))
-        .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.InterviewScheduleStatusId!.Value.GetEnumName()))
-        .ReverseMap();
+            .ForMember(dest => dest.Job, opt => opt.MapFrom(src => src.Job!.Title))
+            .ForMember(dest => dest.CandidateName, opt => opt.MapFrom(src => src.Candidate!.UserName))
+            .ForMember(dest => dest.Schedule, opt => opt.MapFrom(src => src.ScheduleTime!.Value.ToVieFormat()))
+            .ForMember(dest => dest.Interviewers, opt => opt.MapFrom(src => src.Interviewers.Select(u => u.UserName).ToList()))
+            .ForMember(dest => dest.Result, opt => opt.MapFrom(src => src.InterviewResultId!.Value.GetEnumName()))
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.InterviewScheduleStatusId!.Value.GetEnumName()))
+            .ReverseMap();
 
 
         CreateMap<InterviewSchedule, InterviewScheduleForRetrieveDTO>()

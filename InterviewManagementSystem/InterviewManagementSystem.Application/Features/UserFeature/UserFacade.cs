@@ -47,9 +47,9 @@ public sealed class UserFacade
 
 
 
-    public async Task<ApiResponse<PageResult<UserForRetrieveDTO>>> GetListUserPagingAsync(PaginationRequest paginationRequest, RoleEnum? roleId)
+    public async Task<ApiResponse<PageResult<UserForRetrieveDTO>>> GetListUserPagingAsync(UserPaginatedSearchRequest request)
     {
-        return await UserRetrieveUseCase.GetListUserPagingAsync(paginationRequest, roleId);
+        return await UserRetrieveUseCase.GetListUserPagingAsync(request);
     }
 
 

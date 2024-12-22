@@ -10,5 +10,9 @@ public class DomainException(string message) : Exception(message)
             throw new InvalidOperationException(errorMessage ?? "Invalid operation");
     }
 
-
+    internal static void ThrowIfInvalidArgument(bool isInvalidCondition, string? errorMessage = null)
+    {
+        if (isInvalidCondition)
+            throw new ArgumentException(errorMessage ?? "Invalid argument");
+    }
 }

@@ -35,9 +35,6 @@ public enum LevelEnum
 }
 
 
-
-
-
 public enum HighestLevelEnum
 {
     HighSchool = 1,

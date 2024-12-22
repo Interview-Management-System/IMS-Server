@@ -1,11 +1,8 @@
-﻿using InterviewManagementSystem.Application.CustomClasses;
-using InterviewManagementSystem.Application.DTOs.UserDTOs.CandidateDTOs;
+﻿using InterviewManagementSystem.Application.DTOs.UserDTOs.CandidateDTOs;
 using InterviewManagementSystem.Application.DTOs.UserDTOs.UserDTOs;
 using InterviewManagementSystem.Application.Features.UserFeature;
 using InterviewManagementSystem.Domain.Enums;
-using InterviewManagementSystem.Infrastructure.Persistences;
 using Microsoft.AspNetCore.Mvc;
-using static InterviewManagementSystem.Application.CustomClasses.Helpers.EntityHelper;
 
 namespace InterviewManagementSystem.API.Controllers;
 
@@ -44,17 +41,9 @@ public sealed class UserController : ControllerBase
 
 
     [HttpGet("list-paging")]
-    public async Task<IActionResult> GetListUserPagingAsync(string? searchName, RoleEnum? roleId, int pageSize = 5, int pageIndex = 1)
+    public async Task<IActionResult> GetListUserPagingAsync(UserPaginatedSearchRequest request)
     {
-
-        var pagingRequest = new PaginationRequest()
-        {
-            PageSize = pageSize,
-            PageIndex = pageIndex,
-            FieldNamesToSearch = EntityPropertyMapping.BuildAppUserSearchFieldMapping(searchName)
-        };
-
-        var apiResponse = await _userFacade.GetListUserPagingAsync(pagingRequest, roleId);
+        var apiResponse = await _userFacade.GetListUserPagingAsync(request);
         return Ok(apiResponse);
     }
 
@@ -173,30 +162,4 @@ public sealed class UserController : ControllerBase
         return Ok(apiResponse);
     }
 
-
-    [HttpPost("download-pdf")]
-    public async Task<IActionResult> DownloadPdf(IFormFile file)
-    {
-
-        // Read the PDF file bytes
-        byte[] fileBytes = [];
-
-
-        using (var memoryStream = new MemoryStream())
-        {
-            await file.CopyToAsync(memoryStream);
-            fileBytes = memoryStream.ToArray();
-        }
-
-        // Return the file as a response with the appropriate content type
-        return Ok(fileBytes);
-    }
-
-    [HttpGet("geteeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")]
-    public async Task<IActionResult> Get()
-    {
-
-        var a = new InterviewManagementSystemContext();
-        return Ok(a.Positions.ToList());
-    }
 }

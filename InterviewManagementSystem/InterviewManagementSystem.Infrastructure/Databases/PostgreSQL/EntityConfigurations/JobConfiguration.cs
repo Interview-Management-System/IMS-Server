@@ -3,7 +3,7 @@ using InterviewManagementSystem.Domain.Entities.MasterData;
 using InterviewManagementSystem.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
-namespace InterviewManagementSystem.Infrastructure.Persistences.EntityConfigurations;
+namespace InterviewManagementSystem.Infrastructure.Databases.PostgreSQL.EntityConfigurations;
 
 internal static class JobConfiguration
 {

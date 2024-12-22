@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System.Linq.Expressions;
-
-namespace InterviewManagementSystem.Application.CustomClasses.Helpers;
+﻿namespace InterviewManagementSystem.Application.CustomClasses.Helpers;
 
 public static class FilterHelper
 {
@@ -9,7 +6,7 @@ public static class FilterHelper
 
     public static IServiceProvider? Service { get; set; }
 
-
+    /*
     public static List<Expression<Func<TEntity, bool>>> BuildFilters<TEntity>(PaginationRequest paginationRequest, string searchFieldName)
     {
         var listCondition = new List<Expression<Func<TEntity, bool>>>();
@@ -174,6 +171,7 @@ public static class FilterHelper
             }
         }
     }
+    */
 }
 
 

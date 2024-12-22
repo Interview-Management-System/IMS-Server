@@ -4,7 +4,7 @@ using InterviewManagementSystem.Domain.CustomClasses.EntityData.InterviewData;
 using InterviewManagementSystem.Domain.Entities.AppUsers;
 using InterviewManagementSystem.Domain.Entities.Interviews;
 using InterviewManagementSystem.Domain.Entities.Jobs;
-using Microsoft.EntityFrameworkCore;
+using InterviewManagementSystem.Domain.Enums.Extensions;
 
 namespace InterviewManagementSystem.Application.Features.InterviewScheduleFeature.UseCases;
 
@@ -61,7 +61,7 @@ public sealed class InterviewScheduleCreateUseCase : BaseUseCase
 
 
         // Get all available interviewers
-        var interviewers = await _userManager.GetUsersInRoleAsync(RoleEnum.Interviewer.GetRoleName());
+        var interviewers = await _userManager.GetUsersInRoleAsync(RoleEnum.Interviewer.GetEnumName());
         var filteredInterviewers = interviewers.Where(i => interviewScheduleForCreateDTO.InterviewerList.Contains(i.Id)).ToList();
 
         ApplicationException.ThrowIfNoRecordFound((filteredInterviewers.Count == 0) is false, "No interviewers available");

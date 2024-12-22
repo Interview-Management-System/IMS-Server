@@ -1,9 +1,7 @@
-﻿using InterviewManagementSystem.Application.CustomClasses;
-using InterviewManagementSystem.Application.DTOs.OfferDTOs;
+﻿using InterviewManagementSystem.Application.DTOs.OfferDTOs;
 using InterviewManagementSystem.Application.Features.OfferFeature;
 using InterviewManagementSystem.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
-using static InterviewManagementSystem.Application.CustomClasses.Helpers.EntityHelper;
 
 namespace InterviewManagementSystem.API.Controllers;
 
@@ -13,21 +11,10 @@ public sealed class OfferController(OfferFacade offerFacade) : ControllerBase
 {
 
 
-
-    [HttpGet("list-paging")]
-    public async Task<IActionResult> GetListOfferPagingAsync(string? searchName, OfferStatusEnum? offerStatusId, DepartmentEnum? departmentId, int pageSize = 5, int pageIndex = 1)
+    [HttpPost("list-paging")]
+    public async Task<IActionResult> GetListOfferPagingAsync(OfferPaginatedSearchRequest paginatedSearchRequest)
     {
-
-        var pagingRequest = new PaginationRequest()
-        {
-            PageSize = pageSize,
-            PageIndex = pageIndex,
-            EnumsToFilter = EntityEnumMapping.BuildOfferEnumFilter(offerStatusId, departmentId),
-            FieldNamesToSearch = EntityPropertyMapping.BuildOfferSearchFieldMapping(searchName)
-        };
-
-
-        var apiResponse = await offerFacade.GetListOfferPagingAsync(pagingRequest);
+        var apiResponse = await offerFacade.GetListOfferPagingAsync(paginatedSearchRequest);
         return Ok(apiResponse);
 
     }

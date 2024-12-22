@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace InterviewManagementSystem.Infrastructure.Persistences.Extensions;
+namespace InterviewManagementSystem.Infrastructure.Databases.PostgreSQL.Extensions;
 
 public static class DependencyInjectionExtension
 {

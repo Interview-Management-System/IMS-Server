@@ -1,4 +1,5 @@
 ﻿using InterviewManagementSystem.Domain.Enums;
+using InterviewManagementSystem.Domain.Enums.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -52,11 +53,11 @@ internal static class AccessControl
     internal static void AddRoleAuthorization(this IServiceCollection services)
     {
 
-        string adminRole = RoleEnum.Admin.GetRoleName();
-        string managerRole = RoleEnum.Manager.GetRoleName();
-        string candidateRole = RoleEnum.Candidate.GetRoleName();
-        string recruiterRole = RoleEnum.Recruiter.GetRoleName();
-        string interviewRole = RoleEnum.Interviewer.GetRoleName();
+        string adminRole = RoleEnum.Admin.GetEnumName();
+        string managerRole = RoleEnum.Manager.GetEnumName();
+        string candidateRole = RoleEnum.Candidate.GetEnumName();
+        string recruiterRole = RoleEnum.Recruiter.GetEnumName();
+        string interviewRole = RoleEnum.Interviewer.GetEnumName();
 
 
         string[] adminAndManagerRoles = [adminRole, managerRole];
