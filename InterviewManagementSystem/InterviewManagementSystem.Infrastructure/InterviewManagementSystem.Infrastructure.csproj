@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Folder Include="Databases\MongoDB\" />
+    <Folder Include="Exceptions\" />
     <Folder Include="Services\Email\" />
     <Folder Include="Services\BackgroundServices\" />
   </ItemGroup>

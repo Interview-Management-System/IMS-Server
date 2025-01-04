@@ -18,12 +18,11 @@ public sealed class UserMappingProfile : Profile
 
     private void AppUserMapping()
     {
+
         CreateMap<AppUser, UserForRetrieveDTO>()
             .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender! ? "Male" : "Female"))
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.IsActive! ? "Active" : "In-Active"))
-            .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Roles.FirstOrDefault()!.Name ?? null))
-            .ForMember(dest => dest.Department, opt => opt.MapFrom(src => src.DepartmentId.HasValue ? src.DepartmentId.Value.GetEnumName() : ""));
-
+            .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Roles.FirstOrDefault()!.Name));
 
         CreateMap<BaseUserDTO, AppUser>()
             .ForMember(dest => dest.Id, opt => opt.Ignore())

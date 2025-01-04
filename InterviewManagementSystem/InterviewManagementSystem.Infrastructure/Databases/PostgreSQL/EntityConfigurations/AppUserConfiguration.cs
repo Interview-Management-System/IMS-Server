@@ -1,6 +1,7 @@
 ﻿using InterviewManagementSystem.Domain.Entities.AppUsers;
 using InterviewManagementSystem.Domain.Entities.Interviews;
 using InterviewManagementSystem.Domain.Entities.MasterData;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace InterviewManagementSystem.Infrastructure.Databases.PostgreSQL.EntityConfigurations;
@@ -10,7 +11,6 @@ internal static class AppUserConfiguration
     internal static void ConfigureAppUser(this ModelBuilder modelBuilder)
     {
 
-
         modelBuilder.Entity<AppRole>(entity =>
         {
             entity.ToTable("AppRoles", "IMS");
@@ -18,6 +18,7 @@ internal static class AppUserConfiguration
             entity.Property(e => e.Name).HasMaxLength(256);
             entity.Property(e => e.NormalizedName).HasMaxLength(256);
         });
+
 
 
         modelBuilder.Entity<AppRoleClaim>(entity =>
@@ -75,6 +76,15 @@ internal static class AppUserConfiguration
                         j.HasKey("AppUserId", "InterviewScheduleId").HasName("Interviewers_pkey");
                         j.ToTable("Interviewers", "IMS");
                     });
+
+            entity.HasMany(u => u.Roles)
+                .WithMany(r => r.Users)
+                .UsingEntity<IdentityUserRole<Guid>>(
+                    join => join.HasOne<AppRole>().WithMany().HasForeignKey(nameof(IdentityUserRole<Guid>.RoleId)),
+                    join => join.HasOne<AppUser>().WithMany().HasForeignKey(nameof(IdentityUserRole<Guid>.UserId)),
+                    join => join.ToTable("AppUserRoles")
+                );
+
         });
 
 
@@ -88,7 +98,6 @@ internal static class AppUserConfiguration
 
         modelBuilder.Entity<AppUserLogin>(entity =>
         {
-
             entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
             entity.ToTable("AppCustomUserLogins", "IMS");
             entity.HasIndex(e => e.UserId, "IX_AppUserLogins_UserId");
@@ -102,8 +111,6 @@ internal static class AppUserConfiguration
             entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name });
             entity.HasOne(d => d.User).WithMany(p => p.AppUserTokens).HasForeignKey(d => d.UserId);
         });
-
-
 
 
         modelBuilder.Entity<Candidate>(entity =>
@@ -162,7 +169,6 @@ internal static class AppUserConfiguration
                         j.HasKey("CandidateId", "SkillId").HasName("CandidateSkills_pkey");
                         j.ToTable("CandidateSkills", "IMS");
                     });
-
         });
 
 

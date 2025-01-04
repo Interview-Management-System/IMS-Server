@@ -15,7 +15,7 @@ public sealed class OfferRetrieveUseCase(IMapper mapper, IUnitOfWork unitOfWork)
 
 
         string[] includeProperties = [nameof(Offer.Candidate), nameof(Offer.Approver)];
-        var pageResult = await _unitOfWork.OfferRepository.GetByPageWithIncludeAsync(paginationParameter, includeProperties);
+        var pageResult = await _unitOfWork.OfferRepository.GetPaginationList(paginationParameter, includeProperties);
 
 
         return new ApiResponse<PageResult<OfferForRetrieveDTO>>

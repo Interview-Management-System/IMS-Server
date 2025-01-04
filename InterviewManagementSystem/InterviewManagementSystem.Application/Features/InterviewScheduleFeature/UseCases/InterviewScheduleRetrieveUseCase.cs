@@ -19,7 +19,7 @@ public sealed class InterviewScheduleRetrieveUseCase(IMapper mapper, IUnitOfWork
 
         var pageResult = await _unitOfWork
             .InterviewScheduleRepository
-            .GetByPageWithIncludeAsync(paginationParameter, includeProperties);
+            .GetPaginationList(paginationParameter, includeProperties);
 
 
         return new ApiResponse<PageResult<InterviewScheduleForRetrieveDTO>>

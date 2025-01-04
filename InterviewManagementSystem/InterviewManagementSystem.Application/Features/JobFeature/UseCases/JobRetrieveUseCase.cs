@@ -14,7 +14,7 @@ public sealed class JobRetrieveUseCase(IMapper mapper, IUnitOfWork unitOfWork) :
         PaginationParameter<Job> paginationParameter = _mapper.Map<PaginationParameter<Job>>(request);
 
         string[] includeProperties = [nameof(Job.Skills), nameof(Job.Levels), nameof(Job.JobStatus)];
-        var pageResult = await _unitOfWork.JobRepository.GetByPageWithIncludeAsync(paginationParameter, includeProperties);
+        var pageResult = await _unitOfWork.JobRepository.GetPaginationList(paginationParameter, includeProperties);
 
 
         return new ApiResponse<PageResult<JobForRetrieveDTO>>

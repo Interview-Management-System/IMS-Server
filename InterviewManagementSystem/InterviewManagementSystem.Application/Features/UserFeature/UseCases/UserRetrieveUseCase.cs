@@ -1,4 +1,5 @@
-﻿using InterviewManagementSystem.Application.DTOs.UserDTOs.CandidateDTOs;
+﻿using AutoMapper.QueryableExtensions;
+using InterviewManagementSystem.Application.DTOs.UserDTOs.CandidateDTOs;
 using InterviewManagementSystem.Application.DTOs.UserDTOs.UserDTOs;
 using InterviewManagementSystem.Domain.Entities.AppUsers;
 using InterviewManagementSystem.Domain.Enums.Extensions;
@@ -71,18 +72,24 @@ public sealed class UserRetrieveUseCase : BaseUserUseCase
 
         PaginationParameter<AppUser> paginationParameter = _mapper.Map<PaginationParameter<AppUser>>(request);
 
-        RoleEnum roleId = request.RoleId ?? default;
-
-        // Filter by role
-        AppRole? role = await _roleManager.FindByIdAsync(roleId.GetRoleId());
-        ArgumentNullException.ThrowIfNull(role, "Role not found to filter");
+        RoleEnum? roleId = request.RoleId;
 
 
-        List<Guid> userWithRole = (await _userManager.GetUsersInRoleAsync(role.Name!)).Select(x => x.Id).ToList();
-        paginationParameter.Filters.Add(x => userWithRole.Contains(x.Id));
+        if (roleId != null && roleId != RoleEnum.Default)
+        {
+
+            AppRole? role = await _roleManager.FindByIdAsync(roleId.Value.GetRoleId());
+            ArgumentNullException.ThrowIfNull(role, "Role not found to filter");
 
 
-        var pageResult = await _unitOfWork.AppUserRepository.GetByPageWithIncludeAsync(paginationParameter);
+            List<Guid> userWithRole = (await _userManager.GetUsersInRoleAsync(role.Name!)).Select(x => x.Id).ToList();
+            paginationParameter.Filters.Add(x => userWithRole.Contains(x.Id));
+        }
+
+        IQueryable<UserForRetrieveDTO> queryModifier(IQueryable<AppUser> q) => q.ProjectTo<UserForRetrieveDTO>(_mapper.ConfigurationProvider);
+
+        var pageResult = await _unitOfWork.AppUserRepository.GetPaginationList(paginationParameter, queryModifier: queryModifier);
+
 
         return new ApiResponse<PageResult<UserForRetrieveDTO>>()
         {
@@ -90,12 +97,6 @@ public sealed class UserRetrieveUseCase : BaseUserUseCase
             Message = "Get user list successful"
         };
     }
-
-
-
-
-
-
 
 
     internal async Task<ApiResponse<UserForRetrieveDTO>> GetUserByIdAsync(Guid id)

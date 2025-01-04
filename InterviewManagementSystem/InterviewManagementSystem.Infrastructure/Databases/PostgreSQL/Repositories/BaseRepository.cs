@@ -2,6 +2,7 @@
 using InterviewManagementSystem.Domain.Entities;
 using InterviewManagementSystem.Domain.Interfaces;
 using InterviewManagementSystem.Domain.Paginations;
+using InterviewManagementSystem.Infrastructure.Databases.PostgreSQL.Extensions;
 using InterviewManagementSystem.Infrastructure.Persistences;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
@@ -15,15 +16,11 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
     protected readonly DbSet<T> _dbSet;
     protected readonly InterviewManagementSystemContext _interviewManagementSystemContext;
 
-
-
     public BaseRepository(InterviewManagementSystemContext interviewManagementSystemContext)
     {
         _dbSet = interviewManagementSystemContext.Set<T>();
         _interviewManagementSystemContext = interviewManagementSystemContext;
     }
-
-
 
 
     public async Task AddAsync(T entity)
@@ -68,7 +65,6 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
                 SetDeleteFieldToTrue(entity);
             }
         }
-
     }
 
 
@@ -77,7 +73,6 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
     {
         var entities = GetQuery(where).AsEnumerable();
         DeleteRange(entities, isHardDelete);
-
     }
 
 
@@ -118,63 +113,17 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
     }
 
 
-
-    public async Task<PageResult<T>> GetByPageAsync(PaginationParameter<T> pagingParameter)
+    public async Task<PageResult<TResult>> GetPaginationList<TResult>(PaginationParameter<T> pagingParameter, IEnumerable<string>? includeProperties = null, Func<IQueryable<T>, IQueryable<TResult>>? queryModifier = null)
     {
-        IQueryable<T> query = _dbSet;
 
-
-
+        IQueryable<T> query = _dbSet.AsNoTracking().AsSplitQuery();
         var filters = pagingParameter.Filters;
 
-        if (filters != null)
-            foreach (var filter in filters)
-                query = query.Where(filter);
-
-
-
-
-        var pagingOrderBy = pagingParameter.OrderBy;
-
-        if (pagingOrderBy != null)
-            query = pagingOrderBy(query);
-
-
-        CancellationToken cancellationToken = CancellationTokenProvider.CancellationToken;
-
-
-        var totalRecord = await query.CountAsync(cancellationToken);
-
-        var items = await query
-            .Skip(pagingParameter.PageSize * (pagingParameter.PageIndex - 1))
-            .Take(pagingParameter.PageSize)
-            .ToListAsync(cancellationToken);
-
-
-        return new PageResult<T>()
-        {
-            TotalRecords = totalRecord,
-            Items = items,
-            PageIndex = pagingParameter.PageIndex,
-            PageSize = pagingParameter.PageSize,
-        };
-
-    }
-
-
-
-    public async Task<PageResult<T>> GetByPageWithIncludeAsync(PaginationParameter<T> pagingParameter, IEnumerable<string>? includeProperties = null)
-    {
-        IQueryable<T> query = _dbSet.AsNoTracking();
-
-
-        var filters = pagingParameter.Filters;
 
         // Apply filters
         if (filters != null)
             foreach (var filter in filters)
                 query = query.Where(filter);
-
 
 
         // Apply includes
@@ -183,40 +132,43 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
                 query = query.Include(includeProperty);
 
 
-
-        query = query.AsSplitQuery();
         var orderBy = pagingParameter.OrderBy;
 
-
+        // Apply order by
         if (orderBy != null)
             query = orderBy(query);
 
 
-        CancellationToken cancellationToken = CancellationTokenProvider.CancellationToken;
-        var totalRecord = await query.CountAsync(cancellationToken);
+        var cancellationToken = CancellationTokenProvider.CancellationToken;
+        var totalRecords = await query.CountAsync(cancellationToken);
 
 
         int pageSize = pagingParameter.PageSize;
         int pageNumber = pagingParameter.PageIndex;
 
 
+        // Apply pagination
         var items = await query
-            .Skip(pageSize * (pageNumber - 1))
-            .Take(pageSize)
-            .ToListAsync(cancellationToken);
+           .Skip(pageSize * (pageNumber - 1))
+           .Take(pageSize)
+           .Pipe(queryModifier)
+           .ToListAsync(cancellationToken);
 
 
-
-        return new PageResult<T>()
+        return new PageResult<TResult>()
         {
-            TotalRecords = totalRecord,
+            TotalRecords = totalRecords,
             Items = items,
             PageIndex = pageNumber,
             PageSize = pageSize,
         };
-
     }
 
+
+    public async Task<PageResult<T>> GetPaginationList(PaginationParameter<T> pagingParameter, IEnumerable<string>? includeProperties = null)
+    {
+        return await GetPaginationList<T>(pagingParameter, includeProperties);
+    }
 
 
     public IQueryable<T> GetQuery()
@@ -309,4 +261,6 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         }
     }
 
+
 }
+

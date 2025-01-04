@@ -180,9 +180,7 @@ public static class EnumExtension
         bool isEnumExist = EnumMappings.TryGetValue(enumType, out var mappings);
         bool isEnumHasValue = mappings!.TryGetValue(enumValue, out var name);
 
-        if (isEnumExist && isEnumHasValue)
-            return name ?? "";
-
+        return isEnumExist && isEnumHasValue ? name ?? "" : "";
         throw new ArgumentException($"No mapping found for enum value '{enumValue}' in type '{enumType.Name}'");
     }
 

@@ -22,7 +22,7 @@ public sealed class LoginUseCase : BaseAuthenticationUseCase
 
 
 
-    internal async Task<ApiResponse<object>> LoginAsync(UserLoginRequest userLoginRequest)
+    internal async Task<ApiResponse<UserLoginResponse>> LoginAsync(UserLoginRequest userLoginRequest)
     {
         AppUser? user = await _userManager.FindByEmailAsync(userLoginRequest.Email);
 
@@ -35,12 +35,12 @@ public sealed class LoginUseCase : BaseAuthenticationUseCase
         AppUserException.ThrowIfWrongPassword(isValidPassword);
 
 
-        return new ApiResponse<object>
+        return new ApiResponse<UserLoginResponse>
         {
-            Data = new
+            Data = new UserLoginResponse
             {
-                userName = user.UserName,
-                token = await GenerateJwtToken(user),
+                UserName = user.UserName,
+                Token = await GenerateJwtToken(user),
             },
             Message = "Login successfully"
         };

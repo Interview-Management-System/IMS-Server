@@ -3,8 +3,7 @@
 public class ApplicationException(string errorMessage) : Exception(errorMessage)
 {
 
-
-    internal static void ThrowIfOperationFail(bool isOperationSuccess, string? errorMessage = null)
+    public static void ThrowIfOperationFail(bool isOperationSuccess, string? errorMessage = null)
     {
         if (isOperationSuccess == false)
             throw new ApplicationException(errorMessage ?? "Action fail");

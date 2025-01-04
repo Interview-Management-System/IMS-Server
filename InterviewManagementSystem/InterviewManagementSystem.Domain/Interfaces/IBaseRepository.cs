@@ -27,18 +27,6 @@ public interface IBaseRepository<T> where T : class
     IQueryable<T> GetQuery(Expression<Func<T, bool>> where);
 
 
-
-    /// <summary>
-    /// Get entities by condition
-    /// </summary>
-    /// <param name="condition">Condition to get entities</param>
-    /// <param name="size">Number of entity to return for each page</param>
-    /// <param name="page">Page index</param>
-    /// <returns></returns>
-    Task<PageResult<T>> GetByPageAsync(PaginationParameter<T> pagingParameter);
-
-
-
     /// <summary>
     /// Include entity property but does not support ThenInclude()
     /// </summary>
@@ -50,9 +38,10 @@ public interface IBaseRepository<T> where T : class
     IQueryable<T> GetWithInclude(Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, bool canLoadDeleted = false, bool isTracking = false, params string[] includeProperties);
 
 
+    Task<PageResult<T>> GetPaginationList(PaginationParameter<T> pagingParameter, IEnumerable<string>? includeProperties = null);
 
 
-    Task<PageResult<T>> GetByPageWithIncludeAsync(PaginationParameter<T> pagingParameter, IEnumerable<string>? includeProperties = null);
+    Task<PageResult<TResult>> GetPaginationList<TResult>(PaginationParameter<T> pagingParameter, IEnumerable<string>? includeProperties = null, Func<IQueryable<T>, IQueryable<TResult>>? queryModifier = null);
 
 
 

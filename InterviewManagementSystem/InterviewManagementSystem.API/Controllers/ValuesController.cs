@@ -1,5 +1,4 @@
 ﻿using InterviewManagementSystem.Domain.Entities.AppUsers;
-using InterviewManagementSystem.Infrastructure.Persistences;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -36,12 +35,16 @@ namespace InterviewManagementSystem.API.Controllers
             return Ok(fileBytes);
         }
 
-        [HttpGet("geteeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")]
+        [HttpGet("get")]
         public async Task<IActionResult> Get()
         {
 
-            var a = new InterviewManagementSystemContext();
-            return Ok(a.Positions.ToList());
+            //var a = new InterviewManagementSystemContext();
+
+            //ApplicationException.ThrowIfOperationFail()
+
+            Application.CustomClasses.Exceptions.ApplicationException.ThrowIfOperationFail(false, "t546hyt");
+            return Ok("test message");
         }
     }
 

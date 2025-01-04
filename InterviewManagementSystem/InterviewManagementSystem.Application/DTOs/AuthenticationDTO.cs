@@ -42,3 +42,9 @@ public sealed record ResetPasswordRequest
     public required string ConfirmPassword { get; set; }
 }
 
+
+public sealed record UserLoginResponse
+{
+    public string? UserName { get; set; }
+    public string? Token { get; set; }
+}

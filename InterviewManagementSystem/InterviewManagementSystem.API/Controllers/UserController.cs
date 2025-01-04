@@ -8,42 +8,30 @@ namespace InterviewManagementSystem.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public sealed class UserController : ControllerBase
+public sealed class UserController(UserFacade userFacade) : ControllerBase
 {
-
-    private readonly UserFacade _userFacade;
-
-
-
-    public UserController(UserFacade userFacade)
-    {
-        _userFacade = userFacade;
-    }
-
-
-
     [HttpGet("list")]
     public async Task<IActionResult> GetListUserAsync()
     {
-        var apiResponse = await _userFacade.GetListUserAsync();
+        var apiResponse = await userFacade.GetListUserAsync();
         return Ok(apiResponse);
     }
 
 
 
-    [HttpGet("list-candidate")]
+    [HttpGet("candidate-list")]
     public async Task<IActionResult> GetListCandidateAsync()
     {
-        var apiResponse = await _userFacade.GetListCandidateAsync();
+        var apiResponse = await userFacade.GetListCandidateAsync();
         return Ok(apiResponse);
     }
 
 
 
-    [HttpGet("list-paging")]
+    [HttpPost("list-paging")]
     public async Task<IActionResult> GetListUserPagingAsync(UserPaginatedSearchRequest request)
     {
-        var apiResponse = await _userFacade.GetListUserPagingAsync(request);
+        var apiResponse = await userFacade.GetListUserPagingAsync(request);
         return Ok(apiResponse);
     }
 
@@ -52,7 +40,7 @@ public sealed class UserController : ControllerBase
     [HttpGet("detail")]
     public async Task<IActionResult> GetUserDetailAsync([FromQuery] Guid id)
     {
-        var apiResponse = await _userFacade.GetUserByIdAsync(id);
+        var apiResponse = await userFacade.GetUserByIdAsync(id);
         return Ok(apiResponse);
     }
 
@@ -61,7 +49,7 @@ public sealed class UserController : ControllerBase
     [HttpGet("candidate-detail")]
     public async Task<IActionResult> GetCandidateDetailAsync([FromQuery] Guid id)
     {
-        var apiResponse = await _userFacade.GetCandidateByIdAsync(id);
+        var apiResponse = await userFacade.GetCandidateByIdAsync(id);
         return Ok(apiResponse);
     }
 
@@ -70,7 +58,7 @@ public sealed class UserController : ControllerBase
     [HttpPost("candidate-create")]
     public async Task<IActionResult> CreateCandidateAsync([FromForm] CandidateForCreateDTO candidateForCreateDTO)
     {
-        var apiResponse = await _userFacade.CreateCandidateAsync(candidateForCreateDTO);
+        var apiResponse = await userFacade.CreateCandidateAsync(candidateForCreateDTO);
         return Ok(apiResponse);
     }
 
@@ -79,7 +67,7 @@ public sealed class UserController : ControllerBase
     [HttpPut("candidate-update")]
     public async Task<IActionResult> UpdateCandidateAsync([FromForm] CandidateForUpdateDTO candidateForUpdateDTO)
     {
-        var apiResponse = await _userFacade.UpdateCandidateAsync(candidateForUpdateDTO);
+        var apiResponse = await userFacade.UpdateCandidateAsync(candidateForUpdateDTO);
         return Ok(apiResponse);
     }
 
@@ -89,7 +77,7 @@ public sealed class UserController : ControllerBase
     [HttpPatch("candidate-set-status")]
     public async Task<IActionResult> SetCandidateStatusAsync([FromQuery] Guid id, [FromQuery] CandidateStatusEnum candidateStatusEnum)
     {
-        var apiResponse = await _userFacade.SetCandidateStatus(id, candidateStatusEnum);
+        var apiResponse = await userFacade.SetCandidateStatus(id, candidateStatusEnum);
         return Ok(apiResponse);
     }
 
@@ -99,7 +87,7 @@ public sealed class UserController : ControllerBase
     [HttpPost("create")]
     public async Task<IActionResult> CreateUserAsync([FromBody] UserForCreateDTO userForCreateDTO)
     {
-        string responseMessage = await _userFacade.CreateUserAsync(userForCreateDTO);
+        string responseMessage = await userFacade.CreateUserAsync(userForCreateDTO);
         return Ok(responseMessage);
     }
 
@@ -108,7 +96,7 @@ public sealed class UserController : ControllerBase
     [HttpPut("update")]
     public async Task<IActionResult> UpdateUserAsync([FromBody] UserForUpdateDTO userForUpdateDTO)
     {
-        var apiResponse = await _userFacade.UpdateUserAsync(userForUpdateDTO);
+        var apiResponse = await userFacade.UpdateUserAsync(userForUpdateDTO);
         return Ok(apiResponse);
     }
 
@@ -118,7 +106,7 @@ public sealed class UserController : ControllerBase
     [HttpDelete("delete")]
     public async Task<IActionResult> DeleteUserAsync([FromQuery] Guid id)
     {
-        var apiResponse = await _userFacade.DeleteUserAsync(id);
+        var apiResponse = await userFacade.DeleteUserAsync(id);
         return Ok(apiResponse);
     }
 
@@ -128,7 +116,7 @@ public sealed class UserController : ControllerBase
     [HttpPatch("undo-delete")]
     public async Task<IActionResult> UndoDeleteUserAsync([FromQuery] Guid id)
     {
-        var apiResponse = await _userFacade.UndoDeleteUserAsync(id);
+        var apiResponse = await userFacade.UndoDeleteUserAsync(id);
         return Ok(apiResponse);
     }
 
@@ -138,7 +126,7 @@ public sealed class UserController : ControllerBase
     [HttpPatch("activate-user")]
     public async Task<IActionResult> ActivateUserAsync([FromQuery] Guid id)
     {
-        var apiResponse = await _userFacade.ActivateUserAsync(id);
+        var apiResponse = await userFacade.ActivateUserAsync(id);
         return Ok(apiResponse);
     }
 
@@ -149,7 +137,7 @@ public sealed class UserController : ControllerBase
     [HttpPatch("deActivate-user")]
     public async Task<IActionResult> DeActivateUserAsync([FromQuery] Guid id)
     {
-        var apiResponse = await _userFacade.DeActivateUserAsync(id);
+        var apiResponse = await userFacade.DeActivateUserAsync(id);
         return Ok(apiResponse);
     }
 
@@ -158,7 +146,7 @@ public sealed class UserController : ControllerBase
     [HttpPatch("change-role")]
     public async Task<IActionResult> ChangeUserRoleAsync([FromQuery] Guid id, Guid roleId)
     {
-        var apiResponse = await _userFacade.ChangeUserRoleAsync(id, roleId);
+        var apiResponse = await userFacade.ChangeUserRoleAsync(id, roleId);
         return Ok(apiResponse);
     }
 

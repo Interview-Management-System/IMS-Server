@@ -31,14 +31,12 @@ internal sealed class ExceptionHandler : IExceptionHandler
 
 
             case ArgumentNullException:
-
                 statusCode = StatusCodes.Status404NotFound;
                 match = Regex.Match(exception.Message, MESSAGE_PATTERN);
                 break;
 
 
             case InvalidOperationException:
-
                 statusCode = StatusCodes.Status500InternalServerError;
                 match = Regex.Match(exception.Message, MESSAGE_PATTERN);
                 break;

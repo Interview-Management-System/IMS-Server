@@ -24,7 +24,7 @@ builder.Services.AddCrossOriginResourceSharing();
 builder.Services.AddMapper();
 builder.Services.AddFluentValidation();
 builder.Services.AddInjectionService();
-//builder.Services.AddExceptionHandlers();
+builder.Services.AddExceptionHandlers();
 builder.Services.AddHttpContextAccessor();
 FilterHelper.Service = builder.Services.BuildServiceProvider();
 

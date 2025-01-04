@@ -17,7 +17,7 @@ public sealed class AuthenticationFacade
     }
 
 
-    public async Task<ApiResponse<object>> BasicLoginAsync(UserLoginRequest userLoginRequest)
+    public async Task<ApiResponse<UserLoginResponse>> BasicLoginAsync(UserLoginRequest userLoginRequest)
     {
         return await LoginUseCase.LoginAsync(userLoginRequest);
     }
