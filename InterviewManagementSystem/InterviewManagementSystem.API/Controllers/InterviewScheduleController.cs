@@ -1,5 +1,5 @@
 ﻿using InterviewManagementSystem.Application.DTOs.InterviewScheduleDTOs;
-using InterviewManagementSystem.Application.Features.InterviewScheduleFeature;
+using InterviewManagementSystem.Application.Managers.InterviewScheduleFeature;
 using InterviewManagementSystem.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 

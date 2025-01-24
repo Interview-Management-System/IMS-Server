@@ -1,5 +1,5 @@
 ﻿using InterviewManagementSystem.Application.DTOs.JobDTOs;
-using InterviewManagementSystem.Application.Features.JobFeature;
+using InterviewManagementSystem.Application.Managers.JobFeature;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InterviewManagementSystem.API.Controllers;

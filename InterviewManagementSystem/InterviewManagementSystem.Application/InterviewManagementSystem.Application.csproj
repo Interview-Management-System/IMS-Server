@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\CandidateFeature\" />
+    <Folder Include="Managers\UserManagers\CandidateManager\" />
   </ItemGroup>
 
 </Project>

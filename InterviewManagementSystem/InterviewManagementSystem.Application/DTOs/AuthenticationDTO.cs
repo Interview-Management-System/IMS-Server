@@ -1,4 +1,4 @@
-﻿using InterviewManagementSystem.Application.CustomClasses.Attributes;
+﻿using InterviewManagementSystem.Application.Shared.Attributes;
 
 namespace InterviewManagementSystem.Application.DTOs;
 
@@ -45,6 +45,5 @@ public sealed record ResetPasswordRequest
 
 public sealed record UserLoginResponse
 {
-    public string? UserName { get; set; }
     public string? Token { get; set; }
 }

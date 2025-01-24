@@ -1,7 +1,7 @@
 global using InterviewManagementSystem.Application.DTOs;
 using InterviewManagementSystem.API.Configurations;
 using InterviewManagementSystem.API.Middlewares;
-using InterviewManagementSystem.Application.CustomClasses.Helpers;
+using InterviewManagementSystem.Application.Shared.Helpers;
 using System.Text.Json.Serialization;
 
 
@@ -16,14 +16,17 @@ builder.Services
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+var configuration = builder.Configuration;
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwagger();
-builder.Services.AddJWTAuthentication(builder.Configuration);
+builder.Services.AddJWTAuthentication(configuration);
 builder.Services.AddRoleAuthorization();
 builder.Services.AddCrossOriginResourceSharing();
 builder.Services.AddMapper();
 builder.Services.AddFluentValidation();
-builder.Services.AddInjectionService();
+builder.Services.AddInjectionService(configuration);
 builder.Services.AddExceptionHandlers();
 builder.Services.AddHttpContextAccessor();
 FilterHelper.Service = builder.Services.BuildServiceProvider();

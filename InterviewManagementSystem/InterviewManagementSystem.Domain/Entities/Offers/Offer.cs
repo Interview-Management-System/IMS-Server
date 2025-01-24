@@ -1,6 +1,6 @@
 ﻿using InterviewManagementSystem.Domain.Aggregates;
-using InterviewManagementSystem.Domain.CustomClasses.EntityData.OfferData;
 using InterviewManagementSystem.Domain.Enums;
+using InterviewManagementSystem.Domain.Shared.EntityData.OfferData;
 
 namespace InterviewManagementSystem.Domain.Entities.Offers;
 

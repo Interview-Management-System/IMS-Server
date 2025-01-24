@@ -1,22 +1,15 @@
-﻿using InterviewManagementSystem.Application.Features.AuthenticationFeatures;
+﻿using InterviewManagementSystem.Application.Managers.AuthenticationManager;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InterviewManagementSystem.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public sealed class AuthenticationController : ControllerBase
+public sealed class AuthenticationController(AuthenticationManager authenticationManagementFacade) : ControllerBase
 {
 
 
-    private readonly AuthenticationFacade _authenticationManagementFacade;
-
-
-    public AuthenticationController(AuthenticationFacade authenticationManagementFacade)
-    {
-        _authenticationManagementFacade = authenticationManagementFacade;
-    }
-
+    private readonly AuthenticationManager _authenticationManagementFacade = authenticationManagementFacade;
 
 
     [HttpPost("login")]

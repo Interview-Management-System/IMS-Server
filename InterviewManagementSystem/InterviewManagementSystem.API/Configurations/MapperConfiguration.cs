@@ -13,7 +13,7 @@ internal static class MapperConfiguration
             typeof(UserMappingProfile),
             typeof(OfferMappingProfile),
             typeof(PaginationMappingProfile),
-            typeof(InterviewScheduleMappingProfile),
+            typeof(InterviewMappingProfile),
         ];
 
         services.AddAutoMapper(mappingTypes);

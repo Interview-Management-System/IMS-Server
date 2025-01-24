@@ -1,7 +1,7 @@
-﻿using InterviewManagementSystem.Application.CustomClasses;
+﻿using InterviewManagementSystem.Application.Shared;
 using InterviewManagementSystem.Domain.Entities;
 using InterviewManagementSystem.Domain.Interfaces;
-using InterviewManagementSystem.Domain.Paginations;
+using InterviewManagementSystem.Domain.Shared.Paginations;
 using InterviewManagementSystem.Infrastructure.Databases.PostgreSQL.Extensions;
 using InterviewManagementSystem.Infrastructure.Persistences;
 using Microsoft.EntityFrameworkCore;
@@ -101,7 +101,6 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 
     public async Task<T?> GetByIdAsync<TId>(TId id, bool isTracking = false)
     {
-
         var entity = await _dbSet.FindAsync(id);
 
         if (isTracking == false && entity is not null)
@@ -109,35 +108,26 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
             _interviewManagementSystemContext.Entry(entity).State = EntityState.Detached;
         }
 
-        return entity;
+        return entity ?? default;
     }
 
 
-    public async Task<PageResult<TResult>> GetPaginationList<TResult>(PaginationParameter<T> pagingParameter, IEnumerable<string>? includeProperties = null, Func<IQueryable<T>, IQueryable<TResult>>? queryModifier = null)
+    public async Task<TResult?> GetByIdAsync<TResult>(object id, string? idIdentifier = "Id", Func<IQueryable<T>, IQueryable<TResult>>? projection = null, bool isTracking = false)
+    {
+
+        var query = isTracking ? _dbSet : _dbSet.AsNoTracking();
+
+        return await query
+            .Where(e => EF.Property<object>(e, idIdentifier!).Equals(id))
+            .ApplyProjection(projection)
+            .SingleOrDefaultAsync();
+    }
+
+
+    public async Task<PageResult<TResult>> GetPaginationList<TResult>(PaginationParameter<T> pagingParameter, IEnumerable<string>? includeProperties = null, Func<IQueryable<T>, IQueryable<TResult>>? projection = null)
     {
 
         IQueryable<T> query = _dbSet.AsNoTracking().AsSplitQuery();
-        var filters = pagingParameter.Filters;
-
-
-        // Apply filters
-        if (filters != null)
-            foreach (var filter in filters)
-                query = query.Where(filter);
-
-
-        // Apply includes
-        if (includeProperties != null)
-            foreach (var includeProperty in includeProperties)
-                query = query.Include(includeProperty);
-
-
-        var orderBy = pagingParameter.OrderBy;
-
-        // Apply order by
-        if (orderBy != null)
-            query = orderBy(query);
-
 
         var cancellationToken = CancellationTokenProvider.CancellationToken;
         var totalRecords = await query.CountAsync(cancellationToken);
@@ -147,11 +137,13 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         int pageNumber = pagingParameter.PageIndex;
 
 
-        // Apply pagination
         var items = await query
-           .Skip(pageSize * (pageNumber - 1))
-           .Take(pageSize)
-           .Pipe(queryModifier)
+           .ApplyFilter(pagingParameter.Filters)
+           .IncludeProperties(includeProperties)
+           .ApplySortCriteria(pagingParameter.SortCriteria)
+           .ApplyPagination(pageSize, pageNumber)
+           //.ApplyFreeTextSearch(pagingParameter.SearchText, ["Email"])
+           .ApplyProjection(projection)
            .ToListAsync(cancellationToken);
 
 

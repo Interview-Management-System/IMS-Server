@@ -1,5 +1,5 @@
 ﻿using InterviewManagementSystem.Application.DTOs.OfferDTOs;
-using InterviewManagementSystem.Application.Features.OfferFeature;
+using InterviewManagementSystem.Application.Managers.OfferFeature;
 using InterviewManagementSystem.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 

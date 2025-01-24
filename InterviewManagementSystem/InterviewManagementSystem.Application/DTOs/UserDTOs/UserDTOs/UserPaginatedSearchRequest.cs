@@ -2,6 +2,6 @@
 {
     public sealed record UserPaginatedSearchRequest : PaginatedSearchRequest
     {
-        public RoleEnum? RoleId { get; set; }
+        public RoleEnum? RoleId { get; set; } = RoleEnum.Default;
     }
 }

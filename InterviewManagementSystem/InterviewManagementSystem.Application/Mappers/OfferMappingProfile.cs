@@ -1,10 +1,12 @@
 ﻿using InterviewManagementSystem.Application.DTOs.OfferDTOs;
-using InterviewManagementSystem.Domain.CustomClasses.EntityData.OfferData;
+using InterviewManagementSystem.Application.Shared.Extensions;
+using InterviewManagementSystem.Application.Shared.Helpers;
 using InterviewManagementSystem.Domain.Entities.AppUsers;
 using InterviewManagementSystem.Domain.Entities.Interviews;
 using InterviewManagementSystem.Domain.Entities.Offers;
 using InterviewManagementSystem.Domain.Enums.Extensions;
-using InterviewManagementSystem.Domain.Paginations;
+using InterviewManagementSystem.Domain.Shared.EntityData.OfferData;
+using InterviewManagementSystem.Domain.Shared.Paginations;
 
 namespace InterviewManagementSystem.Application.Mappers;
 
@@ -70,8 +72,8 @@ public sealed class OfferMappingProfile : Profile
             .ForMember(dest => dest.DepartmentId, opt => opt.MapFrom(src => (short)src.DepartmentId))
             .ForPath(dest => dest.DatePeriod!.StartDate, opt => opt.MapFrom(src => src.ContractFrom))
             .ForMember(dest => dest.ContractTypeId, opt => opt.MapFrom(src => (short)src.ContractTypeId))
-            .ForMember(dest => dest.AssociatedCandidate, opt => opt.MapFrom((src, dest, destMember, context) => MappingHelper.GetContextItem<Candidate>(context, "Candidate")))
-            .ForMember(dest => dest.AssociatedInterviewSchedule, opt => opt.MapFrom((src, dest, destMember, context) => MappingHelper.GetContextItem<InterviewSchedule>(context, "InterviewSchedule")))
+            .ForMember(dest => dest.AssociatedCandidate, opt => opt.MapFrom((src, dest, destMember, context) => MapperHelper.GetContextItem<Candidate>(context, "Candidate")))
+            .ForMember(dest => dest.AssociatedInterviewSchedule, opt => opt.MapFrom((src, dest, destMember, context) => MapperHelper.GetContextItem<InterviewSchedule>(context, "InterviewSchedule")))
             .ReverseMap();
 
         CreateMap<OfferForUpdateDTO, DataForUpdateOffer>()
@@ -81,8 +83,8 @@ public sealed class OfferMappingProfile : Profile
             .ForMember(dest => dest.DepartmentId, opt => opt.MapFrom(src => (short)src.DepartmentId))
             .ForPath(dest => dest.DatePeriod!.StartDate, opt => opt.MapFrom(src => src.ContractFrom))
             .ForMember(dest => dest.ContractTypeId, opt => opt.MapFrom(src => (short)src.ContractTypeId))
-            .ForMember(dest => dest.AssociatedCandidate, opt => opt.MapFrom((src, dest, destMember, context) => MappingHelper.GetContextItem<Candidate>(context, "Candidate")))
-            .ForMember(dest => dest.AssociatedInterviewSchedule, opt => opt.MapFrom((src, dest, destMember, context) => MappingHelper.GetContextItem<InterviewSchedule>(context, "InterviewSchedule")))
+            .ForMember(dest => dest.AssociatedCandidate, opt => opt.MapFrom((src, dest, destMember, context) => MapperHelper.GetContextItem<Candidate>(context, "Candidate")))
+            .ForMember(dest => dest.AssociatedInterviewSchedule, opt => opt.MapFrom((src, dest, destMember, context) => MapperHelper.GetContextItem<InterviewSchedule>(context, "InterviewSchedule")))
             .ReverseMap();
         */
     }
@@ -112,14 +114,14 @@ public sealed class OfferMappingProfile : Profile
         if (PropertyExists<TDestination>(associatedCandidate))
         {
             mappingExpression.ForMember(associatedCandidate, opt => opt.MapFrom((src, dest, _, context)
-                => MappingHelper.GetContextItem<Candidate>(context, nameof(Candidate))));
+                => MapperHelper.GetContextItem<Candidate>(context, nameof(Candidate))));
         }
 
 
         if (PropertyExists<TDestination>(associatedInterviewSchedule))
         {
             mappingExpression.ForMember(associatedInterviewSchedule, opt => opt.MapFrom((src, dest, _, context)
-                => MappingHelper.GetContextItem<InterviewSchedule>(context, nameof(InterviewSchedule))));
+                => MapperHelper.GetContextItem<InterviewSchedule>(context, nameof(InterviewSchedule))));
         }
     }
 

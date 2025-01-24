@@ -1,5 +1,5 @@
 ﻿using InterviewManagementSystem.Domain.Enums;
-using InterviewManagementSystem.Domain.Exceptions;
+using InterviewManagementSystem.Domain.Shared.Exceptions;
 
 namespace InterviewManagementSystem.Domain.Entities.AppUsers;
 

@@ -1,13 +1,11 @@
-﻿using InterviewManagementSystem.Application.Features.AuthenticationFeatures;
-using InterviewManagementSystem.Application.Features.AuthenticationFeatures.UseCases;
-using InterviewManagementSystem.Application.Features.InterviewScheduleFeature;
-using InterviewManagementSystem.Application.Features.InterviewScheduleFeature.UseCases;
-using InterviewManagementSystem.Application.Features.JobFeature;
-using InterviewManagementSystem.Application.Features.JobFeature.UseCases;
-using InterviewManagementSystem.Application.Features.OfferFeature;
-using InterviewManagementSystem.Application.Features.OfferFeature.UseCases;
-using InterviewManagementSystem.Application.Features.UserFeature;
-using InterviewManagementSystem.Application.Features.UserFeature.UseCases;
+﻿using InterviewManagementSystem.Application.Managers.AuthenticationManager;
+using InterviewManagementSystem.Application.Managers.InterviewScheduleFeature;
+using InterviewManagementSystem.Application.Managers.InterviewScheduleFeature.UseCases;
+using InterviewManagementSystem.Application.Managers.JobFeature;
+using InterviewManagementSystem.Application.Managers.JobFeature.UseCases;
+using InterviewManagementSystem.Application.Managers.OfferFeature;
+using InterviewManagementSystem.Application.Managers.OfferFeature.UseCases;
+using InterviewManagementSystem.Application.Managers.UserManagers;
 using InterviewManagementSystem.Domain.Entities.AppUsers;
 using InterviewManagementSystem.Domain.Interfaces;
 using InterviewManagementSystem.Infrastructure.Persistences;
@@ -20,12 +18,15 @@ namespace InterviewManagementSystem.API.Configurations;
 internal static class InjectionService
 {
 
-    internal static void AddInjectionService(this IServiceCollection services)
+    internal static void AddInjectionService(this IServiceCollection services, IConfiguration configuration)
     {
 
+
+        var connectionString = configuration["IMS_PostgreSqlSetting:ConnectionString"];
+        ArgumentNullException.ThrowIfNullOrEmpty(connectionString, "Connection string not found");
+
         // Setup DB
-        const string connection = "Host=localhost;Database=InterviewManagementSystem;Username=postgres;Password=sa";
-        services.AddDbContext<InterviewManagementSystemContext>(options => options.UseNpgsql(connection));
+        services.AddDbContext<InterviewManagementSystemContext>(options => options.UseNpgsql(connectionString));
 
 
         services.AddIdentity<AppUser, AppRole>()
@@ -37,34 +38,11 @@ internal static class InjectionService
         //services.AddHostedService<JobAutoCloserService>();
 
         AddJobServices(services);
-        AddUserServices(services);
         AddOfferServices(services);
-        AddAuthenticationServices(services);
         AddInterviewScheduleServices(services);
-    }
 
-
-
-
-
-
-    private static void AddAuthenticationServices(IServiceCollection services)
-    {
-        services.AddScoped<LoginUseCase>();
-        services.AddScoped<PasswordUseCase>();
-        services.AddScoped<AuthenticationFacade>();
-    }
-
-
-
-    private static void AddUserServices(IServiceCollection services)
-    {
-        services.AddScoped<UserFacade>();
-        services.AddScoped<UserCreateUseCase>();
-        services.AddScoped<UserStatusUseCase>();
-        services.AddScoped<UserUpdateUseCase>();
-        services.AddScoped<UserRetrieveUseCase>();
-        services.AddScoped<CandidateStatusUseCase>();
+        services.AddScoped<UserManager>();
+        services.AddScoped<AuthenticationManager>();
     }
 
 

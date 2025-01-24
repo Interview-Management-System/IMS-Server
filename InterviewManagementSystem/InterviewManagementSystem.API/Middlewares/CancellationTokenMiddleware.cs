@@ -1,4 +1,4 @@
-﻿using InterviewManagementSystem.Application.CustomClasses;
+﻿using InterviewManagementSystem.Application.Shared;
 
 namespace InterviewManagementSystem.API.Middlewares;
 

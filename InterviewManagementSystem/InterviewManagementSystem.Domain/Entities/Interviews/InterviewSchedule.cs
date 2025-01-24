@@ -1,7 +1,7 @@
 ﻿using InterviewManagementSystem.Domain.Aggregates;
-using InterviewManagementSystem.Domain.CustomClasses.EntityData.InterviewData;
-using InterviewManagementSystem.Domain.CustomClasses.Utilities;
 using InterviewManagementSystem.Domain.Enums;
+using InterviewManagementSystem.Domain.Shared.EntityData.InterviewData;
+using InterviewManagementSystem.Domain.Shared.Utilities;
 
 namespace InterviewManagementSystem.Domain.Entities.Interviews;
 

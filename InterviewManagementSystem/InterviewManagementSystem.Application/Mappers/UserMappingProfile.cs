@@ -2,8 +2,7 @@
 using InterviewManagementSystem.Application.DTOs.UserDTOs.CandidateDTOs;
 using InterviewManagementSystem.Application.DTOs.UserDTOs.UserDTOs;
 using InterviewManagementSystem.Domain.Entities.AppUsers;
-using InterviewManagementSystem.Domain.Enums.Extensions;
-using InterviewManagementSystem.Domain.Paginations;
+using InterviewManagementSystem.Domain.Shared.Paginations;
 
 namespace InterviewManagementSystem.Application.Mappers;
 
@@ -21,7 +20,6 @@ public sealed class UserMappingProfile : Profile
 
         CreateMap<AppUser, UserForRetrieveDTO>()
             .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender! ? "Male" : "Female"))
-            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.IsActive! ? "Active" : "In-Active"))
             .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Roles.FirstOrDefault()!.Name));
 
         CreateMap<BaseUserDTO, AppUser>()
@@ -39,13 +37,12 @@ public sealed class UserMappingProfile : Profile
     private void CandidateMapping()
     {
         CreateMap<Candidate, CandidateForRetrieveDTO>()
-           .IncludeBase<AppUser, UserForRetrieveDTO>()
+          .IncludeBase<AppUser, UserForRetrieveDTO>()
            .ForMember(dest => dest.Department, opt => opt.Ignore())
            .ForMember(dest => dest.DepartmentId, opt => opt.Ignore())
+           .ForMember(dest => dest.Offers, opt => opt.Ignore())
+           .ForMember(dest => dest.Skills, opt => opt.Ignore())
            .ForMember(dest => dest.RecruiterName, opt => opt.MapFrom(src => src.Recruiter!.UserName))
-           .ForMember(dest => dest.Position, opt => opt.MapFrom(src => src.PositionId!.GetEnumName()))
-           .ForMember(dest => dest.HighestLevel, opt => opt.MapFrom(src => src.HighestLevelId.GetEnumName()))
-           .ForMember(dest => dest.CandidateStatus, opt => opt.MapFrom(src => src.CandidateStatusId.GetEnumName()))
            //.ForMember(dest => dest.CV, opt => opt.MapFrom(src => FileUtility.CreateFileContentResultFromBytes(src.Attachment)))
            ;
 

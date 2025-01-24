@@ -1,4 +1,5 @@
 ﻿using InterviewManagementSystem.Domain.Enums.Extensions;
+using InterviewManagementSystem.Domain.Shared.Constant;
 
 namespace InterviewManagementSystem.Application.DTOs.UserDTOs.UserDTOs;
 
@@ -14,7 +15,8 @@ public record UserForRetrieveDTO
     public string? Role { get; set; }
     public DepartmentEnum DepartmentId { get; set; }
     public string? Department => DepartmentId.GetEnumName();
-    public string? Status { get; set; }
+    public bool? IsActive { get; set; }
+    public string? StatusText => IsActive.GetValueOrDefault() ? StatusConstant.Active : StatusConstant.InActive;
     public bool IsDeleted { get; set; }
     public string? Note { get; set; }
 }

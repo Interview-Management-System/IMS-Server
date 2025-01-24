@@ -1,4 +1,4 @@
-﻿using InterviewManagementSystem.Domain.Paginations;
+﻿using InterviewManagementSystem.Domain.Shared.Paginations;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 
@@ -10,6 +10,7 @@ public interface IBaseRepository<T> where T : class
 
     Task<T?> GetByIdAsync<TId>(TId id, bool isTracking = false);
 
+    Task<TResult?> GetByIdAsync<TResult>(object id, string? idIdentifier = "Id", Func<IQueryable<T>, IQueryable<TResult>>? projection = null, bool isTracking = false);
     Task AddAsync(T entity);
 
     Task AddRangeAsync(IEnumerable<T> entities);
@@ -41,9 +42,7 @@ public interface IBaseRepository<T> where T : class
     Task<PageResult<T>> GetPaginationList(PaginationParameter<T> pagingParameter, IEnumerable<string>? includeProperties = null);
 
 
-    Task<PageResult<TResult>> GetPaginationList<TResult>(PaginationParameter<T> pagingParameter, IEnumerable<string>? includeProperties = null, Func<IQueryable<T>, IQueryable<TResult>>? queryModifier = null);
-
-
+    Task<PageResult<TResult>> GetPaginationList<TResult>(PaginationParameter<T> pagingParameter, IEnumerable<string>? includeProperties = null, Func<IQueryable<T>, IQueryable<TResult>>? projection = null);
 
 
     /// <summary>

@@ -1,8 +1,8 @@
-﻿using InterviewManagementSystem.Application.CustomClasses;
-using InterviewManagementSystem.Domain.Exceptions;
+﻿using InterviewManagementSystem.Application.Shared;
+using InterviewManagementSystem.Domain.Shared.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 using System.Text.RegularExpressions;
-using ApplicationException = InterviewManagementSystem.Application.CustomClasses.Exceptions.ApplicationException;
+using ApplicationException = InterviewManagementSystem.Application.Shared.Exceptions.ApplicationException;
 
 namespace InterviewManagementSystem.API.Exceptions;
 

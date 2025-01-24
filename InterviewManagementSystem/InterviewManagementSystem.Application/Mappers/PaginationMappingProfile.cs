@@ -1,11 +1,12 @@
 ﻿using InterviewManagementSystem.Application.DTOs.InterviewScheduleDTOs;
 using InterviewManagementSystem.Application.DTOs.JobDTOs;
 using InterviewManagementSystem.Application.DTOs.OfferDTOs;
+using InterviewManagementSystem.Application.Shared.Extensions;
 using InterviewManagementSystem.Domain.Entities.AppUsers;
 using InterviewManagementSystem.Domain.Entities.Interviews;
 using InterviewManagementSystem.Domain.Entities.Jobs;
 using InterviewManagementSystem.Domain.Entities.Offers;
-using InterviewManagementSystem.Domain.Paginations;
+using InterviewManagementSystem.Domain.Shared.Paginations;
 
 namespace InterviewManagementSystem.Application.Mappers;
 

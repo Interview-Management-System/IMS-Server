@@ -43,7 +43,7 @@ namespace InterviewManagementSystem.API.Controllers
 
             //ApplicationException.ThrowIfOperationFail()
 
-            Application.CustomClasses.Exceptions.ApplicationException.ThrowIfOperationFail(false, "t546hyt");
+            Application.Shared.Exceptions.ApplicationException.ThrowIfOperationFail(false, "t546hyt");
             return Ok("test message");
         }
     }
