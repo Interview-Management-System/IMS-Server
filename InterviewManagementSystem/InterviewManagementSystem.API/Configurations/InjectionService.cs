@@ -1,4 +1,5 @@
-﻿using InterviewManagementSystem.Application.Managers.AuthenticationManager;
+﻿using InterviewManagementSystem.API.SignalR.Services;
+using InterviewManagementSystem.Application.Managers.AuthenticationManager;
 using InterviewManagementSystem.Application.Managers.InterviewScheduleFeature;
 using InterviewManagementSystem.Application.Managers.InterviewScheduleFeature.UseCases;
 using InterviewManagementSystem.Application.Managers.JobFeature;
@@ -41,8 +42,13 @@ internal static class InjectionService
         AddOfferServices(services);
         AddInterviewScheduleServices(services);
 
+
+        //services.AddScoped<UserManager<Candidate>>();
+
         services.AddScoped<UserManager>();
+        services.AddScoped<CandidateManager>();
         services.AddScoped<AuthenticationManager>();
+        services.AddSingleton<UserHubService>();
     }
 
 

@@ -45,7 +45,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         }
         else
         {
-            SetDeleteFieldToTrue(entity);
+            SetDeleteField(entity, true);
             _interviewManagementSystemContext.Entry(entity).State = EntityState.Modified;
         }
     }
@@ -62,7 +62,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         {
             foreach (var entity in entities)
             {
-                SetDeleteFieldToTrue(entity);
+                SetDeleteField(entity, true);
             }
         }
     }
@@ -130,7 +130,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         IQueryable<T> query = _dbSet.AsNoTracking().AsSplitQuery();
 
         var cancellationToken = CancellationTokenProvider.CancellationToken;
-        var totalRecords = await query.CountAsync(cancellationToken);
+        var totalRecords = await query.CountAsync(f => !EF.Property<bool>(f, nameof(BaseEntity.IsDeleted)), cancellationToken);
 
 
         int pageSize = pagingParameter.PageSize;
@@ -239,20 +239,14 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
     }
 
 
-
-
-
-
-    private static void SetDeleteFieldToTrue(T entity)
+    private static void SetDeleteField(T entity, bool isDeleted)
     {
         var propertyInfo = entity.GetType().GetProperty(nameof(BaseEntity.IsDeleted));
 
-        if (propertyInfo != null && propertyInfo.PropertyType == typeof(bool))
+        if (propertyInfo?.PropertyType == typeof(bool))
         {
-            propertyInfo.SetValue(entity, true);
+            propertyInfo.SetValue(entity, isDeleted);
         }
     }
-
-
 }
 

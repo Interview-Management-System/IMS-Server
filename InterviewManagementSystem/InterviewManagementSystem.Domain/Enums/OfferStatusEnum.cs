@@ -2,6 +2,7 @@
 
 public enum OfferStatusEnum
 {
+    Default,
     WaitingForApproval = 1,
     Approved,
     Rejected,

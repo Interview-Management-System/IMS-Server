@@ -210,4 +210,10 @@ public static class EnumExtension
 
         throw new ArgumentException($"Invalid role ID {roleId}");
     }
+
+
+    public static bool IsNotDefault<TEnum>(this TEnum enumValue) where TEnum : Enum
+    {
+        return !enumValue.Equals((TEnum)Enum.ToObject(typeof(TEnum), 0));
+    }
 }

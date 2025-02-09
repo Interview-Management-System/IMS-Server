@@ -8,9 +8,11 @@ namespace InterviewManagementSystem.Application.Managers.UserManagers;
 public sealed class UserManager : BaseUserManager
 {
 
+    private readonly IBaseRepository<AppUser> _appUserRepository;
 
     public UserManager(IMapper mapper, IUnitOfWork unitOfWork, UserManager<AppUser> userManager, RoleManager<AppRole> roleManager) : base(mapper, unitOfWork, userManager, roleManager)
     {
+        _appUserRepository = unitOfWork.AppUserRepository;
     }
 
 
@@ -18,23 +20,11 @@ public sealed class UserManager : BaseUserManager
     public async Task<ApiResponse<List<UserForRetrieveDTO>>> GetListAsync()
     {
 
-        var listUser = await _userManager.Users.ToListAsync();
-        var newListUser = _mapper.Map<List<UserForRetrieveDTO>>(listUser);
-
-
-        foreach (var item in newListUser)
-        {
-            var userFoundById = await _userManager.FindByIdAsync(item.Id.ToString());
-            var listRole = await _userManager.GetRolesAsync(userFoundById!);
-
-            item.Role = listRole.FirstOrDefault();
-        }
-
+        var recruiters = await _userManager.GetUsersInRoleAsync(nameof(RoleEnum.Recruiter));
 
         return new ApiResponse<List<UserForRetrieveDTO>>()
         {
-            Data = newListUser,
-            Message = "Get user list successful"
+            Data = _mapper.Map<List<UserForRetrieveDTO>>(recruiters)
         };
     }
 
@@ -44,11 +34,11 @@ public sealed class UserManager : BaseUserManager
     public async Task<string> CreateUserAsync(UserForCreateDTO userForCreateDTO)
     {
 
-        var userFound = await _userManager.FindByEmailAsync(userForCreateDTO.Email.Trim());
+        var userFound = await _userManager.FindByEmailAsync(userForCreateDTO.PersonalInformation.Email!.Trim());
         AppUserException.ThrowIfUserExist(userFound);
 
 
-        AppRole? role = await _roleManager.FindByIdAsync(userForCreateDTO.RoleId.ToString()!);
+        AppRole? role = await _roleManager.FindByIdAsync(userForCreateDTO.RoleId.ToString());
         ArgumentNullException.ThrowIfNull(role, "Role not found to add user");
 
 
@@ -68,26 +58,16 @@ public sealed class UserManager : BaseUserManager
 
 
 
-    public async Task<ApiResponse<PageResult<UserForRetrieveDTO>>> GetListUserPagingAsync(UserPaginatedSearchRequest request)
+    public async Task<ApiResponse<PageResult<UserForPaginationRetrieveDTO>>> GetListUserPagingAsync(UserPaginatedSearchRequest request)
     {
 
         PaginationParameter<AppUser> paginationParameter = _mapper.Map<PaginationParameter<AppUser>>(request);
 
+        RoleEnum roleId = request.RoleId;
 
-        if (request!.IsLoadDeleted == false)
+        if (roleId.IsNotDefault())
         {
-            paginationParameter.Filters.Add(f => !f.IsDeleted);
-        }
-
-
-
-
-        RoleEnum? roleId = request.RoleId;
-
-        if (roleId != null && roleId != RoleEnum.Default)
-        {
-
-            AppRole? role = await _roleManager.FindByIdAsync(roleId.Value.GetRoleId());
+            AppRole? role = await _roleManager.FindByIdAsync(roleId.GetRoleId());
             ArgumentNullException.ThrowIfNull(role, "Role not found to filter");
 
             List<Guid> userWithRole = (await _userManager.GetUsersInRoleAsync(role.Name!)).Select(x => x.Id).ToList();
@@ -95,34 +75,34 @@ public sealed class UserManager : BaseUserManager
         }
 
 
-        var projection = MapperHelper.CreateProjection<AppUser, UserForRetrieveDTO>(_mapper);
-        var pageResult = await _unitOfWork.AppUserRepository.GetPaginationList(paginationParameter, projection: projection);
+        var projection = MapperHelper.CreateProjection<AppUser, UserForPaginationRetrieveDTO>(_mapper);
+        var pageResult = await _appUserRepository.GetPaginationList(paginationParameter, projection: projection);
 
 
-        return new ApiResponse<PageResult<UserForRetrieveDTO>>()
+        return new ApiResponse<PageResult<UserForPaginationRetrieveDTO>>()
         {
-            Data = _mapper.Map<PageResult<UserForRetrieveDTO>>(pageResult)
+            Data = _mapper.Map<PageResult<UserForPaginationRetrieveDTO>>(pageResult)
         };
     }
 
 
 
-    public async Task<ApiResponse<UserForRetrieveDTO>> GetUserByIdAsync(Guid id)
+    public async Task<ApiResponse<UserForDetailRetrieveDTO>> GetUserByIdAsync(Guid id)
     {
 
-        var userFoundById = await _unitOfWork.AppUserRepository.GetByIdAsync(id);
+        var userFoundById = await _appUserRepository.GetByIdAsync(id);
 
         ArgumentNullException.ThrowIfNull(userFoundById, "User not found");
         ApplicationException.ThrowIfGetDeletedRecord(userFoundById.IsDeleted);
 
 
-        var mappedUser = _mapper.Map<UserForRetrieveDTO>(userFoundById);
+        var mappedUser = _mapper.Map<UserForDetailRetrieveDTO>(userFoundById);
         var listRole = await _userManager.GetRolesAsync(userFoundById);
 
         mappedUser.Role = listRole.FirstOrDefault();
 
 
-        return new ApiResponse<UserForRetrieveDTO>()
+        return new ApiResponse<UserForDetailRetrieveDTO>()
         {
             Data = mappedUser
         };

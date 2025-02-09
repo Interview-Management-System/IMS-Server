@@ -1,17 +1,47 @@
 ﻿using InterviewManagementSystem.Application.DTOs.UserDTOs.CandidateDTOs;
 using InterviewManagementSystem.Application.Shared.Utilities;
 using InterviewManagementSystem.Domain.Entities.AppUsers;
+using InterviewManagementSystem.Domain.Enums.Extensions;
+using InterviewManagementSystem.Domain.Shared.Paginations;
 
 namespace InterviewManagementSystem.Application.Managers.UserManagers;
 
 public sealed class CandidateManager : BaseUserManager
 {
 
-    UserManager<Candidate> test;
+    private readonly UserManager<AppUser> _candidateManager;
+    private readonly IBaseRepository<Candidate> _candidateRepository;
 
-
-    public CandidateManager(IMapper mapper, IUnitOfWork unitOfWork, UserManager<AppUser> userManager, RoleManager<AppRole> roleManager) : base(mapper, unitOfWork, userManager, roleManager)
+    public CandidateManager(IMapper mapper, IUnitOfWork unitOfWork, UserManager<AppUser> candidateManager, RoleManager<AppRole> roleManager) : base(mapper, unitOfWork, candidateManager, roleManager)
     {
+        _candidateManager = candidateManager;
+        _candidateRepository = unitOfWork.CandidateRepository;
+    }
+
+
+
+
+    public async Task<ApiResponse<PageResult<CandidateForRetrieveDTO>>> GetListCandidatePagingAsync(CandidatePaginatedSearchRequest request)
+    {
+
+        PaginationParameter<Candidate> paginationParameter = _mapper.Map<PaginationParameter<Candidate>>(request);
+
+
+        CandidateStatusEnum? statusId = request.StatusId;
+        if (statusId != null && statusId != CandidateStatusEnum.Default)
+        {
+            paginationParameter.Filters.Add(f => f.CandidateStatusId == statusId);
+        }
+
+
+        var projection = MapperHelper.CreateProjection<Candidate, CandidateForRetrieveDTO>(_mapper);
+        var pageResult = await _candidateRepository.GetPaginationList(paginationParameter, projection: projection);
+
+
+        return new ApiResponse<PageResult<CandidateForRetrieveDTO>>()
+        {
+            Data = _mapper.Map<PageResult<CandidateForRetrieveDTO>>(pageResult)
+        };
     }
 
 
@@ -19,15 +49,17 @@ public sealed class CandidateManager : BaseUserManager
 
     public async Task<ApiResponse<CandidateForRetrieveDTO>> GetCandidateByIdAsync(Guid id)
     {
-        var candidateFoundById = await _unitOfWork.CandidateRepository.GetByIdAsync(id);
+
+        var projection = MapperHelper.CreateProjection<Candidate, CandidateForRetrieveDTO>(_mapper);
+
+        var candidateFoundById = await _candidateRepository.GetByIdAsync(id, projection: projection);
         ArgumentNullException.ThrowIfNull(candidateFoundById, "Candidate not found");
 
         var mappedCandidate = _mapper.Map<CandidateForRetrieveDTO>(candidateFoundById);
 
         return new ApiResponse<CandidateForRetrieveDTO>()
         {
-            Data = mappedCandidate,
-            Message = "Candidate found"
+            Data = mappedCandidate
         };
     }
 
@@ -35,16 +67,16 @@ public sealed class CandidateManager : BaseUserManager
 
     public async Task<string> SetCandidateStatus(Guid id, CandidateStatusEnum candidateStatusEnum)
     {
-        var candidate = await test.FindByIdAsync(id.ToString());
+        var candidate = await _userManager.FindByIdAsync(id.ToString());
 
         ArgumentNullException.ThrowIfNull(candidate, "User not found to de-activate");
         ApplicationException.ThrowIfInvalidOperation(candidate is not Candidate, "Not type of candidate");
 
         candidate = candidate as Candidate;
 
-        CandidateException.ThrowIfSetTheSameStatus(candidate!.CandidateStatusId, candidateStatusEnum);
+        //CandidateException.ThrowIfSetTheSameStatus(candidate!.CandidateStatusId, candidateStatusEnum);
 
-        candidate.SetCandidateStatus(candidateStatusEnum);
+        //candidate.SetCandidateStatus(candidateStatusEnum);
 
         var result = await _userManager.UpdateAsync(candidate);
         ApplicationException.ThrowIfOperationFail(result.Succeeded, "Activate user failed");
@@ -53,11 +85,11 @@ public sealed class CandidateManager : BaseUserManager
     }
 
 
-
+    /*
     public async Task<ApiResponse<List<CandidateForRetrieveDTO>>> GetCandidateListAsync()
     {
 
-        var listUser = await _unitOfWork.CandidateRepository.GetAllAsync();
+        var listUser = await _candidateRepository.GetAllAsync();
         var newListUser = _mapper.Map<List<CandidateForRetrieveDTO>>(listUser);
 
 
@@ -66,7 +98,7 @@ public sealed class CandidateManager : BaseUserManager
             var userFoundById = await _userManager.FindByIdAsync(item.Id.ToString());
             var listRole = await _userManager.GetRolesAsync(userFoundById!);
 
-            item.Role = listRole.FirstOrDefault();
+            item. = listRole.FirstOrDefault();
         }
 
 
@@ -76,22 +108,30 @@ public sealed class CandidateManager : BaseUserManager
             Message = "Get user list successful"
         };
     }
-
+    */
 
 
     public async Task<string> CreateCandidateAsync(CandidateForCreateDTO candidateForCreateDTO)
     {
 
-        var userFound = await _userManager.FindByEmailAsync(candidateForCreateDTO.Email.Trim());
+        var userFound = await _userManager.FindByEmailAsync(candidateForCreateDTO.PersonalInformation.Email.Trim());
         AppUserException.ThrowIfUserExist(userFound);
 
-
-        AppRole? role = await _roleManager.FindByIdAsync(candidateForCreateDTO.RoleId.ToString()!);
+        AppRole? role = await _roleManager.FindByIdAsync(RoleEnum.Candidate.GetRoleId());
         ArgumentNullException.ThrowIfNull(role, "Role not found to add user");
 
 
         var candidate = _mapper.Map<Candidate>(candidateForCreateDTO);
         candidate.Attachment = await FileUtility.ConvertFileToBytes(candidateForCreateDTO.Attachment);
+
+
+        SkillsEnum[] skillsEnum = candidateForCreateDTO.ProfessionalInformation.SkillId;
+
+        var skills = await _unitOfWork
+            .SkillRepository
+            .GetAllAsync(s => skillsEnum.Length > 0 && skillsEnum.Contains(s.Id), true);
+
+        candidate.SetSkillList(skills);
 
         var createUserResult = await _userManager.CreateAsync(candidate, DEFAULT_PASSWORD);
         ApplicationException.ThrowIfOperationFail(createUserResult.Succeeded, "Create candidate failed");
@@ -123,7 +163,7 @@ public sealed class CandidateManager : BaseUserManager
 
 
         _mapper.Map(candidateForUpdateDTO, candidate);
-        await UpdateUserRoleAsync(userFoundById, candidateForUpdateDTO.RoleId);
+        //await UpdateUserRoleAsync(userFoundById, candidateForUpdateDTO.RoleId);
 
 
 

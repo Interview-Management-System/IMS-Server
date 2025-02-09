@@ -2,12 +2,16 @@
 using InterviewManagementSystem.Domain.Entities.Interviews;
 using InterviewManagementSystem.Domain.Entities.Jobs;
 using InterviewManagementSystem.Domain.Entities.Offers;
-using Microsoft.EntityFrameworkCore;
 
 namespace InterviewManagementSystem.Application.Shared.Helpers;
 
 public static class EntityHelper
 {
+
+
+
+
+
 
     internal static readonly Dictionary<Type, List<string>> EntitySearchFieldMappings = new()
     {
@@ -20,12 +24,7 @@ public static class EntityHelper
     internal static bool IsNavigationProperty<T>(DbContext context, string propertyName)
     {
         // Get the entity type for the specified type
-        var entityType = context.Model.FindEntityType(typeof(T));
-
-        if (entityType == null)
-        {
-            throw new ArgumentException($"Entity type {typeof(T).Name} is not found in the DbContext.");
-        }
+        var entityType = context.Model.FindEntityType(typeof(T)) ?? throw new ArgumentException($"Entity type {typeof(T).Name} is not found in the DbContext.");
 
         // Check if the specified property is a navigation property
         var navigationProperty = entityType.GetNavigations().FirstOrDefault(n => n.Name == propertyName);

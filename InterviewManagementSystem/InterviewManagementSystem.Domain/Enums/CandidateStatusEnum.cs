@@ -2,7 +2,8 @@
 
 public enum CandidateStatusEnum : short
 {
-    Open = 1,
+    Default,
+    Open,
     Banned,
     WaitingForInterview,
     InProgress,

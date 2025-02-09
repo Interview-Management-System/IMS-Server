@@ -2,7 +2,8 @@
 
 public enum InterviewResultEnum
 {
-    Open = 1,
+    Default,
+    Open,
     Pass,
     Failed,
     NA
@@ -11,6 +12,7 @@ public enum InterviewResultEnum
 
 public enum InterviewStatusEnum
 {
+    Default,
     New = 1,
     Invited,
     Interviewed,

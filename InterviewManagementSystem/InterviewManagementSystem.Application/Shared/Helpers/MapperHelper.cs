@@ -2,8 +2,11 @@
 
 namespace InterviewManagementSystem.Application.Shared.Helpers;
 
-internal static class MapperHelper
+public static class MapperHelper
 {
+
+    public static IMapper? Mapper { get; set; } = default;
+
 
     internal static List<T> GetListFromContext<T>(ResolutionContext context, string key)
     {

@@ -19,7 +19,7 @@ public partial class Candidate : AppUser
 
     public Guid? JobId { get; set; }
 
-    public CandidateStatusEnum CandidateStatusId { get; set; }
+    public CandidateStatusEnum? CandidateStatusId { get; set; }
 
     public virtual CandidateStatus? CandidateStatus { get; set; }
 
@@ -48,7 +48,10 @@ public partial class Candidate : AppUser
 public partial class Candidate
 {
 
-
+    public Candidate()
+    {
+        SetCandidateStatus(CandidateStatusEnum.Open);
+    }
 
 
     public void SetJob(Job job)
@@ -72,6 +75,22 @@ public partial class Candidate
     public void AddCandidateOfferStatus(CandidateOfferStatus candidateOfferStatus)
     {
         CandidateOfferStatuses.Add(candidateOfferStatus);
+    }
+
+
+    public void SetSkillList(List<Skill> skills)
+    {
+        if (skills.Count == 0)
+        {
+            Skills.Clear();
+        }
+        else
+        {
+            foreach (var skill in skills)
+            {
+                Skills.Add(skill);
+            }
+        }
     }
 
 }

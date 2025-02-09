@@ -5,10 +5,10 @@ using InterviewManagementSystem.Application.Shared.Helpers;
 using System.Text.Json.Serialization;
 
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 
+builder.Services.AddSignalR();
 builder.Services
     .AddControllers()
     .AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
@@ -52,6 +52,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<CancellationTokenMiddleware>();
 app.MapControllers();
+app.UseHubs();
 
 app.Run();
 

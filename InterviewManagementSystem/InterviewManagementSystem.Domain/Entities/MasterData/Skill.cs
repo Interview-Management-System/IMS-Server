@@ -31,4 +31,10 @@ public partial class Skill
     {
         Jobs.Remove(job);
     }
+
+
+    public void AddCandidate(Candidate candidate)
+    {
+        Candidates.Add(candidate);
+    }
 }

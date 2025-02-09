@@ -10,16 +10,26 @@ namespace InterviewManagementSystem.API.Controllers;
 public sealed class CandidateController(CandidateManager candidateManager) : ControllerBase
 {
 
-    [HttpGet("candidate-list")]
+    [HttpGet("list")]
     public async Task<IActionResult> GetListCandidateAsync()
     {
-        var apiResponse = await candidateManager.GetCandidateListAsync();
+        //var apiResponse = await candidateManager.GetCandidateListAsync();
+        return Ok("");
+    }
+
+
+    [HttpPost("pagination")]
+    public async Task<IActionResult> GetListUserPagingAsync(CandidatePaginatedSearchRequest? request)
+    {
+        var newRequest = request ?? new CandidatePaginatedSearchRequest();
+
+        var apiResponse = await candidateManager.GetListCandidatePagingAsync(newRequest);
         return Ok(apiResponse);
     }
 
 
-    [HttpGet("candidate-detail")]
-    public async Task<IActionResult> GetCandidateDetailAsync([FromQuery] Guid id)
+    [HttpGet("detail/{id}")]
+    public async Task<IActionResult> GetCandidateDetailAsync(Guid id)
     {
         var apiResponse = await candidateManager.GetCandidateByIdAsync(id);
         return Ok(apiResponse);
@@ -27,7 +37,7 @@ public sealed class CandidateController(CandidateManager candidateManager) : Con
 
 
 
-    [HttpPost("candidate-create")]
+    [HttpPost("create")]
     public async Task<IActionResult> CreateCandidateAsync([FromForm] CandidateForCreateDTO candidateForCreateDTO)
     {
         var apiResponse = await candidateManager.CreateCandidateAsync(candidateForCreateDTO);
@@ -36,7 +46,7 @@ public sealed class CandidateController(CandidateManager candidateManager) : Con
 
 
 
-    [HttpPut("candidate-update")]
+    [HttpPut("update")]
     public async Task<IActionResult> UpdateCandidateAsync([FromForm] CandidateForUpdateDTO candidateForUpdateDTO)
     {
         var apiResponse = await candidateManager.UpdateCandidateAsync(candidateForUpdateDTO);
@@ -46,7 +56,7 @@ public sealed class CandidateController(CandidateManager candidateManager) : Con
 
 
 
-    [HttpPatch("candidate-set-status")]
+    [HttpPatch("change-status")]
     public async Task<IActionResult> SetCandidateStatusAsync([FromQuery] Guid id, [FromQuery] CandidateStatusEnum candidateStatusEnum)
     {
         var apiResponse = await candidateManager.SetCandidateStatus(id, candidateStatusEnum);

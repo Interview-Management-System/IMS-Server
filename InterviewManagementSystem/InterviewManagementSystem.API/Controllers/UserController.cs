@@ -1,4 +1,5 @@
-﻿using InterviewManagementSystem.Application.DTOs.UserDTOs.UserDTOs;
+﻿using InterviewManagementSystem.API.SignalR.Services;
+using InterviewManagementSystem.Application.DTOs.UserDTOs.UserDTOs;
 using InterviewManagementSystem.Application.Managers.UserManagers;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,12 +7,12 @@ namespace InterviewManagementSystem.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public sealed class UserController(UserManager userManager) : ControllerBase
+public sealed class UserController(UserManager userManager, UserHubService userHubService) : ControllerBase
 {
 
 
-    [HttpGet("list")]
-    public async Task<IActionResult> GetListUserAsync()
+    [HttpGet("recruiters")]
+    public async Task<IActionResult> GetListRecruiterAsync()
     {
         var apiResponse = await userManager.GetListAsync();
         return Ok(apiResponse);
@@ -82,6 +83,8 @@ public sealed class UserController(UserManager userManager) : ControllerBase
     public async Task<IActionResult> ActivateUserAsync(Guid id)
     {
         var apiResponse = await userManager.ActivateUser(id);
+        await userHubService.NotifyUserStatusChangeAsync();
+
         return Ok(apiResponse);
     }
 
@@ -93,6 +96,8 @@ public sealed class UserController(UserManager userManager) : ControllerBase
     public async Task<IActionResult> DeActivateUserAsync(Guid id)
     {
         var apiResponse = await userManager.DeActivateUser(id);
+        await userHubService.NotifyUserStatusChangeAsync();
+
         return Ok(apiResponse);
     }
 

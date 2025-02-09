@@ -7,6 +7,7 @@ public sealed class PaginationParameter<T> where T : class
     public int PageSize { get; set; }
     public int PageIndex { get; set; }
     public string? SearchText { get; set; }
+    public bool IsLoadDeleted { get; set; }
     public SortCriteria? SortCriteria { get; set; } = new();
     public List<Expression<Func<T, bool>>> Filters { get; set; } = [];
 }

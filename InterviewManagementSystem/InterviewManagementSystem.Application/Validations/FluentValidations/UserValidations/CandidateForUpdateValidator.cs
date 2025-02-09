@@ -6,7 +6,7 @@ namespace InterviewManagementSystem.Application.Validations.FluentValidations.Us
     {
         public CandidateForUpdateValidator()
         {
-            Include(new BaseUserDTOValidator<CandidateForUpdateDTO>());
+            //Include(new BaseUserDTOValidator<CandidateForUpdateDTO>());
         }
     }
 }

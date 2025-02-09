@@ -2,6 +2,7 @@
 
 public enum SkillsEnum
 {
+    Default,
     Java = 1,
     NodeJs,
     DotNet,
@@ -14,6 +15,7 @@ public enum SkillsEnum
 
 public enum PositionEnum
 {
+    Default,
     BackendDeveloper = 1,
     BusinessAnalyst,
     Tester,
@@ -26,6 +28,7 @@ public enum PositionEnum
 
 public enum LevelEnum
 {
+    Default,
     Fresher = 1,
     Junior,
     Senior,
@@ -37,6 +40,7 @@ public enum LevelEnum
 
 public enum HighestLevelEnum
 {
+    Default,
     HighSchool = 1,
     BachelorDegree,
     MasterDegree,
@@ -46,6 +50,7 @@ public enum HighestLevelEnum
 
 public enum DepartmentEnum
 {
+    Default,
     IT = 1,
     HR,
     Finance,
@@ -59,6 +64,7 @@ public enum DepartmentEnum
 
 public enum BenefitEnum
 {
+    Default,
     Travel = 1,
     HybridWorking,
     HealthcareInsurance,
@@ -70,6 +76,7 @@ public enum BenefitEnum
 
 public enum ContractTypeEnum
 {
+    Default,
     Trial2Months = 1,
     Trainee3Months,
     OneYear,

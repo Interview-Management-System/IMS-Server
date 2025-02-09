@@ -5,7 +5,6 @@ namespace InterviewManagementSystem.Domain.Entities.AppUsers;
 
 public partial class AppUser : IdentityUser<Guid>
 {
-
     public DateTime? Dob { get; set; }
 
     public bool Gender { get; set; }

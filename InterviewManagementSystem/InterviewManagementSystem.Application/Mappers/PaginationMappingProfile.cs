@@ -1,7 +1,6 @@
 ﻿using InterviewManagementSystem.Application.DTOs.InterviewScheduleDTOs;
 using InterviewManagementSystem.Application.DTOs.JobDTOs;
 using InterviewManagementSystem.Application.DTOs.OfferDTOs;
-using InterviewManagementSystem.Application.Shared.Extensions;
 using InterviewManagementSystem.Domain.Entities.AppUsers;
 using InterviewManagementSystem.Domain.Entities.Interviews;
 using InterviewManagementSystem.Domain.Entities.Jobs;
@@ -66,5 +65,6 @@ public sealed class PaginationMappingProfile : Profile
     private void UserPaginationMapping()
     {
         CreateMap<PaginatedSearchRequest, PaginationParameter<AppUser>>().MapPagination();
+        CreateMap<PaginatedSearchRequest, PaginationParameter<Candidate>>().MapPagination();
     }
 }

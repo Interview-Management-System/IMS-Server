@@ -6,7 +6,7 @@
 
         public int PageSize { get; set; } = 5;
 
-        public int TotalRecords { get; set; }
+        public int TotalRecords { get; set; } = 0;
 
         public List<T> Items { set; get; } = [];
 

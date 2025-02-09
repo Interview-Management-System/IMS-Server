@@ -1,6 +1,9 @@
-﻿using InterviewManagementSystem.Domain.Entities.AppUsers;
+﻿using InterviewManagementSystem.API.SignalR.Hubs;
+using InterviewManagementSystem.API.SignalR.Services;
+using InterviewManagementSystem.Domain.Entities.AppUsers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace InterviewManagementSystem.API.Controllers
 {
@@ -9,10 +12,15 @@ namespace InterviewManagementSystem.API.Controllers
     public class ValuesController : ControllerBase
     {
         UserManager<AppUser> _userManager;
+        private readonly IHubContext<UserHub> _hubContext;
 
-        public ValuesController(UserManager<AppUser> a)
+        private readonly UserHubService userHubService;
+
+        public ValuesController(UserManager<AppUser> a, IHubContext<UserHub> hubContext, UserHubService userHubService)
         {
             this._userManager = a;
+            _hubContext = hubContext;
+            this.userHubService = userHubService;
         }
 
 
@@ -38,12 +46,12 @@ namespace InterviewManagementSystem.API.Controllers
         [HttpGet("get")]
         public async Task<IActionResult> Get()
         {
+            //_hubContext.Clients.All.
+            //await _hubContext.Clients.All.SendMessage(string.Empty);
+            //await userHubService.NotifyUserDeletedAsync();
 
-            //var a = new InterviewManagementSystemContext();
 
-            //ApplicationException.ThrowIfOperationFail()
 
-            Application.Shared.Exceptions.ApplicationException.ThrowIfOperationFail(false, "t546hyt");
             return Ok("test message");
         }
     }

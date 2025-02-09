@@ -7,19 +7,20 @@ public class BaseUserDTOValidator<T> : AbstractValidator<T> where T : BaseUserDT
 
     public BaseUserDTOValidator()
     {
+        /*
 
         RuleFor(s => s.CreatedBy).NotEmpty().WithMessage("Creator must not empty");
-        RuleFor(s => s.DepartmentId).NotEmpty().WithMessage("Department can not empty");
+        //RuleFor(s => s.DepartmentId).NotEmpty().WithMessage("Department can not empty");
         RuleFor(s => s.RoleId).NotEmpty().WithMessage("Role must not empty");
-        RuleFor(s => s.Address).NotEmpty().WithMessage("Address must not empty");
-        RuleFor(s => s.Username).NotEmpty().WithMessage("Username name must not empty");
+        RuleFor(s => s.PersonalInformation.Address).NotEmpty().WithMessage("Address must not empty");
+        RuleFor(s => s.PersonalInformation.Username).NotEmpty().WithMessage("Username name must not empty");
 
 
 
-        RuleFor(s => s.Dob)
+        RuleFor(s => s.PersonalInformation.Dob)
             .NotNull().WithMessage("Date of birth must not empty")
-            .LessThan(DateTime.Now).WithMessage("Date of Birth must be in the past.")
-            .Must(BeAValidDate).WithMessage("Birthdate must be a valid date.");
+            .LessThan(DateTime.Now).WithMessage("Date of Birth must be in the past.");
+        //.Must(BeAValidDate).WithMessage("Birthdate must be a valid date.");
 
 
 
@@ -29,13 +30,13 @@ public class BaseUserDTOValidator<T> : AbstractValidator<T> where T : BaseUserDT
            .WithMessage("Status must have a valid value (true or false).");
 
 
-        RuleFor(x => x.Gender)
+        RuleFor(x => x.PersonalInformation.Gender)
           .NotNull().WithMessage("Gender cannot be empty.")
           .Must(value => (value == true || value == false))
           .WithMessage("Gender must have a valid value (true or false).");
 
 
-        RuleFor(s => s.Email)
+        RuleFor(s => s.PersonalInformation.Email)
             .NotNull().NotEmpty().WithMessage("Email must not empty")
             .EmailAddress().WithMessage("Invalid email format");
 
