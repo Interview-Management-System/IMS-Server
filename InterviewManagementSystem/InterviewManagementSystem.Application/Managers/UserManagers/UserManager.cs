@@ -1,7 +1,5 @@
 ﻿using InterviewManagementSystem.Application.DTOs.UserDTOs.UserDTOs;
 using InterviewManagementSystem.Domain.Entities.AppUsers;
-using InterviewManagementSystem.Domain.Enums.Extensions;
-using InterviewManagementSystem.Domain.Shared.Paginations;
 
 namespace InterviewManagementSystem.Application.Managers.UserManagers;
 

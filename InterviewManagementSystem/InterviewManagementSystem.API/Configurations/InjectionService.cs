@@ -7,12 +7,7 @@ using InterviewManagementSystem.Application.Managers.JobFeature.UseCases;
 using InterviewManagementSystem.Application.Managers.OfferFeature;
 using InterviewManagementSystem.Application.Managers.OfferFeature.UseCases;
 using InterviewManagementSystem.Application.Managers.UserManagers;
-using InterviewManagementSystem.Domain.Entities.AppUsers;
-using InterviewManagementSystem.Domain.Interfaces;
-using InterviewManagementSystem.Infrastructure.Persistences;
-using InterviewManagementSystem.Infrastructure.UnitOfWorks;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+using InterviewManagementSystem.Infrastructure.Databases.PostgreSQL.Extensions;
 
 namespace InterviewManagementSystem.API.Configurations;
 
@@ -21,21 +16,7 @@ internal static class InjectionService
 
     internal static void AddInjectionService(this IServiceCollection services, IConfiguration configuration)
     {
-
-
-        var connectionString = configuration["IMS_PostgreSqlSetting:ConnectionString"];
-        ArgumentNullException.ThrowIfNullOrEmpty(connectionString, "Connection string not found");
-
-        // Setup DB
-        services.AddDbContext<InterviewManagementSystemContext>(options => options.UseNpgsql(connectionString));
-
-
-        services.AddIdentity<AppUser, AppRole>()
-            .AddEntityFrameworkStores<InterviewManagementSystemContext>()
-            .AddDefaultTokenProviders();
-
-
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddPostgreSqlDbContext(configuration);
         //services.AddHostedService<JobAutoCloserService>();
 
         AddJobServices(services);

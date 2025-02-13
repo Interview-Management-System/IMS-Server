@@ -1,0 +1,10 @@
+{
+
+  "IMS_PostgreSqlSetting": {
+    "ConnectionString": "Host=localhost;Database=InterviewManagementSystem;Username=postgres;Password=sa"
+  },
+
+  "IMS_MongoDbSetting": {
+    "ConnectionString": ""
+  }
+}

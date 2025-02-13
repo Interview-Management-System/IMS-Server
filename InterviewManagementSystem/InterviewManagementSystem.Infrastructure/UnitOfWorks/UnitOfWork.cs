@@ -117,6 +117,7 @@ public sealed class UnitOfWork : IUnitOfWork, IDisposable
         {
             await _transaction.DisposeAsync();
         }
+
         if (_connection != null)
         {
             await _connection.DisposeAsync();

@@ -1,5 +1,4 @@
 ﻿using InterviewManagementSystem.Application.DTOs.JobDTOs;
-using InterviewManagementSystem.Application.Managers;
 using InterviewManagementSystem.Application.Shared.Utilities;
 using InterviewManagementSystem.Domain.Entities.Jobs;
 using InterviewManagementSystem.Domain.Shared.EntityData.JobData;
@@ -18,9 +17,9 @@ public sealed class JobCreateUseCase : BaseManager
     internal async Task<string> CreateNewJobAsync(JobForCreateDTO jobForCreateDTO)
     {
 
-        var levelList = await MasterDataUtility.GetListLevelByIdList(jobForCreateDTO.LevelId);
-        var benefitList = await MasterDataUtility.GetListBenefitByIdList(jobForCreateDTO.BenefitId);
-        var skillList = await MasterDataUtility.GetListSkillByIdList(jobForCreateDTO.RequiredSkillId);
+        var levelList = await MasterDataUtility.GetListLevelByIdListAsync(jobForCreateDTO.LevelId);
+        var benefitList = await MasterDataUtility.GetListBenefitByIdListAsync(jobForCreateDTO.BenefitId);
+        var skillList = await MasterDataUtility.GetListSkillByIdListAsync(jobForCreateDTO.RequiredSkillId);
 
 
         DataForCreateJob dataForCreateJob = _mapper.Map<DataForCreateJob>(jobForCreateDTO, opt =>

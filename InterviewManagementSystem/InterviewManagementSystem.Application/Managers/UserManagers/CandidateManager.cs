@@ -1,8 +1,6 @@
 ﻿using InterviewManagementSystem.Application.DTOs.UserDTOs.CandidateDTOs;
 using InterviewManagementSystem.Application.Shared.Utilities;
 using InterviewManagementSystem.Domain.Entities.AppUsers;
-using InterviewManagementSystem.Domain.Enums.Extensions;
-using InterviewManagementSystem.Domain.Shared.Paginations;
 
 namespace InterviewManagementSystem.Application.Managers.UserManagers;
 
@@ -21,43 +19,44 @@ public sealed class CandidateManager : BaseUserManager
 
 
 
-    public async Task<ApiResponse<PageResult<CandidateForRetrieveDTO>>> GetListCandidatePagingAsync(CandidatePaginatedSearchRequest request)
+    public async Task<ApiResponse<PageResult<CandidateForPaginationRetrieveDTO>>> GetListCandidatePagingAsync(CandidatePaginatedSearchRequest request)
     {
 
         PaginationParameter<Candidate> paginationParameter = _mapper.Map<PaginationParameter<Candidate>>(request);
 
 
-        CandidateStatusEnum? statusId = request.StatusId;
-        if (statusId != null && statusId != CandidateStatusEnum.Default)
+        CandidateStatusEnum statusId = request.StatusId;
+
+        if (statusId.IsNotDefault())
         {
             paginationParameter.Filters.Add(f => f.CandidateStatusId == statusId);
         }
 
 
-        var projection = MapperHelper.CreateProjection<Candidate, CandidateForRetrieveDTO>(_mapper);
+        var projection = MapperHelper.CreateProjection<Candidate, CandidateForPaginationRetrieveDTO>(_mapper);
         var pageResult = await _candidateRepository.GetPaginationList(paginationParameter, projection: projection);
 
 
-        return new ApiResponse<PageResult<CandidateForRetrieveDTO>>()
+        return new ApiResponse<PageResult<CandidateForPaginationRetrieveDTO>>()
         {
-            Data = _mapper.Map<PageResult<CandidateForRetrieveDTO>>(pageResult)
+            Data = _mapper.Map<PageResult<CandidateForPaginationRetrieveDTO>>(pageResult)
         };
     }
 
 
 
 
-    public async Task<ApiResponse<CandidateForRetrieveDTO>> GetCandidateByIdAsync(Guid id)
+    public async Task<ApiResponse<CandidateForDetailRetrieveDTO>> GetCandidateByIdAsync(Guid id)
     {
 
-        var projection = MapperHelper.CreateProjection<Candidate, CandidateForRetrieveDTO>(_mapper);
+        var projection = MapperHelper.CreateProjection<Candidate, CandidateForDetailRetrieveDTO>(_mapper);
 
         var candidateFoundById = await _candidateRepository.GetByIdAsync(id, projection: projection);
         ArgumentNullException.ThrowIfNull(candidateFoundById, "Candidate not found");
 
-        var mappedCandidate = _mapper.Map<CandidateForRetrieveDTO>(candidateFoundById);
+        var mappedCandidate = _mapper.Map<CandidateForDetailRetrieveDTO>(candidateFoundById);
 
-        return new ApiResponse<CandidateForRetrieveDTO>()
+        return new ApiResponse<CandidateForDetailRetrieveDTO>()
         {
             Data = mappedCandidate
         };
@@ -114,7 +113,7 @@ public sealed class CandidateManager : BaseUserManager
     public async Task<string> CreateCandidateAsync(CandidateForCreateDTO candidateForCreateDTO)
     {
 
-        var userFound = await _userManager.FindByEmailAsync(candidateForCreateDTO.PersonalInformation.Email.Trim());
+        var userFound = await _userManager.FindByEmailAsync(candidateForCreateDTO.PersonalInformation.Email!.Trim());
         AppUserException.ThrowIfUserExist(userFound);
 
         AppRole? role = await _roleManager.FindByIdAsync(RoleEnum.Candidate.GetRoleId());
@@ -125,13 +124,9 @@ public sealed class CandidateManager : BaseUserManager
         candidate.Attachment = await FileUtility.ConvertFileToBytes(candidateForCreateDTO.Attachment);
 
 
-        SkillsEnum[] skillsEnum = candidateForCreateDTO.ProfessionalInformation.SkillId;
-
-        var skills = await _unitOfWork
-            .SkillRepository
-            .GetAllAsync(s => skillsEnum.Length > 0 && skillsEnum.Contains(s.Id), true);
-
+        var skills = await MasterDataUtility.GetListSkillByIdListAsync(candidateForCreateDTO.SkillList);
         candidate.SetSkillList(skills);
+
 
         var createUserResult = await _userManager.CreateAsync(candidate, DEFAULT_PASSWORD);
         ApplicationException.ThrowIfOperationFail(createUserResult.Succeeded, "Create candidate failed");

@@ -1,6 +1,4 @@
-﻿using InterviewManagementSystem.Domain.Entities.MasterData;
-
-namespace InterviewManagementSystem.Application.Shared.Utilities;
+﻿namespace InterviewManagementSystem.Application.Shared.Utilities;
 
 internal static class MasterDataUtility
 {
@@ -9,26 +7,26 @@ internal static class MasterDataUtility
 
 
 
-    internal static async Task<List<Skill>> GetListSkillByIdList(SkillsEnum[] skillsEnums)
+    internal static async Task<List<Skill>> GetListSkillByIdListAsync(SkillsEnum[] skillsEnums)
     {
         return await UnitOfWork
               .GetBaseRepository<Skill>()
-              .GetAllAsync(s => skillsEnums.Select(s => s).Contains(s.Id), true);
+              .GetAllAsync(s => skillsEnums.Length > 0 && skillsEnums.Contains(s.Id), true);
     }
 
 
-    internal static async Task<List<Level>> GetListLevelByIdList(LevelEnum[] levelEnums)
+    internal static async Task<List<Level>> GetListLevelByIdListAsync(LevelEnum[] levelEnums)
     {
         return await UnitOfWork
               .GetBaseRepository<Level>()
-              .GetAllAsync(s => levelEnums.Select(s => s).Contains(s.Id), true);
+              .GetAllAsync(s => levelEnums.Length > 0 && levelEnums.Contains(s.Id), true);
     }
 
 
-    internal static async Task<List<Benefit>> GetListBenefitByIdList(BenefitEnum[] benefitEnums)
+    internal static async Task<List<Benefit>> GetListBenefitByIdListAsync(BenefitEnum[] benefitEnums)
     {
         return await UnitOfWork
               .GetBaseRepository<Benefit>()
-              .GetAllAsync(s => benefitEnums.Select(s => s).Contains(s.Id), true);
+              .GetAllAsync(s => benefitEnums.Length > 0 && benefitEnums.Contains(s.Id), true);
     }
 }

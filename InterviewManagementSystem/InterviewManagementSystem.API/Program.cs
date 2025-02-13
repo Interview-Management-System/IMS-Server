@@ -13,6 +13,9 @@ builder.Services
     .AddControllers()
     .AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
+builder.Configuration
+    .AddJsonFile(Path.Combine(AppContext.BaseDirectory, "infraSettings.json"), optional: false, reloadOnChange: true);
+
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -1,5 +1,4 @@
 ﻿using InterviewManagementSystem.Application.DTOs.JobDTOs;
-using InterviewManagementSystem.Application.Managers;
 using InterviewManagementSystem.Application.Shared.Utilities;
 using InterviewManagementSystem.Domain.Entities.Jobs;
 using InterviewManagementSystem.Domain.Shared.EntityData.JobData;
@@ -37,9 +36,9 @@ public sealed class JobUpdateUseCase : BaseManager
 
 
 
-        var levelList = await MasterDataUtility.GetListLevelByIdList(jobForUpdateDTO.LevelId);
-        var benefitList = await MasterDataUtility.GetListBenefitByIdList(jobForUpdateDTO.BenefitId);
-        var skillList = await MasterDataUtility.GetListSkillByIdList(jobForUpdateDTO.RequiredSkillId);
+        var levelList = await MasterDataUtility.GetListLevelByIdListAsync(jobForUpdateDTO.LevelId);
+        var benefitList = await MasterDataUtility.GetListBenefitByIdListAsync(jobForUpdateDTO.BenefitId);
+        var skillList = await MasterDataUtility.GetListSkillByIdListAsync(jobForUpdateDTO.RequiredSkillId);
 
 
         DataForUpdateJob dataForUpdateJob = _mapper.Map<DataForUpdateJob>(jobForUpdateDTO, opt =>

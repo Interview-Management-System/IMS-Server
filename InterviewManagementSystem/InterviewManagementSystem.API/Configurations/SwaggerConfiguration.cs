@@ -1,4 +1,5 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.OpenApi.Models;
 
 namespace InterviewManagementSystem.API.Configurations;
 
@@ -18,20 +19,27 @@ internal static class SwaggerConfiguration
                 Description = "Bearer Authentication with JWT Token",
                 Type = SecuritySchemeType.Http
             });
+
             x.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
             {
-                new OpenApiSecurityScheme
-                {
-                    Reference = new OpenApiReference
                     {
-                        Type = ReferenceType.SecurityScheme,
-                        Id = "Bearer"
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        Array.Empty<string>()
                     }
-                },
-                Array.Empty<string>()
-            }
-    });
+            });
+
+            x.MapType<FileResult>(() => new OpenApiSchema
+            {
+                Type = "string",
+                Format = "binary"
+            });
         });
     }
 }

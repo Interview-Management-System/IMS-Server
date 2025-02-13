@@ -2,6 +2,6 @@
 {
     public sealed record CandidatePaginatedSearchRequest : PaginatedSearchRequest
     {
-        public CandidateStatusEnum? StatusId { get; set; } = default;
+        public CandidateStatusEnum StatusId { get; set; } = CandidateStatusEnum.Default;
     }
 }

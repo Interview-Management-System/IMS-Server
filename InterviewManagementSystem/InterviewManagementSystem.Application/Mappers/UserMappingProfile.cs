@@ -2,7 +2,6 @@
 using InterviewManagementSystem.Application.DTOs.UserDTOs.CandidateDTOs;
 using InterviewManagementSystem.Application.DTOs.UserDTOs.UserDTOs;
 using InterviewManagementSystem.Domain.Entities.AppUsers;
-using InterviewManagementSystem.Domain.Shared.Paginations;
 
 namespace InterviewManagementSystem.Application.Mappers;
 
@@ -48,31 +47,62 @@ public sealed class UserMappingProfile : Profile
 
 
 
+
+
     private void CandidateMapping()
     {
-        CreateMap<Candidate, ProfessionalInformation>();
+        CreateMap<Candidate, BaseCandidateDTO>()
+        .ForMember(dest => dest.PersonalInformation, opt => opt.MapFrom(src => src))
+        .IncludeAllDerived();
 
-        //CreateMap<Candidate, CandidateForRetrieveDTO>()
-        //  .IncludeBase<AppUser, UserForRetrieveDTO>()
+        CreateMap<Candidate, UserStatus>().ReverseMap();
 
-        //  ;
-        //.ForMember(dest => dest.Department, opt => opt.Ignore())
-        //.ForMember(dest => dest.DepartmentId, opt => opt.Ignore())
-        //.ForMember(dest => dest.Offers, opt => opt.Ignore())
-        //.ForMember(dest => dest.Skills, opt => opt.MapFrom(src => src.Skills.Select(s => s.Name)))
-        //.ForMember(dest => dest.RecruiterName, opt => opt.MapFrom(src => src.Recruiter!.UserName))
-        //.ForMember(dest => dest.UpdateBy, opt => opt.MapFrom(src => src.UpdatedByNavigation!.UserName));
+        CreateMap<Candidate, AuditInformation>()
+            .ForMember(dest => dest.UpdateBy, opt => opt.MapFrom(src => src.UpdatedByNavigation!.UserName))
+            .ReverseMap();
+
+        CreateMap<Candidate, PersonalInformation>().ReverseMap();
+        CreateMap<Candidate, ProfessionalInformation>().ReverseMap();
 
 
         CreateMap<CandidateForCreateDTO, Candidate>()
-            .ForMember(dest => dest.Attachment, opt => opt.Ignore())
-            .AfterMap((src, dest) =>
-            {
-                dest.DepartmentId = null;
-            })
-            .ReverseMap();
+             .IncludeMembers(src => src.PersonalInformation)
+             .IncludeMembers(src => src.ProfessionalInformation)
+              .AfterMap((src, dest) =>
+               {
+                   dest.DepartmentId = null;
+               });
+
 
         CreateMap<Candidate, CandidateForUpdateDTO>().ReverseMap();
-        CreateMap<PageResult<Candidate>, PageResult<CandidateForUpdateDTO>>().ReverseMap();
+
+
+
+        #region Retrieve
+        CreateMap<Candidate, CandidateForRetrieveDTO>()
+            .IncludeAllDerived();
+
+
+        CreateMap<Candidate, CandidateForPaginationRetrieveDTO>()
+        .ForMember(dest => dest.UserStatus, opt => opt.MapFrom(src => src))
+        .ForMember(dest => dest.OwnerHr, opt => opt.MapFrom(src => src.CreatedByNavigation!.UserName))
+        .ForMember(dest => dest.CurrentPosition, opt => opt.MapFrom(src => src.PositionId.GetEnumName()))
+        .ForMember(dest => dest.CandidateStatus, opt => opt.MapFrom(src => src.CandidateStatusId.GetValueOrDefault().GetEnumName()));
+
+
+        CreateMap<Candidate, CandidateForDetailRetrieveDTO>()
+            .ForMember(dest => dest.Offers, opt => opt.Ignore())
+            .ForMember(dest => dest.AuditInformation, opt => opt.MapFrom(src => src))
+            .ForMember(dest => dest.ProfessionalInformation, opt => opt.MapFrom(src => src))
+            .ForMember(dest => dest.Skills, opt => opt.MapFrom(src => src.Skills.Select(s => s.Name)))
+            .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => GenderHelper.GetGenderText(src.Gender)))
+            ;
+
+
+        CreateMap<PageResult<Candidate>, PageResult<CandidateForPaginationRetrieveDTO>>();
+        #endregion
+
+
+
     }
 }
