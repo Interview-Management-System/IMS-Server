@@ -9,8 +9,6 @@ public partial class Candidate : AppUser
 {
     public short? YearsOfExperience { get; set; }
 
-    public byte[]? Attachment { get; set; }
-
     public Guid? RecruiterId { get; set; }
 
     public PositionEnum PositionId { get; set; }
@@ -20,6 +18,8 @@ public partial class Candidate : AppUser
     public Guid? JobId { get; set; }
 
     public CandidateStatusEnum? CandidateStatusId { get; set; }
+
+    public string? AttachmentLink { get; set; }
 
     public virtual CandidateStatus? CandidateStatus { get; set; }
 

@@ -1,11 +1,10 @@
-﻿using InterviewManagementSystem.Domain.Aggregates;
-using InterviewManagementSystem.Domain.Enums;
+﻿using InterviewManagementSystem.Domain.Enums;
 using InterviewManagementSystem.Domain.Shared.EntityData.InterviewData;
 using InterviewManagementSystem.Domain.Shared.Utilities;
 
 namespace InterviewManagementSystem.Domain.Entities.Interviews;
 
-public partial class InterviewSchedule : BaseEntity, IAggregate<Guid>
+public partial class InterviewSchedule : BaseEntity
 {
 
     public string? Title { get; set; }
@@ -60,14 +59,7 @@ public partial class InterviewSchedule : BaseEntity, IAggregate<Guid>
 
     public InterviewSchedule()
     {
-        GenerateId();
         SetStatus(InterviewStatusEnum.New);
-    }
-
-
-    private void GenerateId()
-    {
-        Id = Guid.NewGuid();
     }
 }
 

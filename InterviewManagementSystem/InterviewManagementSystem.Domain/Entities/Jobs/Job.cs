@@ -1,6 +1,4 @@
-﻿using InterviewManagementSystem.Domain.Aggregates;
-using InterviewManagementSystem.Domain.Enums;
-using InterviewManagementSystem.Domain.Shared.EntityData.JobData;
+﻿using InterviewManagementSystem.Domain.Enums;
 using InterviewManagementSystem.Domain.Shared.Utilities;
 
 namespace InterviewManagementSystem.Domain.Entities.Jobs;
@@ -19,7 +17,7 @@ public partial class Job : BaseEntity
 
     public DatePeriod? DatePeriod { get; set; }
 
-    public JobStatusEnum JobStatusId { get; set; }
+    public JobStatusEnum? JobStatusId { get; set; }
 
     public virtual AppUser? CreatedByNavigation { get; set; }
 
@@ -39,94 +37,13 @@ public partial class Job : BaseEntity
 
 
 
-    private Job()
+    public Job()
     {
-        GenerateId();
+        JobStatusId = JobStatusEnum.Draft;
     }
-
-
-
-    private void GenerateId()
-    {
-        Id = Guid.NewGuid();
-    }
-}
-#endregion
-
-
-
-
-
-#region Transactional methods
-public partial class Job : IAggregate<Guid>
-{
-
-
-    public static Job Create(DataForCreateJob dataForCreateJob)
-    {
-
-        var salaryRange = SalaryRange.Create(dataForCreateJob.From, dataForCreateJob.To);
-        var datePeriod = DatePeriod.Create(dataForCreateJob.StartDate, dataForCreateJob.EndDate);
-
-
-        var newJob = new Job()
-        {
-            DatePeriod = datePeriod,
-            SalaryRange = salaryRange,
-            Title = dataForCreateJob.Title,
-            Description = dataForCreateJob.Description,
-            WorkingAddress = dataForCreateJob.WorkingAddress,
-        };
-
-
-
-        if (dataForCreateJob.IsSaveAsDraft)
-        {
-            newJob.SaveAsDraft();
-        }
-        else
-        {
-            newJob.OpenJob();
-        }
-
-
-        newJob.AddLevels(dataForCreateJob.Levels);
-        newJob.AddSkills(dataForCreateJob.Skills);
-        newJob.AddBenefits(dataForCreateJob.Benefits);
-
-
-        return newJob;
-    }
-
-
-
-
-    public static void Update(Job jobToUpdate, DataForUpdateJob dataForCreateJob)
-    {
-
-        var salaryRange = SalaryRange.Create(dataForCreateJob.From, dataForCreateJob.To);
-        var datePeriod = DatePeriod.Create(dataForCreateJob.StartDate, dataForCreateJob.EndDate);
-
-
-        jobToUpdate.SetDatePeriod(datePeriod);
-        jobToUpdate.SetSalaryRange(salaryRange);
-
-
-        jobToUpdate.Title = dataForCreateJob.Title;
-        jobToUpdate.Description = dataForCreateJob.Description;
-        jobToUpdate.WorkingAddress = dataForCreateJob.WorkingAddress;
-
-
-        jobToUpdate.AddLevels(dataForCreateJob.Levels);
-        jobToUpdate.AddSkills(dataForCreateJob.Skills);
-        jobToUpdate.AddBenefits(dataForCreateJob.Benefits);
-    }
-
 
 }
 #endregion
-
-
 
 
 
@@ -134,53 +51,33 @@ public partial class Job : IAggregate<Guid>
 public partial class Job
 {
 
-
-
     public void AddCandidate(Candidate candidate)
     {
         Candidates.Add(candidate);
     }
 
 
-    public void SetDatePeriod(DatePeriod datePeriod)
-    {
-        DatePeriod = datePeriod;
-    }
-
-
-    public void SetSalaryRange(SalaryRange salaryRange)
-    {
-        SalaryRange = salaryRange;
-    }
-
-
-
 
     public void AddSkills(List<Skill> skills)
     {
+        Skills.Clear();
 
-        if (skills.Count == 0)
+        if (skills.Count != 0)
         {
-            Skills.Clear();
-            return;
-        }
+            var skillsToRemove = EntityComparer.GetNonMatchingEntities(Skills, skills);
+            foreach (var skill in skillsToRemove)
+            {
+                Skills.Remove(skill);
+                skill.RemoveJob(this);
+            }
 
 
-
-        var skillsToRemove = EntityComparer.GetNonMatchingEntities(Skills, skills);
-        foreach (var skill in skillsToRemove)
-        {
-            Skills.Remove(skill);
-            skill.RemoveJob(this);
-        }
-
-
-
-        var skillsToAdd = EntityComparer.GetNonMatchingEntities(skills, Skills);
-        foreach (var skill in skillsToAdd)
-        {
-            Skills.Add(skill);
-            skill.AddJob(this);
+            var skillsToAdd = EntityComparer.GetNonMatchingEntities(skills, Skills);
+            foreach (var skill in skillsToAdd)
+            {
+                Skills.Add(skill);
+                skill.AddJob(this);
+            }
         }
     }
 
@@ -189,13 +86,7 @@ public partial class Job
 
     public void AddLevels(List<Level> levels)
     {
-
-
-        if (levels.Count == 0)
-        {
-            Levels.Clear();
-            return;
-        }
+        Levels.Clear();
 
 
         var levelsToRemove = EntityComparer.GetNonMatchingEntities(Levels, levels);
@@ -204,7 +95,6 @@ public partial class Job
             Levels.Remove(level);
             level.RemoveJob(this);
         }
-
 
 
         var levelsToAdd = EntityComparer.GetNonMatchingEntities(levels, Levels);
@@ -220,12 +110,7 @@ public partial class Job
 
     public void AddBenefits(List<Benefit> benefits)
     {
-        if (benefits.Count == 0)
-        {
-            Benefits.Clear();
-            return;
-        }
-
+        Benefits.Clear();
 
 
         var benefitsToRemove = EntityComparer.GetNonMatchingEntities(Benefits, benefits);

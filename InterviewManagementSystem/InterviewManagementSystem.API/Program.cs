@@ -1,7 +1,6 @@
 global using InterviewManagementSystem.Application.DTOs;
 using InterviewManagementSystem.API.Configurations;
 using InterviewManagementSystem.API.Middlewares;
-using InterviewManagementSystem.Application.Shared.Helpers;
 using System.Text.Json.Serialization;
 
 
@@ -32,13 +31,8 @@ builder.Services.AddFluentValidation();
 builder.Services.AddInjectionService(configuration);
 builder.Services.AddExceptionHandlers();
 builder.Services.AddHttpContextAccessor();
-FilterHelper.Service = builder.Services.BuildServiceProvider();
-
 
 var app = builder.Build();
-
-
-AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 
 // Configure the HTTP request pipeline.

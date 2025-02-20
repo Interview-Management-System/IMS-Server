@@ -27,7 +27,7 @@ public partial class AppUser : IdentityUser<Guid>
 
     public Guid? UpdatedBy { get; set; }
 
-
+    public string? AvatarLink { get; set; }
 
     // k
     public virtual ICollection<AppUserClaim> AppUserClaims { get; set; } = new List<AppUserClaim>();

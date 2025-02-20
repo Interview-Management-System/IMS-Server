@@ -1,9 +1,8 @@
 ﻿using InterviewManagementSystem.Domain.Entities.AppUsers;
-using InterviewManagementSystem.Domain.Enums.Extensions;
 
 namespace InterviewManagementSystem.Application.Managers.UserManagers;
 
-public abstract class BaseUserManager : BaseManager
+public abstract class BaseUserManager : BaseManager<AppUser>
 {
 
     protected readonly UserManager<AppUser> _userManager;

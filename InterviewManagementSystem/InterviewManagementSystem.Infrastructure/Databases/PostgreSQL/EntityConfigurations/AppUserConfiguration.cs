@@ -43,7 +43,7 @@ internal static class AppUserConfiguration
             entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
             entity.Property(e => e.Note).HasColumnType("character varying");
             entity.Property(e => e.UserName).HasMaxLength(256);
-
+            entity.Property(e => e.AvatarLink).HasColumnType("character varying");
 
             entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.InverseCreatedByNavigation)
                 .HasForeignKey(d => d.CreatedBy)
@@ -117,9 +117,8 @@ internal static class AppUserConfiguration
         {
             entity.ToTable("Candidates", "IMS");
 
-
             entity.Property(e => e.Id).ValueGeneratedNever();
-            entity.Property(e => e.Attachment).HasColumnType("bytea");
+            entity.Property(e => e.AttachmentLink).HasColumnType("character varying");
 
 
             entity.HasOne(d => d.CandidateStatus).WithMany(p => p.Candidates)

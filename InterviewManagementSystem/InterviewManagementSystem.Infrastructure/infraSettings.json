@@ -6,5 +6,11 @@
 
   "IMS_MongoDbSetting": {
     "ConnectionString": ""
+  },
+
+  "IMS_CloudinarySetting": {
+    "CloudName": "ims-cloudinary",
+    "ApiKey": "858515935912852",
+    "ApiSecret": "j5QdNhGnDLXNzazGO3XeKybAwVk",
   }
 }

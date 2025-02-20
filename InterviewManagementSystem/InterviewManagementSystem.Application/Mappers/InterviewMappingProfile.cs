@@ -1,9 +1,5 @@
-﻿using InterviewManagementSystem.Application.DTOs.InterviewScheduleDTOs;
-using InterviewManagementSystem.Application.Shared.Extensions;
+﻿using InterviewManagementSystem.Application.DTOs.InterviewDTOs;
 using InterviewManagementSystem.Domain.Entities.Interviews;
-using InterviewManagementSystem.Domain.Enums.Extensions;
-using InterviewManagementSystem.Domain.Shared.EntityData.InterviewData;
-using InterviewManagementSystem.Domain.Shared.Paginations;
 
 namespace InterviewManagementSystem.Application.Mappers;
 
@@ -12,48 +8,36 @@ public sealed class InterviewMappingProfile : Profile
 
     public InterviewMappingProfile()
     {
-        CreateMap<PageResult<InterviewSchedule>, PageResult<InterviewScheduleForRetrieveDTO>>()
-            .ReverseMap();
+
+        CreateMap<Domain.ValueObjects.HourPeriod, HourPeriod>().ReverseMap();
+        CreateMap<InterviewSchedule, DTOs.InterviewDTOs.InterviewResult>().ReverseMap();
+        CreateMap<InterviewSchedule, InterviewStatus>().ReverseMap();
 
 
-        // Base mapping for interview
-        CreateMap<InterviewSchedule, BaseInterviewSchedule>()
-            .ForMember(dest => dest.Job, opt => opt.MapFrom(src => src.Job!.Title))
+        CreateMap<InterviewSchedule, BaseInterviewDTO>()
+            .ForMember(dest => dest.InterviewResult, opt => opt.MapFrom(src => src))
+            .ForMember(dest => dest.InterviewStatus, opt => opt.MapFrom(src => src))
+            .ForMember(dest => dest.HourPeriod, opt => opt.MapFrom(src => src.HourPeriod))
+            .ReverseMap()
+            .IncludeAllDerived();
+
+
+
+        #region Retrieve
+        CreateMap<InterviewSchedule, InterviewForRetrieveDTO>()
+            .IncludeBase<InterviewSchedule, BaseInterviewDTO>()
+            .ForMember(dest => dest.JobTitle, opt => opt.MapFrom(src => src.Job!.Title))
             .ForMember(dest => dest.CandidateName, opt => opt.MapFrom(src => src.Candidate!.UserName))
-            .ForMember(dest => dest.Schedule, opt => opt.MapFrom(src => src.ScheduleTime!.Value.ToVieFormat()))
-            .ForMember(dest => dest.Interviewers, opt => opt.MapFrom(src => src.Interviewers.Select(u => u.UserName).ToList()))
-            .ForMember(dest => dest.Result, opt => opt.MapFrom(src => src.InterviewResultId!.Value.GetEnumName()))
-            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.InterviewScheduleStatusId!.Value.GetEnumName()))
-            .ReverseMap();
+            .ForMember(dest => dest.Interviewers, opt => opt.MapFrom(src => src.Interviewers.Select(i => i.UserName)))
+            .IncludeAllDerived();
 
 
-        CreateMap<InterviewSchedule, InterviewScheduleForRetrieveDTO>()
-            .IncludeBase<InterviewSchedule, BaseInterviewSchedule>()
-            .ForMember(dest => dest.EndHour, opt => opt.MapFrom(src => src.HourPeriod!.EndHour.ToNewFormat()))
-            .ForMember(dest => dest.StartHour, opt => opt.MapFrom(src => src.HourPeriod!.StartHour.ToNewFormat()))
-            .ReverseMap();
+        CreateMap<InterviewSchedule, InterviewForDetailRetrieveDTO>();
+        CreateMap<InterviewSchedule, InterviewForPaginationRetrieveDTO>();
+        CreateMap<PageResult<InterviewSchedule>, PageResult<InterviewForPaginationRetrieveDTO>>();
+        #endregion
 
 
-        CreateMap<InterviewSchedule, InterviewScheduleForDetailRetrieveDTO>()
-            .IncludeBase<InterviewSchedule, BaseInterviewSchedule>()
-            .ForMember(dest => dest.EndHour, opt => opt.MapFrom(src => src.HourPeriod!.EndHour.ToString()))
-            .ForMember(dest => dest.StartHour, opt => opt.MapFrom(src => src.HourPeriod!.StartHour.ToString()))
-            .ReverseMap();
 
-
-        CreateMap<InterviewScheduleForCreateDTO, InterviewSchedule>()
-            .ReverseMap();
-
-
-        CreateMap<InterviewScheduleForCreateDTO, DataForCreateInterview>()
-            .ForMember(dest => dest.StartHourString, opt => opt.MapFrom(src => src.StartHour))
-            .ForMember(dest => dest.EndHourString, opt => opt.MapFrom(src => src.EndHour))
-            .ReverseMap();
-
-
-        CreateMap<InterviewScheduleForUpdateDTO, DataForUpdateInterview>()
-            .ForMember(dest => dest.StartHourString, opt => opt.MapFrom(src => src.StartHour))
-            .ForMember(dest => dest.EndHourString, opt => opt.MapFrom(src => src.EndHour))
-            .ReverseMap();
     }
 }

@@ -22,7 +22,6 @@ public sealed class UserController(UserManager userManager, UserHubService userH
     [HttpPost("pagination")]
     public async Task<IActionResult> GetListUserPagingAsync(UserPaginatedSearchRequest? request)
     {
-
         var newRequest = request ?? new UserPaginatedSearchRequest();
 
         var apiResponse = await userManager.GetListUserPagingAsync(newRequest);
@@ -34,7 +33,7 @@ public sealed class UserController(UserManager userManager, UserHubService userH
     [HttpGet("detail/{id}")]
     public async Task<IActionResult> GetUserDetailAsync(Guid id)
     {
-        var apiResponse = await userManager.GetUserByIdAsync(id);
+        var apiResponse = await userManager.GetDetailByIdAsync<UserForDetailRetrieveDTO>(id);
         return Ok(apiResponse);
     }
 
@@ -60,9 +59,9 @@ public sealed class UserController(UserManager userManager, UserHubService userH
 
 
     [HttpDelete("delete/{id}")]
-    public async Task<IActionResult> DeleteUserAsync(Guid id)
+    public async Task<IActionResult> DeleteUserAsync(Guid id, [FromQuery] bool? isHardDelete)
     {
-        var apiResponse = await userManager.DeleteUserAsync(id);
+        var apiResponse = await userManager.DeleteAsync(id, isHardDelete ?? false);
         return Ok(apiResponse);
     }
 
@@ -72,7 +71,7 @@ public sealed class UserController(UserManager userManager, UserHubService userH
     [HttpPatch("undo-delete/{id}")]
     public async Task<IActionResult> UndoDeleteUserAsync(Guid id)
     {
-        var apiResponse = await userManager.UnDoDeleteUserAsync(id);
+        var apiResponse = await userManager.UndoDeleteAsync(id);
         return Ok(apiResponse);
     }
 

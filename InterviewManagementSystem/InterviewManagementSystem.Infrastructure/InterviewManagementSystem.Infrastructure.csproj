@@ -20,7 +20,6 @@
 
   <ItemGroup>
     <Folder Include="Databases\MongoDB\" />
-    <Folder Include="Databases\FireBase\" />
     <Folder Include="Databases\PostgreSQL\Helpers\" />
     <Folder Include="Exceptions\" />
     <Folder Include="Services\Email\" />

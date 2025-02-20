@@ -14,6 +14,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 {
 
     protected readonly DbSet<T> _dbSet;
+    private static readonly SemaphoreSlim _semaphore = new(1, 1);
     protected readonly InterviewManagementSystemContext _interviewManagementSystemContext;
 
     public BaseRepository(InterviewManagementSystemContext interviewManagementSystemContext)
@@ -80,21 +81,14 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
     public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, bool isTracking = false)
     {
 
-        IQueryable<T> queryable = _dbSet;
-
+        IQueryable<T> queryable = isTracking ? _dbSet : _dbSet.AsNoTracking();
 
         if (filter != null)
         {
             queryable = queryable.Where(filter);
         }
 
-
-        if (isTracking)
-        {
-            return await queryable.ToListAsync();
-        }
-
-        return await queryable.AsNoTracking().ToListAsync();
+        return await queryable.ToListAsync();
     }
 
 

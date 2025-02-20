@@ -9,7 +9,7 @@ public record CandidateForRetrieveDTO : BaseCandidateDTO
 public sealed record CandidateForDetailRetrieveDTO : CandidateForRetrieveDTO
 {
     public string? Gender { get; set; }
-    public byte[]? Attachment { get; set; } = [];
+    public string? AttachmentLink { get; set; }
     public List<string> Offers { get; set; } = [];
     public List<string>? Skills { get; set; } = [];
     public AuditInformation AuditInformation { get; set; } = new();

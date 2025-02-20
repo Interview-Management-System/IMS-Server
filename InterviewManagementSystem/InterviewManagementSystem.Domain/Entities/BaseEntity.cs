@@ -13,5 +13,11 @@
         public DateTime? UpdateAt { get; set; }
 
         public bool IsDeleted { get; set; } = false;
+
+
+        protected BaseEntity()
+        {
+            Id = Guid.NewGuid();
+        }
     }
 }

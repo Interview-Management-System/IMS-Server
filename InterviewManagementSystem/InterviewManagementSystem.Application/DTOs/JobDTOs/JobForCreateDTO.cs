@@ -2,10 +2,8 @@
 {
     public record JobForCreateDTO : BaseJobDTO
     {
-        public SkillsEnum[] RequiredSkillId { get; set; } = [];
-        public BenefitEnum[] BenefitId { get; set; } = [];
-        public LevelEnum[] LevelId { get; set; } = [];
-        public string? Description { get; set; }
-        public bool IsSaveAsDraft { get; set; } = true;
+        public LevelEnum[] LevelIds { get; set; } = [];
+        public BenefitEnum[] BenefitIds { get; set; } = [];
+        public SkillsEnum[] SkillIds { get; set; } = [];
     }
 }

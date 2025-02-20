@@ -84,30 +84,6 @@ public sealed class UserManager : BaseUserManager
     }
 
 
-
-    public async Task<ApiResponse<UserForDetailRetrieveDTO>> GetUserByIdAsync(Guid id)
-    {
-
-        var userFoundById = await _appUserRepository.GetByIdAsync(id);
-
-        ArgumentNullException.ThrowIfNull(userFoundById, "User not found");
-        ApplicationException.ThrowIfGetDeletedRecord(userFoundById.IsDeleted);
-
-
-        var mappedUser = _mapper.Map<UserForDetailRetrieveDTO>(userFoundById);
-        var listRole = await _userManager.GetRolesAsync(userFoundById);
-
-        mappedUser.Role = listRole.FirstOrDefault();
-
-
-        return new ApiResponse<UserForDetailRetrieveDTO>()
-        {
-            Data = mappedUser
-        };
-    }
-
-
-
     public async Task<string> UpdateUserAsync(UserForUpdateDTO userForUpdateDTO)
     {
 
@@ -183,51 +159,4 @@ public sealed class UserManager : BaseUserManager
         ApplicationException.ThrowIfOperationFail(result.Succeeded, "Activate user failed");
         return "Activate user successfully";
     }
-
-
-
-
-    public async Task<string> DeleteUserAsync(Guid id)
-    {
-
-        var userFoundById = await _userManager.FindByIdAsync(id.ToString());
-
-        ArgumentNullException.ThrowIfNull(userFoundById, "User not found to delete");
-        ApplicationException.ThrowIfGetDeletedRecord(userFoundById.IsDeleted);
-
-
-        userFoundById.Delete();
-
-
-        var result = await _userManager.UpdateAsync(userFoundById);
-        ApplicationException.ThrowIfOperationFail(result.Succeeded, "Delete user failed");
-
-
-        return "Update user successfully";
-    }
-
-
-
-
-    public async Task<string> UnDoDeleteUserAsync(Guid id)
-    {
-
-        var userFoundById = await _userManager.FindByIdAsync(id.ToString());
-
-        ArgumentNullException.ThrowIfNull(userFoundById, "User not found to undo delete");
-        AppUserException.ThrowIfUnDoDeleteUnDeletedUser(userFoundById.IsDeleted);
-
-
-        userFoundById.UnDoDelete();
-
-
-        var result = await _userManager.UpdateAsync(userFoundById);
-        ApplicationException.ThrowIfOperationFail(result.Succeeded, "Undo delete user failed");
-
-
-        return "Update user successfully";
-    }
-
-
-
 }

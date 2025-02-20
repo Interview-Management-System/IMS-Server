@@ -1,6 +1,8 @@
 ﻿using InterviewManagementSystem.API.SignalR.Hubs;
 using InterviewManagementSystem.API.SignalR.Services;
 using InterviewManagementSystem.Domain.Entities.AppUsers;
+using InterviewManagementSystem.Domain.Interfaces;
+using InterviewManagementSystem.Infrastructure.Databases.Cloudinary;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -30,17 +32,19 @@ namespace InterviewManagementSystem.API.Controllers
     }
 
 
-    [Route("api/[controller]")]
-    [ApiController]
     public class ValuesController : ControllerBase
     {
         UserManager<AppUser> _userManager;
         private readonly IHubContext<UserHub> _hubContext;
 
         private readonly UserHubService userHubService;
+        private readonly CloudinaryService cloudinaryService;
+        private readonly IUnitOfWork unitOfWork;
 
-        public ValuesController(UserManager<AppUser> a, IHubContext<UserHub> hubContext, UserHubService userHubService)
+        public ValuesController(UserManager<AppUser> a, IHubContext<UserHub> hubContext, UserHubService userHubService, CloudinaryService cloudinaryService, IUnitOfWork unitOfWork)
         {
+            this.cloudinaryService = cloudinaryService;
+            this.unitOfWork = unitOfWork;
             this._userManager = a;
             _hubContext = hubContext;
             this.userHubService = userHubService;
@@ -52,19 +56,13 @@ namespace InterviewManagementSystem.API.Controllers
         public async Task<IActionResult> DownloadPdf(IFormFile file)
         {
 
-            // Read the PDF file bytes
-            byte[] fileBytes = [];
+            var rs = await cloudinaryService.UploadFileAsync(file);
 
-
-            using (var memoryStream = new MemoryStream())
-            {
-                await file.CopyToAsync(memoryStream);
-                fileBytes = memoryStream.ToArray();
-            }
-
-            // Return the file as a response with the appropriate content type
-            return Ok(fileBytes);
+            return Ok(rs);
         }
+
+
+
 
         [HttpGet("get")]
         [ProducesResponseType(typeof(FileResult), 200)]

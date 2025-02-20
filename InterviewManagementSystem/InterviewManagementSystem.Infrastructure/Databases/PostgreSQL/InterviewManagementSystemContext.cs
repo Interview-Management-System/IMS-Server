@@ -13,12 +13,12 @@ namespace InterviewManagementSystem.Infrastructure.Persistences;
 
 public partial class InterviewManagementSystemContext : IdentityDbContext<AppUser, AppRole, Guid>
 {
+
     public InterviewManagementSystemContext()
     {
     }
 
-    public InterviewManagementSystemContext(DbContextOptions<InterviewManagementSystemContext> options)
-        : base(options)
+    public InterviewManagementSystemContext(DbContextOptions<InterviewManagementSystemContext> options) : base(options)
     {
     }
 
@@ -82,17 +82,6 @@ public partial class InterviewManagementSystemContext : IdentityDbContext<AppUse
 /// </summary>
 public partial class InterviewManagementSystemContext
 {
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        if (optionsBuilder.IsConfigured == false)
-        {
-            const string connectionString = "Host=localhost;Database=InterviewManagementSystem;Username=postgres;Password=sa";
-            optionsBuilder.UseNpgsql(connectionString);
-        }
-    }
-
-
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

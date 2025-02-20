@@ -2,6 +2,6 @@
 {
     public record JobPaginatedSearchRequest : PaginatedSearchRequest
     {
-        public JobStatusEnum? JobStatusId { get; set; }
+        public JobStatusEnum JobStatusId { get; set; } = JobStatusEnum.Default;
     }
 }

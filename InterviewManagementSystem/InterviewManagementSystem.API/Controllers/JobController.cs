@@ -1,57 +1,50 @@
 ﻿using InterviewManagementSystem.Application.DTOs.JobDTOs;
-using InterviewManagementSystem.Application.Managers.JobFeature;
+using InterviewManagementSystem.Application.Managers.JobManager;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InterviewManagementSystem.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class JobController : ControllerBase
+public class JobController(JobManager manager) : ControllerBase
 {
 
-    private readonly JobFacade _jobFacade;
+
+    private readonly JobManager _jobManager = manager;
 
 
-    public JobController(JobFacade jobFacade)
-    {
-        _jobFacade = jobFacade;
-    }
-
-
-
-    [HttpGet("list-open-job")]
+    [HttpGet("open-jobs")]
     public async Task<IActionResult> GetListOpenJobAsync()
     {
-        var apiResponse = await _jobFacade.GetListOpenJobAsync();
+        var apiResponse = "";
         return Ok(apiResponse);
     }
 
 
 
-    [HttpGet("list-paging")]
-    public async Task<IActionResult> GetListJobPageResultAsync(JobPaginatedSearchRequest request)
+    [HttpPost("pagination")]
+    public async Task<IActionResult> GetListJobPageResultAsync(JobPaginatedSearchRequest? request)
     {
-        var apiResponse = await _jobFacade.GetListJobPagingAsync(request);
+        var newRequest = request ?? new JobPaginatedSearchRequest();
+
+        var apiResponse = await _jobManager.GetListJobPagingAsync(newRequest);
         return Ok(apiResponse);
     }
 
 
-
-
-    [HttpGet("detail")]
+    [HttpGet("detail/{id}")]
     public async Task<IActionResult> GetJobDetailByIdAsync(Guid id)
     {
-        var apiResponse = await _jobFacade.GetJobDetailByIdAsync(id);
+        var apiResponse = await _jobManager.GetDetailByIdAsync<JobForDetailRetrieveDTO>(id);
         return Ok(apiResponse);
     }
-
 
 
 
     [HttpPost("create")]
     public async Task<IActionResult> CreateJobAsync([FromBody] JobForCreateDTO jobForCreateDTO)
     {
-        var response = await _jobFacade.CreateJobAsync(jobForCreateDTO);
+        var response = await _jobManager.CreateNewJobAsync(jobForCreateDTO);
         return Created("", response);
     }
 
@@ -60,17 +53,25 @@ public class JobController : ControllerBase
     [HttpPut("update")]
     public async Task<IActionResult> UpdateJobAsync([FromBody] JobForUpdateDTO jobForUpdateDTO)
     {
-        var response = await _jobFacade.UpdateJobAsync(jobForUpdateDTO);
+        var response = await _jobManager.UpdateJobAsync(jobForUpdateDTO);
         return Ok(response);
     }
 
 
 
-    [HttpPatch("delete")]
-    public async Task<IActionResult> DeleteJobAsync(Guid id)
+    [HttpDelete("delete/{id}")]
+    public async Task<IActionResult> DeleteJobAsync(Guid id, [FromQuery] bool? isHardDelete)
     {
-        var responseMessage = await _jobFacade.DeleteJobAsync(id);
-        return Accepted("", responseMessage);
+        var responseMessage = await _jobManager.DeleteAsync(id, isHardDelete ?? false);
+        return Ok(responseMessage);
     }
 
+
+
+    [HttpPatch("undo-delete/{id}")]
+    public async Task<IActionResult> UnDoDeleteJobAsync(Guid id)
+    {
+        var responseMessage = await _jobManager.UndoDeleteAsync(id);
+        return Ok(responseMessage);
+    }
 }

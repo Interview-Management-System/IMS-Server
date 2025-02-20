@@ -121,10 +121,9 @@ public sealed class CandidateManager : BaseUserManager
 
 
         var candidate = _mapper.Map<Candidate>(candidateForCreateDTO);
-        candidate.Attachment = await FileUtility.ConvertFileToBytes(candidateForCreateDTO.Attachment);
 
 
-        var skills = await MasterDataUtility.GetListSkillByIdListAsync(candidateForCreateDTO.SkillList);
+        var skills = await MasterDataUtility.GetListSkillByIdListAsync(candidateForCreateDTO.SkillList, _unitOfWork);
         candidate.SetSkillList(skills);
 
 
