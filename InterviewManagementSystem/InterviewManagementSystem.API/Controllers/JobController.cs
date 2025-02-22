@@ -16,7 +16,7 @@ public class JobController(JobManager manager) : ControllerBase
     [HttpGet("open-jobs")]
     public async Task<IActionResult> GetListOpenJobAsync()
     {
-        var apiResponse = "";
+        var apiResponse = await _jobManager.GetListOpenJobAsync();
         return Ok(apiResponse);
     }
 

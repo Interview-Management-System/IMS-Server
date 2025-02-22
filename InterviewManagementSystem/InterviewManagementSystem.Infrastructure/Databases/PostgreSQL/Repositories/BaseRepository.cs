@@ -78,17 +78,11 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 
 
 
-    public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, bool isTracking = false)
+    public async Task<List<TResult>> GetAllAsync<TResult>(Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>, IQueryable<TResult>>? projection = null, bool isTracking = false)
     {
-
         IQueryable<T> queryable = isTracking ? _dbSet : _dbSet.AsNoTracking();
 
-        if (filter != null)
-        {
-            queryable = queryable.Where(filter);
-        }
-
-        return await queryable.ToListAsync();
+        return await queryable.ApplyFilter([filter]).ApplyProjection(projection).ToListAsync();
     }
 
 

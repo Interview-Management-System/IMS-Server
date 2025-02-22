@@ -1,4 +1,5 @@
 ﻿using InterviewManagementSystem.Application.DTOs.UserDTOs.CandidateDTOs;
+using InterviewManagementSystem.Application.Services;
 using InterviewManagementSystem.Application.Shared.Utilities;
 using InterviewManagementSystem.Domain.Entities.AppUsers;
 
@@ -6,11 +7,17 @@ namespace InterviewManagementSystem.Application.Managers.UserManagers;
 
 public sealed class CandidateManager : BaseUserManager
 {
-
     private readonly UserManager<AppUser> _candidateManager;
     private readonly IBaseRepository<Candidate> _candidateRepository;
 
-    public CandidateManager(IMapper mapper, IUnitOfWork unitOfWork, UserManager<AppUser> candidateManager, RoleManager<AppRole> roleManager) : base(mapper, unitOfWork, candidateManager, roleManager)
+
+    public CandidateManager(
+        IMapper mapper,
+        IUnitOfWork unitOfWork,
+        UserManager<AppUser> candidateManager,
+        RoleManager<AppRole> roleManager,
+        ICloudinaryService cloudinaryService
+        ) : base(mapper, unitOfWork, candidateManager, roleManager, cloudinaryService)
     {
         _candidateManager = candidateManager;
         _candidateRepository = unitOfWork.CandidateRepository;
@@ -84,32 +91,6 @@ public sealed class CandidateManager : BaseUserManager
     }
 
 
-    /*
-    public async Task<ApiResponse<List<CandidateForRetrieveDTO>>> GetCandidateListAsync()
-    {
-
-        var listUser = await _candidateRepository.GetAllAsync();
-        var newListUser = _mapper.Map<List<CandidateForRetrieveDTO>>(listUser);
-
-
-        foreach (var item in newListUser)
-        {
-            var userFoundById = await _userManager.FindByIdAsync(item.Id.ToString());
-            var listRole = await _userManager.GetRolesAsync(userFoundById!);
-
-            item. = listRole.FirstOrDefault();
-        }
-
-
-        return new ApiResponse<List<CandidateForRetrieveDTO>>()
-        {
-            Data = newListUser,
-            Message = "Get user list successful"
-        };
-    }
-    */
-
-
     public async Task<string> CreateCandidateAsync(CandidateForCreateDTO candidateForCreateDTO)
     {
 
@@ -123,8 +104,17 @@ public sealed class CandidateManager : BaseUserManager
         var candidate = _mapper.Map<Candidate>(candidateForCreateDTO);
 
 
-        var skills = await MasterDataUtility.GetListSkillByIdListAsync(candidateForCreateDTO.SkillList, _unitOfWork);
+        var skills = await MasterDataUtility.GetListSkillByIdListAsync(candidateForCreateDTO.SkillList);
         candidate.SetSkillList(skills);
+
+
+        var uploadAvatarTask = _cloudinaryService.UploadFileAsync(candidateForCreateDTO.Avatar);
+        var uploadAttachmentTask = _cloudinaryService.UploadFileAsync(candidateForCreateDTO.Attachment);
+
+        await Task.WhenAll(uploadAvatarTask, uploadAttachmentTask);
+
+        candidate.AvatarLink = uploadAvatarTask?.Result?.SecureUrl.ToString();
+        candidate.AttachmentLink = uploadAttachmentTask?.Result?.SecureUrl.ToString();
 
 
         var createUserResult = await _userManager.CreateAsync(candidate, DEFAULT_PASSWORD);

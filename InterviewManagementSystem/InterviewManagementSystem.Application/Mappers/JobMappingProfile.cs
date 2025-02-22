@@ -34,6 +34,8 @@ public sealed class JobMappingProfile : Profile
             .ForMember(dest => dest.AuditInformation, opt => opt.MapFrom(src => src))
             .ForMember(dest => dest.Benefits, opt => opt.MapFrom(src => src.Benefits.Select(b => b.Name)));
 
+
+        CreateMap<Job, JobOpenForRetrieveDTO>();
         CreateMap<Job, JobForPaginationRetrieveDTO>();
         CreateMap<PageResult<Job>, PageResult<JobForPaginationRetrieveDTO>>();
         #endregion

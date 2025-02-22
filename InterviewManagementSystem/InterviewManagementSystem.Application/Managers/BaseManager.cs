@@ -14,7 +14,6 @@ public abstract class BaseManager<T>(IMapper mapper, IUnitOfWork unitOfWork) whe
     protected async Task<ApiResponse<PageResult<TPaginationDTO>>> GetListPaginationAsync<TPaginationDTO>(PaginationParameter<T> paginationParameter)
     {
 
-        // Create projection for mapping entity to DTO
         var projection = MapperHelper.CreateProjection<T, TPaginationDTO>(_mapper);
         var pageResult = await _repository.GetPaginationList(paginationParameter, projection: projection);
 

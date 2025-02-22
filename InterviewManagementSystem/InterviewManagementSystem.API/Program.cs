@@ -1,8 +1,8 @@
 global using InterviewManagementSystem.Application.DTOs;
+global using Microsoft.AspNetCore.SignalR;
 using InterviewManagementSystem.API.Configurations;
 using InterviewManagementSystem.API.Middlewares;
 using System.Text.Json.Serialization;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,7 +33,6 @@ builder.Services.AddExceptionHandlers();
 builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
-
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

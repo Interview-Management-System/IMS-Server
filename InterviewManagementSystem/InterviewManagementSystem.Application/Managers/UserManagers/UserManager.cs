@@ -1,4 +1,5 @@
 ﻿using InterviewManagementSystem.Application.DTOs.UserDTOs.UserDTOs;
+using InterviewManagementSystem.Application.Services;
 using InterviewManagementSystem.Domain.Entities.AppUsers;
 
 namespace InterviewManagementSystem.Application.Managers.UserManagers;
@@ -8,7 +9,13 @@ public sealed class UserManager : BaseUserManager
 
     private readonly IBaseRepository<AppUser> _appUserRepository;
 
-    public UserManager(IMapper mapper, IUnitOfWork unitOfWork, UserManager<AppUser> userManager, RoleManager<AppRole> roleManager) : base(mapper, unitOfWork, userManager, roleManager)
+    public UserManager(
+        IMapper mapper,
+        IUnitOfWork unitOfWork,
+        UserManager<AppUser> userManager,
+        RoleManager<AppRole> roleManager,
+        ICloudinaryService cloudinaryService
+        ) : base(mapper, unitOfWork, userManager, roleManager, cloudinaryService)
     {
         _appUserRepository = unitOfWork.AppUserRepository;
     }

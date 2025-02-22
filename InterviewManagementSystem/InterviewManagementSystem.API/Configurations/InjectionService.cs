@@ -25,7 +25,6 @@ internal static class InjectionService
         services.AddScoped<InterviewManager>();
         services.AddScoped<AuthenticationManager>();
         services.AddSingleton<UserHubService>();
-
     }
 }
 

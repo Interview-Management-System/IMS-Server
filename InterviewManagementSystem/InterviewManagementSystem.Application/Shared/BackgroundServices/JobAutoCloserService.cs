@@ -55,14 +55,14 @@ public sealed class JobAutoCloserService : BackgroundService
             j.JobStatusId == JobStatusEnum.Open
             && j.DatePeriod!.EndDate < DateTime.UtcNow;
 
+        /*
+                var overdueJobs = await dbContext
+                    .GetBaseRepository<Job>()
+                    .GetAllAsync(expression, isTracking: true);
+        */
 
-        var overdueJobs = await dbContext
-            .GetBaseRepository<Job>()
-            .GetAllAsync(expression, true);
-
-
-        foreach (var job in overdueJobs)
-            job.CloseJob();
+        //foreach (var job in overdueJobs)
+        //    job.CloseJob();
 
 
         await dbContext.SaveChangesAsync();

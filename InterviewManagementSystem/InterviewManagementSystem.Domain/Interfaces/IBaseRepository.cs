@@ -6,7 +6,7 @@ namespace InterviewManagementSystem.Domain.Interfaces;
 
 public interface IBaseRepository<T> where T : class
 {
-    Task<List<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, bool isTracking = false);
+    Task<List<TResult>> GetAllAsync<TResult>(Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>, IQueryable<TResult>>? projection = null, bool isTracking = false);
 
     Task<T?> GetByIdAsync<TId>(TId id, bool isTracking = false);
 

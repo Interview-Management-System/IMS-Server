@@ -1,19 +1,21 @@
-﻿using InterviewManagementSystem.Domain.Entities.AppUsers;
+﻿using InterviewManagementSystem.Application.Services;
+using InterviewManagementSystem.Domain.Entities.AppUsers;
 
 namespace InterviewManagementSystem.Application.Managers.UserManagers;
 
 public abstract class BaseUserManager : BaseManager<AppUser>
 {
-
     protected readonly UserManager<AppUser> _userManager;
     protected readonly RoleManager<AppRole> _roleManager;
+    protected readonly ICloudinaryService _cloudinaryService;
     protected static readonly string DEFAULT_PASSWORD = "T@n75541972";
 
 
-    protected BaseUserManager(IMapper mapper, IUnitOfWork unitOfWork, UserManager<AppUser> userManager, RoleManager<AppRole> roleManager) : base(mapper, unitOfWork)
+    protected BaseUserManager(IMapper mapper, IUnitOfWork unitOfWork, UserManager<AppUser> userManager, RoleManager<AppRole> roleManager, ICloudinaryService cloudinaryService) : base(mapper, unitOfWork)
     {
         _userManager = userManager;
         _roleManager = roleManager;
+        _cloudinaryService = cloudinaryService;
     }
 
 

@@ -1,4 +1,6 @@
-﻿using InterviewManagementSystem.Domain.Entities.AppUsers;
+﻿using InterviewManagementSystem.Application.Services;
+using InterviewManagementSystem.Application.Shared.Utilities;
+using InterviewManagementSystem.Domain.Entities.AppUsers;
 using InterviewManagementSystem.Domain.Interfaces;
 using InterviewManagementSystem.Infrastructure.Databases.Cloudinary;
 using InterviewManagementSystem.Infrastructure.Databases.PostgreSQL;
@@ -18,7 +20,7 @@ namespace InterviewManagementSystem.Infrastructure.Extensions
         public static void AddCloudinaryService(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<CloudinarySetting>(configuration.GetSection("IMS_CloudinarySetting"));
-            services.AddSingleton<CloudinaryService>();
+            services.AddSingleton<ICloudinaryService, CloudinaryService>();
         }
 
 
@@ -41,6 +43,8 @@ namespace InterviewManagementSystem.Infrastructure.Extensions
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             //AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
+            MasterDataUtility.Initialize(services);
         }
     }
 }

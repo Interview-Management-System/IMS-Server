@@ -1,6 +1,5 @@
 ﻿
 using InterviewManagementSystem.Application.DTOs.JobDTOs;
-using InterviewManagementSystem.Application.Shared.Utilities;
 using InterviewManagementSystem.Domain.Entities.Jobs;
 
 namespace InterviewManagementSystem.Application.Managers.JobManager;
@@ -11,9 +10,10 @@ public sealed class JobManager : BaseManager<Job>
     public JobManager(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork) { }
 
 
-    void GetListOpenJob()
+    public async Task<List<JobOpenForRetrieveDTO>> GetListOpenJobAsync()
     {
-
+        var projection = MapperHelper.CreateProjection<Job, JobOpenForRetrieveDTO>(_mapper);
+        return await _repository.GetAllAsync(f => f.JobStatusId == JobStatusEnum.Open, projection);
     }
 
 
@@ -38,6 +38,7 @@ public sealed class JobManager : BaseManager<Job>
 
         Job job = _mapper.Map<Job>(jobForCreateDTO);
 
+        /*
         var levels = await MasterDataUtility.GetListLevelByIdListAsync(jobForCreateDTO.LevelIds, _unitOfWork);
         var skills = await MasterDataUtility.GetListSkillByIdListAsync(jobForCreateDTO.SkillIds, _unitOfWork);
         var benefits = await MasterDataUtility.GetListBenefitByIdListAsync(jobForCreateDTO.BenefitIds, _unitOfWork);
@@ -45,6 +46,7 @@ public sealed class JobManager : BaseManager<Job>
         job.AddSkills(skills);
         job.AddLevels(levels);
         job.AddBenefits(benefits);
+        */
 
         await _repository.AddAsync(job);
         bool createdSuccessful = await _unitOfWork.SaveChangesAsync();
@@ -75,7 +77,7 @@ public sealed class JobManager : BaseManager<Job>
 
         _mapper.Map(jobForUpdateDTO, jobFoundById);
 
-
+        /*
         var levels = await MasterDataUtility.GetListLevelByIdListAsync(jobForUpdateDTO.LevelIds, _unitOfWork);
         var skills = await MasterDataUtility.GetListSkillByIdListAsync(jobForUpdateDTO.SkillIds, _unitOfWork);
         var benefits = await MasterDataUtility.GetListBenefitByIdListAsync(jobForUpdateDTO.BenefitIds, _unitOfWork);
@@ -84,7 +86,7 @@ public sealed class JobManager : BaseManager<Job>
         jobFoundById.AddSkills(skills);
         jobFoundById.AddLevels(levels);
         jobFoundById.AddBenefits(benefits);
-
+        */
 
         _repository.Update(jobFoundById);
         bool updatedSuccessful = await _unitOfWork.SaveChangesAsync();
