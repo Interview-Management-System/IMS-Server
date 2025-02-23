@@ -1,5 +1,4 @@
 ﻿using InterviewManagementSystem.Application.Services;
-using InterviewManagementSystem.Application.Shared.Utilities;
 using InterviewManagementSystem.Domain.Entities.AppUsers;
 using InterviewManagementSystem.Domain.Interfaces;
 using InterviewManagementSystem.Infrastructure.Databases.Cloudinary;
@@ -43,8 +42,6 @@ namespace InterviewManagementSystem.Infrastructure.Extensions
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             //AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-
-            MasterDataUtility.Initialize(services);
         }
     }
 }

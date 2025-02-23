@@ -79,7 +79,7 @@ internal static class AccessControl
 
 
 
-    internal static void AddCrossOriginResourceSharing(this IServiceCollection services)
+    internal static void AddCorsPolicy(this IServiceCollection services)
     {
         services.AddCors(options =>
             options.AddDefaultPolicy(builder =>

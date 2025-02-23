@@ -1,8 +1,6 @@
-﻿using InterviewManagementSystem.Domain.Enums.Extensions;
+﻿namespace InterviewManagementSystem.Application.DTOs.UserDTOs.UserDTOs;
 
-namespace InterviewManagementSystem.Application.DTOs.UserDTOs.UserDTOs;
-
-public record UserForRetrieveDTO : BaseUserDTO
+public record UserRetrieveDTO : BaseUserDTO
 {
     public Guid Id { get; set; }
     public string? Role { get; set; }
@@ -11,7 +9,7 @@ public record UserForRetrieveDTO : BaseUserDTO
 
 
 
-public sealed record UserForDetailRetrieveDTO : UserForRetrieveDTO
+public sealed record UserDetailRetrieveDTO : UserRetrieveDTO
 {
     public DepartmentEnum DepartmentId { get; set; }
     public string? Department => DepartmentId.GetEnumName();
@@ -20,7 +18,7 @@ public sealed record UserForDetailRetrieveDTO : UserForRetrieveDTO
 
 
 
-public sealed record UserForPaginationRetrieveDTO
+public sealed record UserPaginationRetrieveDTO
 {
     public Guid Id { get; set; }
     public string? Role { get; set; }

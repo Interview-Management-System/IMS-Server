@@ -25,4 +25,11 @@
         public bool IsActive { get; set; }
         public string? StatusText => UserStatusHelper.GetUserStatusText(IsActive);
     }
+
+
+    public record UserIdentityRetrieveDTO
+    {
+        public Guid Id { get; set; }
+        public string? Username { get; set; }
+    }
 }

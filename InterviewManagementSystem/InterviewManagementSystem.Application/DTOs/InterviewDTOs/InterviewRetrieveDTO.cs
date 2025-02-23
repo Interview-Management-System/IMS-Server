@@ -1,6 +1,6 @@
 ﻿namespace InterviewManagementSystem.Application.DTOs.InterviewDTOs;
 
-public record InterviewForRetrieveDTO : BaseInterviewDTO
+public record InterviewRetrieveDTO : BaseInterviewDTO
 {
     public Guid Id { get; set; }
     public string? JobTitle { get; set; }
@@ -10,10 +10,10 @@ public record InterviewForRetrieveDTO : BaseInterviewDTO
 
 
 
-public sealed record InterviewForPaginationRetrieveDTO : InterviewForRetrieveDTO { }
+public sealed record InterviewForPaginationRetrieveDTO : InterviewRetrieveDTO { }
 
 
-public sealed record InterviewForDetailRetrieveDTO : InterviewForRetrieveDTO
+public sealed record InterviewForDetailRetrieveDTO : InterviewRetrieveDTO
 {
     public string? Note { get; set; }
     public string? Location { get; set; }

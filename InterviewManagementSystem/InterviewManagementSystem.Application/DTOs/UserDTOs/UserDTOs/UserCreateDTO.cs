@@ -2,7 +2,7 @@
 
 namespace InterviewManagementSystem.Application.DTOs.UserDTOs.UserDTOs
 {
-    public record UserForCreateDTO : BaseUserDTO
+    public record UserCreateDTO : BaseUserDTO
     {
         public Guid RoleId { get; set; }
         public bool IsActive { get; set; }

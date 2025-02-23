@@ -25,7 +25,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwagger();
 builder.Services.AddJWTAuthentication(configuration);
 builder.Services.AddRoleAuthorization();
-builder.Services.AddCrossOriginResourceSharing();
+builder.Services.AddCorsPolicy();
 builder.Services.AddMapper();
 builder.Services.AddFluentValidation();
 builder.Services.AddInjectionService(configuration);
@@ -33,6 +33,8 @@ builder.Services.AddExceptionHandlers();
 builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
+
+app.AddConfig();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

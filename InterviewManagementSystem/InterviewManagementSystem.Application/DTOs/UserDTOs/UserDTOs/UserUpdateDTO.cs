@@ -1,6 +1,6 @@
 ﻿namespace InterviewManagementSystem.Application.DTOs.UserDTOs.UserDTOs
 {
-    public sealed record UserForUpdateDTO : BaseUserDTO
+    public sealed record UserUpdateDTO : BaseUserDTO
     {
         [Required]
         public Guid Id { get; set; }

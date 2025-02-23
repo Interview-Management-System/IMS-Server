@@ -22,9 +22,11 @@ public sealed class InterviewMappingProfile : Profile
             .IncludeAllDerived();
 
 
+        CreateMap<InterviewCreateDTO, InterviewSchedule>();
+
 
         #region Retrieve
-        CreateMap<InterviewSchedule, InterviewForRetrieveDTO>()
+        CreateMap<InterviewSchedule, InterviewRetrieveDTO>()
             .IncludeBase<InterviewSchedule, BaseInterviewDTO>()
             .ForMember(dest => dest.JobTitle, opt => opt.MapFrom(src => src.Job!.Title))
             .ForMember(dest => dest.CandidateName, opt => opt.MapFrom(src => src.Candidate!.UserName))

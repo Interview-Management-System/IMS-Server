@@ -1,6 +1,6 @@
 ﻿namespace InterviewManagementSystem.Application.DTOs.UserDTOs.CandidateDTOs
 {
-    public sealed record CandidateForUpdateDTO
+    public sealed record CandidateUpdateDTO
     {
         [Required]
         public Guid Id { get; set; }

@@ -10,14 +10,14 @@ public sealed class JobManager : BaseManager<Job>
     public JobManager(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork) { }
 
 
-    public async Task<List<JobOpenForRetrieveDTO>> GetListOpenJobAsync()
+    public async Task<List<JobOpenRetrieveDTO>> GetListOpenJobAsync()
     {
-        var projection = MapperHelper.CreateProjection<Job, JobOpenForRetrieveDTO>(_mapper);
+        var projection = MapperHelper.CreateProjection<Job, JobOpenRetrieveDTO>(_mapper);
         return await _repository.GetAllAsync(f => f.JobStatusId == JobStatusEnum.Open, projection);
     }
 
 
-    public async Task<ApiResponse<PageResult<JobForPaginationRetrieveDTO>>> GetListJobPagingAsync(JobPaginatedSearchRequest request)
+    public async Task<ApiResponse<PageResult<JobPaginationRetrieveDTO>>> GetListJobPagingAsync(JobPaginatedSearchRequest request)
     {
 
         PaginationParameter<Job> paginationParameter = _mapper.Map<PaginationParameter<Job>>(request);
@@ -29,11 +29,11 @@ public sealed class JobManager : BaseManager<Job>
             paginationParameter.Filters.Add(j => j.JobStatusId == statusId);
         }
 
-        return await base.GetListPaginationAsync<JobForPaginationRetrieveDTO>(paginationParameter);
+        return await base.GetListPaginationAsync<JobPaginationRetrieveDTO>(paginationParameter);
     }
 
 
-    public async Task<string> CreateNewJobAsync(JobForCreateDTO jobForCreateDTO)
+    public async Task<string> CreateNewJobAsync(JobCreateDTO jobForCreateDTO)
     {
 
         Job job = _mapper.Map<Job>(jobForCreateDTO);
@@ -58,7 +58,7 @@ public sealed class JobManager : BaseManager<Job>
 
 
 
-    public async Task<string> UpdateJobAsync(JobForUpdateDTO jobForUpdateDTO)
+    public async Task<string> UpdateJobAsync(JobUpdateDTO jobForUpdateDTO)
     {
 
         string[] includeProperties =

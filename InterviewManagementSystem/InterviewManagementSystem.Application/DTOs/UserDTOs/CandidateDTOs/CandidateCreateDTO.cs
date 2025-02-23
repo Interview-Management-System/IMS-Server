@@ -2,7 +2,7 @@
 
 namespace InterviewManagementSystem.Application.DTOs.UserDTOs.CandidateDTOs
 {
-    public record CandidateForCreateDTO : BaseUserDTO
+    public record CandidateCreateDTO : BaseUserDTO
     {
         public IFormFile? Avatar { get; set; }
         public IFormFile? Attachment { get; set; }

@@ -2,7 +2,7 @@
 
 namespace InterviewManagementSystem.Application.Validations.FluentValidations.UserValidations
 {
-    public sealed class CandidateForUpdateValidator : AbstractValidator<CandidateForUpdateDTO>
+    public sealed class CandidateForUpdateValidator : AbstractValidator<CandidateUpdateDTO>
     {
         public CandidateForUpdateValidator()
         {

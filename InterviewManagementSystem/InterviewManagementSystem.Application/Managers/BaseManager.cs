@@ -11,7 +11,7 @@ public abstract class BaseManager<T>(IMapper mapper, IUnitOfWork unitOfWork) whe
 
 
 
-    protected async Task<ApiResponse<PageResult<TPaginationDTO>>> GetListPaginationAsync<TPaginationDTO>(PaginationParameter<T> paginationParameter)
+    protected virtual async Task<ApiResponse<PageResult<TPaginationDTO>>> GetListPaginationAsync<TPaginationDTO>(PaginationParameter<T> paginationParameter)
     {
 
         var projection = MapperHelper.CreateProjection<T, TPaginationDTO>(_mapper);
@@ -25,7 +25,7 @@ public abstract class BaseManager<T>(IMapper mapper, IUnitOfWork unitOfWork) whe
 
 
 
-    public async Task<ApiResponse<TDetailDTO>> GetDetailByIdAsync<TDetailDTO>(object id)
+    public virtual async Task<ApiResponse<TDetailDTO>> GetDetailByIdAsync<TDetailDTO>(object id)
     {
 
         var projection = MapperHelper.CreateProjection<T, TDetailDTO>(_mapper);
@@ -41,7 +41,7 @@ public abstract class BaseManager<T>(IMapper mapper, IUnitOfWork unitOfWork) whe
 
 
 
-    public async Task<string> DeleteAsync(object id, bool isHardDelete = false)
+    public virtual async Task<string> DeleteAsync(object id, bool isHardDelete = false)
     {
         var entityFoundById = await _repository.GetByIdAsync(id);
 
@@ -67,7 +67,7 @@ public abstract class BaseManager<T>(IMapper mapper, IUnitOfWork unitOfWork) whe
 
 
 
-    public async Task<string> UndoDeleteAsync(object id)
+    public virtual async Task<string> UndoDeleteAsync(object id)
     {
         var entity = await _repository.GetByIdAsync(id, isTracking: true);
         ArgumentNullException.ThrowIfNull(entity, $"Data not found to restore");

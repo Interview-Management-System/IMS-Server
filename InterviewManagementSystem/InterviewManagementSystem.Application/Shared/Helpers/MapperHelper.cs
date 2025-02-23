@@ -6,6 +6,12 @@ public static class MapperHelper
 {
 
     public static IMapper? Mapper { get; set; } = default;
+    private static IMapper? _mapper;
+
+    public static void InitializeMapperInstance(IMapper mapper)
+    {
+        _mapper = mapper;
+    }
 
 
     internal static List<T> GetListFromContext<T>(ResolutionContext context, string key)
@@ -29,7 +35,7 @@ public static class MapperHelper
 
     public static Func<IQueryable<TSource>, IQueryable<TResult>> CreateProjection<TSource, TResult>(IMapper mapper)
     {
-        return query => query.ProjectTo<TResult>(mapper.ConfigurationProvider);
+        return query => query.ProjectTo<TResult>(_mapper!.ConfigurationProvider);
     }
 
 }

@@ -11,6 +11,7 @@ namespace InterviewManagementSystem.API.Controllers
 
         private readonly InterviewManager _interviewManager;
 
+
         public InterviewController(InterviewManager interviewManager)
         {
             _interviewManager = interviewManager;
@@ -33,6 +34,15 @@ namespace InterviewManagementSystem.API.Controllers
         {
             var apiResponse = await _interviewManager.GetDetailByIdAsync<InterviewForDetailRetrieveDTO>(id);
             return Ok(apiResponse);
+        }
+
+
+
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateInterviewAsync([FromBody] InterviewCreateDTO request)
+        {
+            var response = await _interviewManager.CreateInterview(request);
+            return Ok(response);
         }
     }
 }

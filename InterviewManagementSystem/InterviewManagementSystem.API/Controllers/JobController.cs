@@ -35,14 +35,14 @@ public class JobController(JobManager manager) : ControllerBase
     [HttpGet("detail/{id}")]
     public async Task<IActionResult> GetJobDetailByIdAsync(Guid id)
     {
-        var apiResponse = await _jobManager.GetDetailByIdAsync<JobForDetailRetrieveDTO>(id);
+        var apiResponse = await _jobManager.GetDetailByIdAsync<JobDetailRetrieveDTO>(id);
         return Ok(apiResponse);
     }
 
 
 
     [HttpPost("create")]
-    public async Task<IActionResult> CreateJobAsync([FromBody] JobForCreateDTO jobForCreateDTO)
+    public async Task<IActionResult> CreateJobAsync([FromBody] JobCreateDTO jobForCreateDTO)
     {
         var response = await _jobManager.CreateNewJobAsync(jobForCreateDTO);
         return Created("", response);
@@ -51,7 +51,7 @@ public class JobController(JobManager manager) : ControllerBase
 
 
     [HttpPut("update")]
-    public async Task<IActionResult> UpdateJobAsync([FromBody] JobForUpdateDTO jobForUpdateDTO)
+    public async Task<IActionResult> UpdateJobAsync([FromBody] JobUpdateDTO jobForUpdateDTO)
     {
         var response = await _jobManager.UpdateJobAsync(jobForUpdateDTO);
         return Ok(response);

@@ -1,4 +1,5 @@
-﻿using InterviewManagementSystem.Application.DTOs.UserDTOs.UserDTOs;
+﻿using InterviewManagementSystem.Application.DTOs.UserDTOs;
+using InterviewManagementSystem.Application.DTOs.UserDTOs.UserDTOs;
 using InterviewManagementSystem.Application.Services;
 using InterviewManagementSystem.Domain.Entities.AppUsers;
 
@@ -7,8 +8,6 @@ namespace InterviewManagementSystem.Application.Managers.UserManagers;
 public sealed class UserManager : BaseUserManager
 {
 
-    private readonly IBaseRepository<AppUser> _appUserRepository;
-
     public UserManager(
         IMapper mapper,
         IUnitOfWork unitOfWork,
@@ -16,27 +15,27 @@ public sealed class UserManager : BaseUserManager
         RoleManager<AppRole> roleManager,
         ICloudinaryService cloudinaryService
         ) : base(mapper, unitOfWork, userManager, roleManager, cloudinaryService)
+    { }
+
+
+
+    public async Task<List<UserIdentityRetrieveDTO>> GetListRecruiterAsync()
     {
-        _appUserRepository = unitOfWork.AppUserRepository;
-    }
-
-
-
-    public async Task<ApiResponse<List<UserForRetrieveDTO>>> GetListAsync()
-    {
-
         var recruiters = await _userManager.GetUsersInRoleAsync(nameof(RoleEnum.Recruiter));
-
-        return new ApiResponse<List<UserForRetrieveDTO>>()
-        {
-            Data = _mapper.Map<List<UserForRetrieveDTO>>(recruiters)
-        };
+        return _mapper.Map<List<UserIdentityRetrieveDTO>>(recruiters);
     }
 
 
 
+    public async Task<List<UserIdentityRetrieveDTO>> GetListInterviewerAsync()
+    {
+        var interviewers = await _userManager.GetUsersInRoleAsync(nameof(RoleEnum.Interviewer));
+        return _mapper.Map<List<UserIdentityRetrieveDTO>>(interviewers);
+    }
 
-    public async Task<string> CreateUserAsync(UserForCreateDTO userForCreateDTO)
+
+
+    public async Task<string> CreateUserAsync(UserCreateDTO userForCreateDTO)
     {
 
         var userFound = await _userManager.FindByEmailAsync(userForCreateDTO.PersonalInformation.Email!.Trim());
@@ -63,7 +62,7 @@ public sealed class UserManager : BaseUserManager
 
 
 
-    public async Task<ApiResponse<PageResult<UserForPaginationRetrieveDTO>>> GetListUserPagingAsync(UserPaginatedSearchRequest request)
+    public async Task<ApiResponse<PageResult<UserPaginationRetrieveDTO>>> GetListUserPagingAsync(UserPaginatedSearchRequest request)
     {
 
         PaginationParameter<AppUser> paginationParameter = _mapper.Map<PaginationParameter<AppUser>>(request);
@@ -80,18 +79,18 @@ public sealed class UserManager : BaseUserManager
         }
 
 
-        var projection = MapperHelper.CreateProjection<AppUser, UserForPaginationRetrieveDTO>(_mapper);
-        var pageResult = await _appUserRepository.GetPaginationList(paginationParameter, projection: projection);
+        var projection = MapperHelper.CreateProjection<AppUser, UserPaginationRetrieveDTO>(_mapper);
+        var pageResult = await _repository.GetPaginationList(paginationParameter, projection: projection);
 
 
-        return new ApiResponse<PageResult<UserForPaginationRetrieveDTO>>()
+        return new ApiResponse<PageResult<UserPaginationRetrieveDTO>>()
         {
-            Data = _mapper.Map<PageResult<UserForPaginationRetrieveDTO>>(pageResult)
+            Data = _mapper.Map<PageResult<UserPaginationRetrieveDTO>>(pageResult)
         };
     }
 
 
-    public async Task<string> UpdateUserAsync(UserForUpdateDTO userForUpdateDTO)
+    public async Task<string> UpdateUserAsync(UserUpdateDTO userForUpdateDTO)
     {
 
         var userFoundById = await _userManager.FindByIdAsync(userForUpdateDTO.Id.ToString());

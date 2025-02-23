@@ -10,11 +10,11 @@ namespace InterviewManagementSystem.API.Controllers;
 public sealed class CandidateController(CandidateManager candidateManager) : ControllerBase
 {
 
-    [HttpGet("list")]
-    public async Task<IActionResult> GetListCandidateAsync()
+    [HttpGet("list-for-interview")]
+    public async Task<IActionResult> GetListCandidateForInterviewAsync()
     {
-        //var apiResponse = await candidateManager.GetCandidateListAsync();
-        return Ok("");
+        var apiResponse = await candidateManager.GetListCandidateForInterviewAsync();
+        return Ok(apiResponse);
     }
 
 
@@ -31,14 +31,14 @@ public sealed class CandidateController(CandidateManager candidateManager) : Con
     [HttpGet("detail/{id}")]
     public async Task<IActionResult> GetCandidateDetailAsync(Guid id)
     {
-        var apiResponse = await candidateManager.GetCandidateByIdAsync(id);
+        var apiResponse = await candidateManager.GetDetailByIdAsync<CandidateDetailRetrieveDTO>(id);
         return Ok(apiResponse);
     }
 
 
 
     [HttpPost("create")]
-    public async Task<IActionResult> CreateCandidateAsync([FromForm] CandidateForCreateDTO candidateForCreateDTO)
+    public async Task<IActionResult> CreateCandidateAsync([FromForm] CandidateCreateDTO candidateForCreateDTO)
     {
         var apiResponse = await candidateManager.CreateCandidateAsync(candidateForCreateDTO);
         return Ok(apiResponse);
@@ -47,7 +47,7 @@ public sealed class CandidateController(CandidateManager candidateManager) : Con
 
 
     [HttpPut("update")]
-    public async Task<IActionResult> UpdateCandidateAsync([FromForm] CandidateForUpdateDTO candidateForUpdateDTO)
+    public async Task<IActionResult> UpdateCandidateAsync([FromForm] CandidateUpdateDTO candidateForUpdateDTO)
     {
         var apiResponse = await candidateManager.UpdateCandidateAsync(candidateForUpdateDTO);
         return Ok(apiResponse);

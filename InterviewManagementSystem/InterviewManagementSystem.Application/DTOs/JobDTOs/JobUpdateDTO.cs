@@ -1,6 +1,6 @@
 ﻿namespace InterviewManagementSystem.Application.DTOs.JobDTOs
 {
-    public sealed record JobForUpdateDTO : JobForCreateDTO
+    public sealed record JobUpdateDTO : JobCreateDTO
     {
         [Required]
         public Guid Id { get; set; }

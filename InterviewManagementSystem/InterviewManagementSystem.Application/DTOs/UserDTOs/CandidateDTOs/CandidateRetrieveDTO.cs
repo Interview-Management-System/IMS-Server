@@ -1,12 +1,12 @@
 ﻿namespace InterviewManagementSystem.Application.DTOs.UserDTOs.CandidateDTOs;
 
-public record CandidateForRetrieveDTO : BaseCandidateDTO
+public record CandidateRetrieveDTO : BaseCandidateDTO
 {
     public Guid Id { get; set; }
 }
 
 
-public sealed record CandidateForDetailRetrieveDTO : CandidateForRetrieveDTO
+public sealed record CandidateDetailRetrieveDTO : CandidateRetrieveDTO
 {
     public string? Gender { get; set; }
     public string? AttachmentLink { get; set; }
@@ -21,7 +21,7 @@ public sealed record CandidateForDetailRetrieveDTO : CandidateForRetrieveDTO
 
 
 
-public sealed record CandidateForPaginationRetrieveDTO
+public sealed record CandidatePaginationRetrieveDTO
 {
     public Guid Id { get; set; }
     public string? Email { get; set; }

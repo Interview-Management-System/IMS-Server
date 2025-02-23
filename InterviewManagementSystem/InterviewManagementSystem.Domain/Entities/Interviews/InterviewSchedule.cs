@@ -1,5 +1,4 @@
 ﻿using InterviewManagementSystem.Domain.Enums;
-using InterviewManagementSystem.Domain.Shared.EntityData.InterviewData;
 using InterviewManagementSystem.Domain.Shared.Utilities;
 
 namespace InterviewManagementSystem.Domain.Entities.Interviews;
@@ -60,68 +59,9 @@ public partial class InterviewSchedule : BaseEntity
     public InterviewSchedule()
     {
         SetStatus(InterviewStatusEnum.New);
+        CandidateStatusId = CandidateStatusEnum.WaitingForInterview;
     }
 }
-
-
-
-#region Aggregate methods
-public partial class InterviewSchedule
-{
-    public static InterviewSchedule Create(DataForCreateInterview dataForCreateInterview)
-    {
-
-
-
-        var newInterviewSchedule = new InterviewSchedule()
-        {
-            Title = dataForCreateInterview.Title,
-            CandidateId = dataForCreateInterview.CandidateId,
-            ScheduleTime = dataForCreateInterview.ScheduleTime,
-            Note = dataForCreateInterview.Note,
-            Location = dataForCreateInterview.Location,
-            JobId = dataForCreateInterview.JobId,
-            MeetingUrl = dataForCreateInterview.MeetingUrl,
-            RecruiterOwnerId = dataForCreateInterview.RecruiterOwnerId,
-            CandidateStatusId = CandidateStatusEnum.WaitingForInterview,
-        };
-
-
-        var hourPeriod = HourPeriod.CreatePeriod(dataForCreateInterview.StartHourString, dataForCreateInterview.EndHourString);
-
-        newInterviewSchedule.SetHourPeriod(hourPeriod);
-        newInterviewSchedule.SetInterviewers(dataForCreateInterview.Interviews);
-
-        return newInterviewSchedule;
-    }
-
-
-
-
-    public static void Update(InterviewSchedule interviewSchedule, DataForUpdateInterview dataForUpdateInterview)
-    {
-
-
-        interviewSchedule.Note = dataForUpdateInterview.Note;
-        interviewSchedule.Title = dataForUpdateInterview.Title;
-        interviewSchedule.JobId = dataForUpdateInterview.JobId;
-        interviewSchedule.Location = dataForUpdateInterview.Location;
-        interviewSchedule.MeetingUrl = dataForUpdateInterview.MeetingUrl;
-        interviewSchedule.CandidateId = dataForUpdateInterview.CandidateId;
-        interviewSchedule.ScheduleTime = dataForUpdateInterview.ScheduleTime;
-        interviewSchedule.RecruiterOwnerId = dataForUpdateInterview.RecruiterOwnerId;
-        interviewSchedule.CandidateStatusId = dataForUpdateInterview.CandidateStatusId;
-
-
-        var hourPeriod = HourPeriod.CreatePeriod(dataForUpdateInterview.StartHourString, dataForUpdateInterview.EndHourString);
-
-        interviewSchedule.SetHourPeriod(hourPeriod);
-        interviewSchedule.SetInterviewers(dataForUpdateInterview.Interviews);
-
-    }
-}
-#endregion
-
 
 
 
@@ -147,12 +87,12 @@ public partial class InterviewSchedule
     }
 
 
-    public void SetInterviewers(List<AppUser>? interviewers)
+    public void AddInterviewers(List<AppUser>? interviewers)
     {
+        Interviewers.Clear();
 
         if (interviewers is null || interviewers.Count == 0)
         {
-            Interviewers.Clear();
             return;
         }
 

@@ -1,7 +1,9 @@
-﻿using InterviewManagementSystem.Application.DTOs.UserDTOs.CandidateDTOs;
+﻿using InterviewManagementSystem.Application.DTOs.UserDTOs;
+using InterviewManagementSystem.Application.DTOs.UserDTOs.CandidateDTOs;
 using InterviewManagementSystem.Application.Services;
 using InterviewManagementSystem.Application.Shared.Utilities;
 using InterviewManagementSystem.Domain.Entities.AppUsers;
+using InterviewManagementSystem.Domain.Enums.Helpers;
 
 namespace InterviewManagementSystem.Application.Managers.UserManagers;
 
@@ -25,8 +27,23 @@ public sealed class CandidateManager : BaseUserManager
 
 
 
+    public async Task<List<UserIdentityRetrieveDTO>> GetListCandidateForInterviewAsync()
+    {
 
-    public async Task<ApiResponse<PageResult<CandidateForPaginationRetrieveDTO>>> GetListCandidatePagingAsync(CandidatePaginatedSearchRequest request)
+        var allowedCandidateToInterview = CandidateEnumHelper.AllowedCandidateStatusForInterview;
+        var projection = MapperHelper.CreateProjection<Candidate, UserIdentityRetrieveDTO>(_mapper);
+
+
+        var candidateForInterview = await _candidateRepository
+            .GetAllAsync(c => allowedCandidateToInterview.Contains(c.CandidateStatusId!.Value), projection: projection);
+
+        return candidateForInterview;
+    }
+
+
+
+
+    public async Task<ApiResponse<PageResult<CandidatePaginationRetrieveDTO>>> GetListCandidatePagingAsync(CandidatePaginatedSearchRequest request)
     {
 
         PaginationParameter<Candidate> paginationParameter = _mapper.Map<PaginationParameter<Candidate>>(request);
@@ -40,30 +57,29 @@ public sealed class CandidateManager : BaseUserManager
         }
 
 
-        var projection = MapperHelper.CreateProjection<Candidate, CandidateForPaginationRetrieveDTO>(_mapper);
+        var projection = MapperHelper.CreateProjection<Candidate, CandidatePaginationRetrieveDTO>(_mapper);
         var pageResult = await _candidateRepository.GetPaginationList(paginationParameter, projection: projection);
 
 
-        return new ApiResponse<PageResult<CandidateForPaginationRetrieveDTO>>()
+        return new ApiResponse<PageResult<CandidatePaginationRetrieveDTO>>()
         {
-            Data = _mapper.Map<PageResult<CandidateForPaginationRetrieveDTO>>(pageResult)
+            Data = _mapper.Map<PageResult<CandidatePaginationRetrieveDTO>>(pageResult)
         };
     }
 
 
 
 
-    public async Task<ApiResponse<CandidateForDetailRetrieveDTO>> GetCandidateByIdAsync(Guid id)
+    public override async Task<ApiResponse<TDetailDTO>> GetDetailByIdAsync<TDetailDTO>(object id)
     {
-
-        var projection = MapperHelper.CreateProjection<Candidate, CandidateForDetailRetrieveDTO>(_mapper);
+        var projection = MapperHelper.CreateProjection<Candidate, TDetailDTO>(_mapper);
 
         var candidateFoundById = await _candidateRepository.GetByIdAsync(id, projection: projection);
         ArgumentNullException.ThrowIfNull(candidateFoundById, "Candidate not found");
 
-        var mappedCandidate = _mapper.Map<CandidateForDetailRetrieveDTO>(candidateFoundById);
+        var mappedCandidate = _mapper.Map<TDetailDTO>(candidateFoundById);
 
-        return new ApiResponse<CandidateForDetailRetrieveDTO>()
+        return new ApiResponse<TDetailDTO>()
         {
             Data = mappedCandidate
         };
@@ -91,7 +107,7 @@ public sealed class CandidateManager : BaseUserManager
     }
 
 
-    public async Task<string> CreateCandidateAsync(CandidateForCreateDTO candidateForCreateDTO)
+    public async Task<string> CreateCandidateAsync(CandidateCreateDTO candidateForCreateDTO)
     {
 
         var userFound = await _userManager.FindByEmailAsync(candidateForCreateDTO.PersonalInformation.Email!.Trim());
@@ -129,7 +145,7 @@ public sealed class CandidateManager : BaseUserManager
     }
 
 
-    public async Task<string> UpdateCandidateAsync(CandidateForUpdateDTO candidateForUpdateDTO)
+    public async Task<string> UpdateCandidateAsync(CandidateUpdateDTO candidateForUpdateDTO)
     {
 
         var userFoundById = await _userManager.FindByIdAsync(candidateForUpdateDTO.Id.ToString());

@@ -2,7 +2,7 @@
 
 namespace InterviewManagementSystem.Application.Validations.FluentValidations.UserValidations
 {
-    public sealed class CandidateForCreateValidator : AbstractValidator<CandidateForCreateDTO>
+    public sealed class CandidateForCreateValidator : AbstractValidator<CandidateCreateDTO>
     {
         public CandidateForCreateValidator() : base()
         {

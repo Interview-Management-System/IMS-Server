@@ -16,12 +16,12 @@ public sealed class JobMappingProfile : Profile
         CreateMap<Domain.ValueObjects.SalaryRange, SalaryRange>().ReverseMap();
 
 
-        CreateMap<JobForUpdateDTO, Job>();
-        CreateMap<JobForCreateDTO, Job>();
+        CreateMap<JobUpdateDTO, Job>();
+        CreateMap<JobCreateDTO, Job>();
 
 
         #region Retrieve
-        CreateMap<Job, JobForRetrieveDTO>()
+        CreateMap<Job, JobRetrieveDTO>()
              .ForMember(dest => dest.JobStatus, opt => opt.MapFrom(src => src))
              .ForMember(dest => dest.DatePeriod, opt => opt.MapFrom(src => src.DatePeriod))
              .ForMember(dest => dest.SalaryRange, opt => opt.MapFrom(src => src.SalaryRange))
@@ -30,14 +30,14 @@ public sealed class JobMappingProfile : Profile
             .IncludeAllDerived();
 
 
-        CreateMap<Job, JobForDetailRetrieveDTO>()
+        CreateMap<Job, JobDetailRetrieveDTO>()
             .ForMember(dest => dest.AuditInformation, opt => opt.MapFrom(src => src))
             .ForMember(dest => dest.Benefits, opt => opt.MapFrom(src => src.Benefits.Select(b => b.Name)));
 
 
-        CreateMap<Job, JobOpenForRetrieveDTO>();
-        CreateMap<Job, JobForPaginationRetrieveDTO>();
-        CreateMap<PageResult<Job>, PageResult<JobForPaginationRetrieveDTO>>();
+        CreateMap<Job, JobOpenRetrieveDTO>();
+        CreateMap<Job, JobPaginationRetrieveDTO>();
+        CreateMap<PageResult<Job>, PageResult<JobPaginationRetrieveDTO>>();
         #endregion
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace InterviewManagementSystem.Application.DTOs.JobDTOs;
 
-public record JobForRetrieveDTO : BaseJobDTO
+public record JobRetrieveDTO : BaseJobDTO
 {
     public Guid Id { get; set; }
     public bool IsDeleted { get; set; }
@@ -11,17 +11,17 @@ public record JobForRetrieveDTO : BaseJobDTO
 
 
 
-public sealed record JobForPaginationRetrieveDTO : JobForRetrieveDTO { }
+public sealed record JobPaginationRetrieveDTO : JobRetrieveDTO { }
 
 
-public sealed record JobOpenForRetrieveDTO
+public sealed record JobOpenRetrieveDTO
 {
     public Guid Id { get; set; }
     public string? Title { get; set; }
 }
 
 
-public sealed record JobForDetailRetrieveDTO : JobForRetrieveDTO
+public sealed record JobDetailRetrieveDTO : JobRetrieveDTO
 {
     public string[] Benefits { get; set; } = [];
     public AuditInformation? AuditInformation { get; set; } = new();

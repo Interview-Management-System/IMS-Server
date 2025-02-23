@@ -16,6 +16,8 @@ public sealed class UserMappingProfile : Profile
 
     private void AppUserMapping()
     {
+        CreateMap<AppUser, UserIdentityRetrieveDTO>();
+
         CreateMap<AppUser, BaseUserDTO>()
             .ForMember(dest => dest.PersonalInformation, opt => opt.MapFrom(src => src))
             .IncludeAllDerived();
@@ -24,24 +26,24 @@ public sealed class UserMappingProfile : Profile
         CreateMap<AppUser, PersonalInformation>().ReverseMap();
 
 
-        CreateMap<UserForCreateDTO, AppUser>()
+        CreateMap<UserCreateDTO, AppUser>()
               .IncludeMembers(src => src.PersonalInformation);
 
 
         #region Retrieve
-        CreateMap<AppUser, UserForRetrieveDTO>()
+        CreateMap<AppUser, UserRetrieveDTO>()
             .ForMember(dest => dest.UserStatus, opt => opt.MapFrom(src => src))
             .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Roles.FirstOrDefault()!.Name))
             .IncludeAllDerived();
 
 
-        CreateMap<AppUser, UserForPaginationRetrieveDTO>()
+        CreateMap<AppUser, UserPaginationRetrieveDTO>()
             .ForMember(dest => dest.UserStatus, opt => opt.MapFrom(src => src))
             .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Roles.FirstOrDefault()!.Name));
 
 
-        CreateMap<AppUser, UserForDetailRetrieveDTO>();
-        CreateMap<PageResult<AppUser>, PageResult<UserForPaginationRetrieveDTO>>();
+        CreateMap<AppUser, UserDetailRetrieveDTO>();
+        CreateMap<PageResult<AppUser>, PageResult<UserPaginationRetrieveDTO>>();
         #endregion
     }
 
@@ -51,9 +53,11 @@ public sealed class UserMappingProfile : Profile
 
     private void CandidateMapping()
     {
+        CreateMap<Candidate, UserIdentityRetrieveDTO>();
+
         CreateMap<Candidate, BaseCandidateDTO>()
-        .ForMember(dest => dest.PersonalInformation, opt => opt.MapFrom(src => src))
-        .IncludeAllDerived();
+            .ForMember(dest => dest.PersonalInformation, opt => opt.MapFrom(src => src))
+            .IncludeAllDerived();
 
         CreateMap<Candidate, UserStatus>().ReverseMap();
 
@@ -65,32 +69,32 @@ public sealed class UserMappingProfile : Profile
         CreateMap<Candidate, ProfessionalInformation>().ReverseMap();
 
 
-        CreateMap<CandidateForCreateDTO, Candidate>()
+        CreateMap<CandidateCreateDTO, Candidate>()
              .IncludeMembers(src => src.PersonalInformation)
              .IncludeMembers(src => src.ProfessionalInformation)
               .AfterMap((src, dest) =>
-               {
-                   dest.DepartmentId = null;
-               });
+              {
+                  dest.DepartmentId = null;
+              });
 
 
-        CreateMap<Candidate, CandidateForUpdateDTO>().ReverseMap();
+        CreateMap<Candidate, CandidateUpdateDTO>().ReverseMap();
 
 
 
         #region Retrieve
-        CreateMap<Candidate, CandidateForRetrieveDTO>()
+        CreateMap<Candidate, CandidateRetrieveDTO>()
             .IncludeAllDerived();
 
 
-        CreateMap<Candidate, CandidateForPaginationRetrieveDTO>()
+        CreateMap<Candidate, CandidatePaginationRetrieveDTO>()
         .ForMember(dest => dest.UserStatus, opt => opt.MapFrom(src => src))
         .ForMember(dest => dest.OwnerHr, opt => opt.MapFrom(src => src.CreatedByNavigation!.UserName))
         .ForMember(dest => dest.CurrentPosition, opt => opt.MapFrom(src => src.PositionId.GetEnumName()))
         .ForMember(dest => dest.CandidateStatus, opt => opt.MapFrom(src => src.CandidateStatusId.GetValueOrDefault().GetEnumName()));
 
 
-        CreateMap<Candidate, CandidateForDetailRetrieveDTO>()
+        CreateMap<Candidate, CandidateDetailRetrieveDTO>()
             .ForMember(dest => dest.Offers, opt => opt.Ignore())
             .ForMember(dest => dest.AuditInformation, opt => opt.MapFrom(src => src))
             .ForMember(dest => dest.ProfessionalInformation, opt => opt.MapFrom(src => src))
@@ -98,8 +102,7 @@ public sealed class UserMappingProfile : Profile
             .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => GenderHelper.GetGenderText(src.Gender)))
             ;
 
-
-        CreateMap<PageResult<Candidate>, PageResult<CandidateForPaginationRetrieveDTO>>();
+        CreateMap<PageResult<Candidate>, PageResult<CandidatePaginationRetrieveDTO>>();
         #endregion
 
 

@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-
-namespace InterviewManagementSystem.Application.Shared.Utilities;
+﻿namespace InterviewManagementSystem.Application.Shared.Utilities;
 
 public static class MasterDataUtility
 {
@@ -9,9 +7,9 @@ public static class MasterDataUtility
 
 
 
-    public static void Initialize(IServiceCollection services)
+    public static void InitializeUnitOfWorkInstance(IUnitOfWork unitOfWork)
     {
-        _unitOfWork = services.BuildServiceProvider().GetRequiredService<IUnitOfWork>();
+        _unitOfWork = unitOfWork;
     }
 
 

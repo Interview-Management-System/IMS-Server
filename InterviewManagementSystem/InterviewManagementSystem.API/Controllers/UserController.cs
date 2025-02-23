@@ -11,10 +11,21 @@ public sealed class UserController(UserManager userManager, UserHubService userH
 {
 
 
+
+    [HttpGet("interviewers")]
+    public async Task<IActionResult> GetListInterviewerAsync()
+    {
+        var apiResponse = await userManager.GetListInterviewerAsync();
+        return Ok(apiResponse);
+    }
+
+
+
+
     [HttpGet("recruiters")]
     public async Task<IActionResult> GetListRecruiterAsync()
     {
-        var apiResponse = await userManager.GetListAsync();
+        var apiResponse = await userManager.GetListRecruiterAsync();
         return Ok(apiResponse);
     }
 
@@ -33,14 +44,14 @@ public sealed class UserController(UserManager userManager, UserHubService userH
     [HttpGet("detail/{id}")]
     public async Task<IActionResult> GetUserDetailAsync(Guid id)
     {
-        var apiResponse = await userManager.GetDetailByIdAsync<UserForDetailRetrieveDTO>(id);
+        var apiResponse = await userManager.GetDetailByIdAsync<UserDetailRetrieveDTO>(id);
         return Ok(apiResponse);
     }
 
 
 
     [HttpPost("create")]
-    public async Task<IActionResult> CreateUserAsync([FromBody] UserForCreateDTO userForCreateDTO)
+    public async Task<IActionResult> CreateUserAsync([FromBody] UserCreateDTO userForCreateDTO)
     {
         string responseMessage = await userManager.CreateUserAsync(userForCreateDTO);
         return Ok(responseMessage);
@@ -49,7 +60,7 @@ public sealed class UserController(UserManager userManager, UserHubService userH
 
 
     [HttpPut("update")]
-    public async Task<IActionResult> UpdateUserAsync([FromBody] UserForUpdateDTO userForUpdateDTO)
+    public async Task<IActionResult> UpdateUserAsync([FromBody] UserUpdateDTO userForUpdateDTO)
     {
         var apiResponse = await userManager.UpdateUserAsync(userForUpdateDTO);
         return Ok(apiResponse);
