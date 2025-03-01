@@ -14,6 +14,7 @@ internal static class InjectionService
     {
         services.AddCloudinaryService(configuration);
         services.AddPostgreSqlDbContext(configuration);
+        services.AddMongoDb(configuration);
         //services.AddHostedService<JobAutoCloserService>();
         //services.AddScoped<UserManager<Candidate>>();
 

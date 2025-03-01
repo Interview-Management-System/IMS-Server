@@ -1,4 +1,6 @@
 ﻿using InterviewManagementSystem.Domain.Enums;
+using InterviewManagementSystem.Domain.Enums.Extensions;
+using InterviewManagementSystem.Domain.Shared.Exceptions;
 using InterviewManagementSystem.Domain.Shared.Utilities;
 
 namespace InterviewManagementSystem.Domain.Entities.Interviews;
@@ -115,15 +117,18 @@ public partial class InterviewSchedule
     }
 
 
-    public void SetStatus(InterviewStatusEnum interviewStatusEnum)
+    public void SetStatus(InterviewStatusEnum status)
     {
-        InterviewScheduleStatusId = interviewStatusEnum;
+        DomainException.ThrowIfInvalidOperation(status != InterviewScheduleStatusId, "Same status");
+        InterviewScheduleStatusId = status;
     }
 
 
-    public void SetResult(InterviewResultEnum interviewResultEnum)
+    public void SetResult(InterviewResultEnum result)
     {
-        InterviewResultId = interviewResultEnum;
+        bool isValidResult = (result != InterviewResultId) || (result.IsNotDefault());
+        DomainException.ThrowIfInvalidOperation(isValidResult, "Same result");
+        InterviewResultId = result;
     }
 
 

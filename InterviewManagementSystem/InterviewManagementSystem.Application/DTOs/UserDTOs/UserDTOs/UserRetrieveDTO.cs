@@ -12,7 +12,7 @@ public record UserRetrieveDTO : BaseUserDTO
 public sealed record UserDetailRetrieveDTO : UserRetrieveDTO
 {
     public DepartmentEnum DepartmentId { get; set; }
-    public string? Department => DepartmentId.GetEnumName();
+    public string? Department => DepartmentId.GetDescription();
     public string? Gender => GenderHelper.GetGenderText(PersonalInformation!.Gender);
 }
 

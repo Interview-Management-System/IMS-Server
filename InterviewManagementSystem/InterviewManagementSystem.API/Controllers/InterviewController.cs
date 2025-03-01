@@ -44,5 +44,13 @@ namespace InterviewManagementSystem.API.Controllers
             var response = await _interviewManager.CreateInterview(request);
             return Ok(response);
         }
+
+
+        [HttpPatch("submit-result")]
+        public async Task<IActionResult> SubmitInterviewResultAsync([FromBody] InterviewSubmitResultDTO request)
+        {
+            var response = await _interviewManager.SubmitInterviewAsync(request);
+            return Ok(response);
+        }
     }
 }

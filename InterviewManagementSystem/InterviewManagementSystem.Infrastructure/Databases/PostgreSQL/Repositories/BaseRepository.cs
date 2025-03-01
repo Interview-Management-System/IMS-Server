@@ -5,7 +5,6 @@ using InterviewManagementSystem.Domain.Shared.Paginations;
 using InterviewManagementSystem.Infrastructure.Databases.PostgreSQL.Extensions;
 using InterviewManagementSystem.Infrastructure.Persistences;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 
 namespace InterviewManagementSystem.Infrastructure.Databases.PostgreSQL.Repositories;
@@ -14,8 +13,8 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 {
 
     protected readonly DbSet<T> _dbSet;
-    private static readonly SemaphoreSlim _semaphore = new(1, 1);
     protected readonly InterviewManagementSystemContext _interviewManagementSystemContext;
+
 
     public BaseRepository(InterviewManagementSystemContext interviewManagementSystemContext)
     {
@@ -192,6 +191,8 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
     /// <param name="filter"></param>
     /// <param name="includes"></param>
     /// <returns></returns>
+    /// 
+    /*
     public IQueryable<T> GetWithInclude(Expression<Func<T, bool>>? filter, Expression<Func<IQueryable<T>, IIncludableQueryable<T, object>>>[]? includes)
     {
         IQueryable<T> query = _dbSet.AsNoTracking();
@@ -217,7 +218,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         return query;
 
     }
-
+    */
 
 
     public void Update(T entity)

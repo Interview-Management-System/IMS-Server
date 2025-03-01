@@ -90,8 +90,8 @@ public sealed class UserMappingProfile : Profile
         CreateMap<Candidate, CandidatePaginationRetrieveDTO>()
         .ForMember(dest => dest.UserStatus, opt => opt.MapFrom(src => src))
         .ForMember(dest => dest.OwnerHr, opt => opt.MapFrom(src => src.CreatedByNavigation!.UserName))
-        .ForMember(dest => dest.CurrentPosition, opt => opt.MapFrom(src => src.PositionId.GetEnumName()))
-        .ForMember(dest => dest.CandidateStatus, opt => opt.MapFrom(src => src.CandidateStatusId.GetValueOrDefault().GetEnumName()));
+        .ForMember(dest => dest.CurrentPosition, opt => opt.MapFrom(src => src.PositionId.GetDescription()))
+        .ForMember(dest => dest.CandidateStatus, opt => opt.MapFrom(src => src.CandidateStatusId.GetValueOrDefault().GetDescription()));
 
 
         CreateMap<Candidate, CandidateDetailRetrieveDTO>()

@@ -14,7 +14,7 @@
     public sealed record JobStatus
     {
         public JobStatusEnum? JobStatusId { get; set; }
-        public string? Status => JobStatusId.GetValueOrDefault().GetEnumName();
+        public string? Status => JobStatusId.GetValueOrDefault().GetDescription();
     }
 
 

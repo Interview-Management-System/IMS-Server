@@ -1,12 +1,8 @@
 ﻿using InterviewManagementSystem.Application.DTOs.OfferDTOs;
-using InterviewManagementSystem.Application.Shared.Extensions;
-using InterviewManagementSystem.Application.Shared.Helpers;
 using InterviewManagementSystem.Domain.Entities.AppUsers;
 using InterviewManagementSystem.Domain.Entities.Interviews;
 using InterviewManagementSystem.Domain.Entities.Offers;
-using InterviewManagementSystem.Domain.Enums.Extensions;
 using InterviewManagementSystem.Domain.Shared.EntityData.OfferData;
-using InterviewManagementSystem.Domain.Shared.Paginations;
 
 namespace InterviewManagementSystem.Application.Mappers;
 
@@ -22,8 +18,8 @@ public sealed class OfferMappingProfile : Profile
             .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Candidate!.Email))
             .ForMember(dest => dest.Approver, opt => opt.MapFrom(src => src.Approver!.UserName))
             .ForMember(dest => dest.CandidateName, opt => opt.MapFrom(src => src.Candidate!.UserName))
-            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.OfferStatusId!.GetEnumName()))
-            .ForMember(dest => dest.Department, opt => opt.MapFrom(src => src.DepartmentId!.GetEnumName()))
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.OfferStatusId!.GetDescription()))
+            .ForMember(dest => dest.Department, opt => opt.MapFrom(src => src.DepartmentId!.GetDescription()))
             .ReverseMap();
 
 
@@ -32,13 +28,13 @@ public sealed class OfferMappingProfile : Profile
         CreateMap<Offer, OfferForDetailRetrieveDTO>()
             .IncludeBase<Offer, OfferForRetrieveDTO>()
             .ForMember(dest => dest.InterviewNote, opt => opt.MapFrom(src => src.InterviewSchedule!.Note))
-            .ForMember(dest => dest.Level, opt => opt.MapFrom(src => src.LevelId!.GetEnumName()))
+            .ForMember(dest => dest.Level, opt => opt.MapFrom(src => src.LevelId!.GetDescription()))
             .ForMember(dest => dest.RecruiterOwner, opt => opt.MapFrom(src => src.RecruiterOwner!.UserName))
             .ForMember(dest => dest.InterviewTitle, opt => opt.MapFrom(src => src.InterviewSchedule!.Title))
-            .ForMember(dest => dest.Position, opt => opt.MapFrom(src => src.PositionId!.GetEnumName()))
-            .ForMember(dest => dest.ContractType, opt => opt.MapFrom(src => src.ContractTypeId!.GetEnumName()))
+            .ForMember(dest => dest.Position, opt => opt.MapFrom(src => src.PositionId!.GetDescription()))
+            .ForMember(dest => dest.ContractType, opt => opt.MapFrom(src => src.ContractTypeId!.GetDescription()))
             .ForMember(dest => dest.DueDate, opt => opt.MapFrom(src => src.DueDate!.Value.ToVieFormat()))
-            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.OfferStatusId!.GetEnumName()))
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.OfferStatusId!.GetDescription()))
             .ForMember(dest => dest.ContractTo, opt => opt.MapFrom(src => src.DatePeriod!.StartDate.ToVieFormat()))
             .ForMember(dest => dest.ContractFrom, opt => opt.MapFrom(src => src.DatePeriod!.EndDate.ToVieFormat()))
             .ForMember(dest => dest.Interviewers, opt => opt.MapFrom(src => src.InterviewSchedule!.Interviewers.Select(ap => ap.UserName).ToList()))

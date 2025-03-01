@@ -1,5 +1,4 @@
 ﻿using InterviewManagementSystem.Domain.Shared.Paginations;
-using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 
 namespace InterviewManagementSystem.Domain.Interfaces;
@@ -11,6 +10,7 @@ public interface IBaseRepository<T> where T : class
     Task<T?> GetByIdAsync<TId>(TId id, bool isTracking = false);
 
     Task<TResult?> GetByIdAsync<TResult>(object id, string? idIdentifier = "Id", Func<IQueryable<T>, IQueryable<TResult>>? projection = null, bool isTracking = false);
+
     Task AddAsync(T entity);
 
     Task AddRangeAsync(IEnumerable<T> entities);
@@ -53,5 +53,5 @@ public interface IBaseRepository<T> where T : class
     /// <param name="includes"></param>
     /// <param name="canLoadDeleted"></param>
     /// <returns>List of type T</returns>
-    IQueryable<T> GetWithInclude(Expression<Func<T, bool>>? filter, Expression<Func<IQueryable<T>, IIncludableQueryable<T, object>>>[]? includes);
+    //IQueryable<T> GetWithInclude(Expression<Func<T, bool>>? filter, Expression<Func<IQueryable<T>, IIncludableQueryable<T, object>>>[]? includes);
 }

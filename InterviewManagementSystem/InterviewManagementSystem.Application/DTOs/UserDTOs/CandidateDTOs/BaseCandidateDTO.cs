@@ -18,17 +18,17 @@ public sealed record ProfessionalInformation
 
     public string GetPositionName()
     {
-        return PositionId.GetEnumName();
+        return PositionId.GetDescription();
     }
 
 
     public string GetHighestLevelName()
     {
-        return HighestLevelId.GetEnumName();
+        return HighestLevelId.GetDescription();
     }
 
     public string GetCandidateStatusName()
     {
-        return CandidateStatusId.GetEnumName();
+        return CandidateStatusId.GetDescription();
     }
 }

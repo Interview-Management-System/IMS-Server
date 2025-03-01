@@ -55,4 +55,21 @@ public sealed class InterviewManager(IMapper mapper, IUnitOfWork unitOfWork, Use
         return "Create successfully";
 
     }
+
+
+
+    public async Task<string> SubmitInterviewAsync(InterviewSubmitResultDTO request)
+    {
+
+        var interview = await _repository.GetByIdAsync(request.Id, isTracking: true);
+        ArgumentNullException.ThrowIfNull(interview, "Interview schedule not found");
+
+
+        interview.SetResult(request.InterviewResultId);
+        bool updatedSuccessful = await _unitOfWork.SaveChangesAsync();
+
+
+        ApplicationException.ThrowIfOperationFail(updatedSuccessful, "Fail to submit result");
+        return "Update successfully";
+    }
 }

@@ -1,5 +1,6 @@
 ﻿
 using InterviewManagementSystem.Application.DTOs.JobDTOs;
+using InterviewManagementSystem.Application.Shared.Utilities;
 using InterviewManagementSystem.Domain.Entities.Jobs;
 
 namespace InterviewManagementSystem.Application.Managers.JobManager;
@@ -38,15 +39,13 @@ public sealed class JobManager : BaseManager<Job>
 
         Job job = _mapper.Map<Job>(jobForCreateDTO);
 
-        /*
-        var levels = await MasterDataUtility.GetListLevelByIdListAsync(jobForCreateDTO.LevelIds, _unitOfWork);
-        var skills = await MasterDataUtility.GetListSkillByIdListAsync(jobForCreateDTO.SkillIds, _unitOfWork);
-        var benefits = await MasterDataUtility.GetListBenefitByIdListAsync(jobForCreateDTO.BenefitIds, _unitOfWork);
+        var levels = await MasterDataUtility.GetListLevelByIdListAsync(jobForCreateDTO.LevelIds);
+        var skills = await MasterDataUtility.GetListSkillByIdListAsync(jobForCreateDTO.SkillIds);
+        var benefits = await MasterDataUtility.GetListBenefitByIdListAsync(jobForCreateDTO.BenefitIds);
 
         job.AddSkills(skills);
         job.AddLevels(levels);
         job.AddBenefits(benefits);
-        */
 
         await _repository.AddAsync(job);
         bool createdSuccessful = await _unitOfWork.SaveChangesAsync();

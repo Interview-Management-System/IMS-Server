@@ -53,11 +53,11 @@ internal static class AccessControl
     internal static void AddRoleAuthorization(this IServiceCollection services)
     {
 
-        string adminRole = RoleEnum.Admin.GetEnumName();
-        string managerRole = RoleEnum.Manager.GetEnumName();
-        string candidateRole = RoleEnum.Candidate.GetEnumName();
-        string recruiterRole = RoleEnum.Recruiter.GetEnumName();
-        string interviewRole = RoleEnum.Interviewer.GetEnumName();
+        string adminRole = RoleEnum.Admin.GetDescription();
+        string managerRole = RoleEnum.Manager.GetDescription();
+        string candidateRole = RoleEnum.Candidate.GetDescription();
+        string recruiterRole = RoleEnum.Recruiter.GetDescription();
+        string interviewRole = RoleEnum.Interviewer.GetDescription();
 
 
         string[] adminAndManagerRoles = [adminRole, managerRole];

@@ -14,14 +14,14 @@
     public sealed record InterviewResult
     {
         public InterviewResultEnum InterviewResultId { get; set; }
-        public string? InterviewResultText => InterviewResultId.GetEnumName();
+        public string? InterviewResultText => InterviewResultId.GetDescription();
     }
 
 
     public sealed record InterviewStatus
     {
         public InterviewStatusEnum InterviewScheduleStatusId { get; set; }
-        public string? InterviewStatusText => InterviewScheduleStatusId.GetEnumName();
+        public string? InterviewStatusText => InterviewScheduleStatusId.GetDescription();
     }
 
 

@@ -2,6 +2,8 @@
 using InterviewManagementSystem.Domain.Entities.AppUsers;
 using InterviewManagementSystem.Domain.Interfaces;
 using InterviewManagementSystem.Infrastructure.Databases.Cloudinary;
+using InterviewManagementSystem.Infrastructure.Databases.MongoDB;
+using InterviewManagementSystem.Infrastructure.Databases.MongoDB.Repositories;
 using InterviewManagementSystem.Infrastructure.Databases.PostgreSQL;
 using InterviewManagementSystem.Infrastructure.Persistences;
 using InterviewManagementSystem.Infrastructure.UnitOfWorks;
@@ -9,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Driver;
 
 namespace InterviewManagementSystem.Infrastructure.Extensions
 {
@@ -24,12 +27,29 @@ namespace InterviewManagementSystem.Infrastructure.Extensions
 
 
 
+        public static void AddMongoDb(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.Configure<MongoDbSetting>(configuration.GetSection("IMS_MongoDbSetting"));
+            var mongoSettings = configuration.Get<MongoDbSetting>();
+
+            string connectionString = configuration["IMS_MongoDbSetting:ConnectionString"] ?? "";
+            string databaseName = configuration["IMS_MongoDbSetting:DatabaseName"] ?? "";
+
+            var client = new MongoClient(connectionString);
+            var database = client.GetDatabase(databaseName);
+
+            services.AddSingleton(database);
+            //services.AddScoped(typeof(IMongoRepository<>), typeof(MongoBaseRepository<>));
+            services.AddScoped<IMongoRepository<User>, UserRepo>();
+        }
+
+
 
         public static void AddPostgreSqlDbContext(this IServiceCollection services, IConfiguration configuration)
         {
             var a = services.Configure<PostgresSetting>(configuration.GetSection("IMS_PostgreSqlSetting"));
 
-            var connectionString = configuration["IMS_PostgreSqlSetting:ConnectionString"];
+            string connectionString = configuration["IMS_PostgreSqlSetting:ConnectionString"] ?? "";
             ArgumentNullException.ThrowIfNullOrEmpty(connectionString, "Connection string not found");
 
             // Setup DB
@@ -41,7 +61,7 @@ namespace InterviewManagementSystem.Infrastructure.Extensions
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            //AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         }
     }
 }

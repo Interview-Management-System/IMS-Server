@@ -64,8 +64,8 @@ public partial class Candidate
     public void SetCandidateStatus(CandidateStatusEnum candidateStatusEnum)
     {
 
-        bool isInvalidStatus = CandidateStatusId == candidateStatusEnum;
-        DomainException.ThrowIfInvalidOperation(isInvalidStatus, "Current candidate has the same status");
+        bool isValidStatus = CandidateStatusId != candidateStatusEnum;
+        DomainException.ThrowIfInvalidOperation(isValidStatus, "Current candidate has the same status");
 
         CandidateStatusId = candidateStatusEnum;
     }

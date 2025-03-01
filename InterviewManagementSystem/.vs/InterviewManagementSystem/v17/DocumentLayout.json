@@ -1,28 +1,7 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "G:\\FSA\\Project\\Interview Management System\\Source code\\IMS-Server\\InterviewManagementSystem\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{E847C85A-A165-4C23-87A5-31C35114CB46}|InterviewManagementSystem.Application\\InterviewManagementSystem.Application.csproj|g:\\fsa\\project\\interview management system\\source code\\ims-server\\interviewmanagementsystem\\interviewmanagementsystem.application\\dtos\\userdtos\\userdtos\\userupdatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E847C85A-A165-4C23-87A5-31C35114CB46}|InterviewManagementSystem.Application\\InterviewManagementSystem.Application.csproj|solutionrelative:interviewmanagementsystem.application\\dtos\\userdtos\\userdtos\\userupdatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E847C85A-A165-4C23-87A5-31C35114CB46}|InterviewManagementSystem.Application\\InterviewManagementSystem.Application.csproj|g:\\fsa\\project\\interview management system\\source code\\ims-server\\interviewmanagementsystem\\interviewmanagementsystem.application\\dtos\\userdtos\\userdtos\\userretrievedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E847C85A-A165-4C23-87A5-31C35114CB46}|InterviewManagementSystem.Application\\InterviewManagementSystem.Application.csproj|solutionrelative:interviewmanagementsystem.application\\dtos\\userdtos\\userdtos\\userretrievedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E847C85A-A165-4C23-87A5-31C35114CB46}|InterviewManagementSystem.Application\\InterviewManagementSystem.Application.csproj|g:\\fsa\\project\\interview management system\\source code\\ims-server\\interviewmanagementsystem\\interviewmanagementsystem.application\\dtos\\userdtos\\userdtos\\usercreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E847C85A-A165-4C23-87A5-31C35114CB46}|InterviewManagementSystem.Application\\InterviewManagementSystem.Application.csproj|solutionrelative:interviewmanagementsystem.application\\dtos\\userdtos\\userdtos\\usercreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E847C85A-A165-4C23-87A5-31C35114CB46}|InterviewManagementSystem.Application\\InterviewManagementSystem.Application.csproj|g:\\fsa\\project\\interview management system\\source code\\ims-server\\interviewmanagementsystem\\interviewmanagementsystem.application\\dtos\\interviewdtos\\interviewretrievedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E847C85A-A165-4C23-87A5-31C35114CB46}|InterviewManagementSystem.Application\\InterviewManagementSystem.Application.csproj|solutionrelative:interviewmanagementsystem.application\\dtos\\interviewdtos\\interviewretrievedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E847C85A-A165-4C23-87A5-31C35114CB46}|InterviewManagementSystem.Application\\InterviewManagementSystem.Application.csproj|g:\\fsa\\project\\interview management system\\source code\\ims-server\\interviewmanagementsystem\\interviewmanagementsystem.application\\dtos\\interviewdtos\\interviewcreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E847C85A-A165-4C23-87A5-31C35114CB46}|InterviewManagementSystem.Application\\InterviewManagementSystem.Application.csproj|solutionrelative:interviewmanagementsystem.application\\dtos\\interviewdtos\\interviewcreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    }
-  ],
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -30,76 +9,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 306,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": -1,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "UserUpdateDTO.cs",
-              "DocumentMoniker": "G:\\FSA\\Project\\Interview Management System\\Source code\\IMS-Server\\InterviewManagementSystem\\InterviewManagementSystem.Application\\DTOs\\UserDTOs\\UserDTOs\\UserUpdateDTO.cs",
-              "RelativeDocumentMoniker": "InterviewManagementSystem.Application\\DTOs\\UserDTOs\\UserDTOs\\UserUpdateDTO.cs",
-              "ToolTip": "G:\\FSA\\Project\\Interview Management System\\Source code\\IMS-Server\\InterviewManagementSystem\\InterviewManagementSystem.Application\\DTOs\\UserDTOs\\UserDTOs\\UserUpdateDTO.cs",
-              "RelativeToolTip": "InterviewManagementSystem.Application\\DTOs\\UserDTOs\\UserDTOs\\UserUpdateDTO.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAkAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-23T08:47:23.861Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "UserRetrieveDTO.cs",
-              "DocumentMoniker": "G:\\FSA\\Project\\Interview Management System\\Source code\\IMS-Server\\InterviewManagementSystem\\InterviewManagementSystem.Application\\DTOs\\UserDTOs\\UserDTOs\\UserRetrieveDTO.cs",
-              "RelativeDocumentMoniker": "InterviewManagementSystem.Application\\DTOs\\UserDTOs\\UserDTOs\\UserRetrieveDTO.cs",
-              "ToolTip": "G:\\FSA\\Project\\Interview Management System\\Source code\\IMS-Server\\InterviewManagementSystem\\InterviewManagementSystem.Application\\DTOs\\UserDTOs\\UserDTOs\\UserRetrieveDTO.cs",
-              "RelativeToolTip": "InterviewManagementSystem.Application\\DTOs\\UserDTOs\\UserDTOs\\UserRetrieveDTO.cs",
-              "ViewState": "AgIAAAgAAAAAAAAAAAAgwBoAAAApAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-23T08:46:55.982Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "UserCreateDTO.cs",
-              "DocumentMoniker": "G:\\FSA\\Project\\Interview Management System\\Source code\\IMS-Server\\InterviewManagementSystem\\InterviewManagementSystem.Application\\DTOs\\UserDTOs\\UserDTOs\\UserCreateDTO.cs",
-              "RelativeDocumentMoniker": "InterviewManagementSystem.Application\\DTOs\\UserDTOs\\UserDTOs\\UserCreateDTO.cs",
-              "ToolTip": "G:\\FSA\\Project\\Interview Management System\\Source code\\IMS-Server\\InterviewManagementSystem\\InterviewManagementSystem.Application\\DTOs\\UserDTOs\\UserDTOs\\UserCreateDTO.cs",
-              "RelativeToolTip": "InterviewManagementSystem.Application\\DTOs\\UserDTOs\\UserDTOs\\UserCreateDTO.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAuAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-23T08:46:48.253Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "InterviewRetrieveDTO.cs",
-              "DocumentMoniker": "G:\\FSA\\Project\\Interview Management System\\Source code\\IMS-Server\\InterviewManagementSystem\\InterviewManagementSystem.Application\\DTOs\\InterviewDTOs\\InterviewRetrieveDTO.cs",
-              "RelativeDocumentMoniker": "InterviewManagementSystem.Application\\DTOs\\InterviewDTOs\\InterviewRetrieveDTO.cs",
-              "ToolTip": "G:\\FSA\\Project\\Interview Management System\\Source code\\IMS-Server\\InterviewManagementSystem\\InterviewManagementSystem.Application\\DTOs\\InterviewDTOs\\InterviewRetrieveDTO.cs",
-              "RelativeToolTip": "InterviewManagementSystem.Application\\DTOs\\InterviewDTOs\\InterviewRetrieveDTO.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAApAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-23T08:46:26.189Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "InterviewCreateDTO.cs",
-              "DocumentMoniker": "G:\\FSA\\Project\\Interview Management System\\Source code\\IMS-Server\\InterviewManagementSystem\\InterviewManagementSystem.Application\\DTOs\\InterviewDTOs\\InterviewCreateDTO.cs",
-              "RelativeDocumentMoniker": "InterviewManagementSystem.Application\\DTOs\\InterviewDTOs\\InterviewCreateDTO.cs",
-              "ToolTip": "G:\\FSA\\Project\\Interview Management System\\Source code\\IMS-Server\\InterviewManagementSystem\\InterviewManagementSystem.Application\\DTOs\\InterviewDTOs\\InterviewCreateDTO.cs",
-              "RelativeToolTip": "InterviewManagementSystem.Application\\DTOs\\InterviewDTOs\\InterviewCreateDTO.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAuAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-23T08:46:05.086Z",
-              "EditorCaption": ""
             }
           ]
         }
