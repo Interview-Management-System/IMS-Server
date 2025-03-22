@@ -34,9 +34,9 @@ public sealed class InterviewMappingProfile : Profile
             .IncludeAllDerived();
 
 
-        CreateMap<InterviewSchedule, InterviewForDetailRetrieveDTO>();
-        CreateMap<InterviewSchedule, InterviewForPaginationRetrieveDTO>();
-        CreateMap<PageResult<InterviewSchedule>, PageResult<InterviewForPaginationRetrieveDTO>>();
+        CreateMap<InterviewSchedule, InterviewDetailRetrieveDTO>();
+        CreateMap<InterviewSchedule, InterviewPaginationRetrieveDTO>();
+        CreateMap<PageResult<InterviewSchedule>, PageResult<InterviewPaginationRetrieveDTO>>();
         #endregion
 
 

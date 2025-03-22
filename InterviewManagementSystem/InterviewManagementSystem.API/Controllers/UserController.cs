@@ -51,7 +51,7 @@ public sealed class UserController(UserManager userManager, UserHubService userH
 
 
     [HttpPost("create")]
-    public async Task<IActionResult> CreateUserAsync([FromBody] UserCreateDTO userForCreateDTO)
+    public async Task<IActionResult> CreateUserAsync([FromForm] UserCreateDTO userForCreateDTO)
     {
         string responseMessage = await userManager.CreateUserAsync(userForCreateDTO);
         return Ok(responseMessage);

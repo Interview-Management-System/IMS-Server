@@ -3,7 +3,6 @@ using InterviewManagementSystem.Domain.Entities;
 using InterviewManagementSystem.Domain.Interfaces;
 using InterviewManagementSystem.Domain.Shared.Paginations;
 using InterviewManagementSystem.Infrastructure.Databases.PostgreSQL.Extensions;
-using InterviewManagementSystem.Infrastructure.Persistences;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
@@ -69,9 +68,9 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 
 
 
-    public void DeleteRangeWithConditions(Expression<Func<T, bool>> where, bool isHardDelete = false)
+    public void DeleteRangeWithConditions(Expression<Func<T, bool>> filter, bool isHardDelete = false)
     {
-        var entities = GetQuery(where).AsEnumerable();
+        var entities = _dbSet.ApplyFilter([filter]).AsEnumerable();
         DeleteRange(entities, isHardDelete);
     }
 
@@ -115,31 +114,36 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
     {
 
         IQueryable<T> query = _dbSet.AsNoTracking().AsSplitQuery();
-
         var cancellationToken = CancellationTokenProvider.CancellationToken;
-        var totalRecords = await query.CountAsync(f => !EF.Property<bool>(f, nameof(BaseEntity.IsDeleted)), cancellationToken);
+
+
+        query = query
+            .Where(f => !EF.Property<bool>(f, nameof(BaseEntity.IsDeleted)))
+            .ApplyFilter(pagingParameter.Filters)
+            .ApplyFullTextSearch(pagingParameter.SearchText);
+
+
+        var totalRecords = await query.CountAsync(cancellationToken);
 
 
         int pageSize = pagingParameter.PageSize;
-        int pageNumber = pagingParameter.PageIndex;
+        int pageIndex = pagingParameter.PageIndex;
 
 
         var items = await query
-           .ApplyFilter(pagingParameter.Filters)
            .IncludeProperties(includeProperties)
            .ApplySortCriteria(pagingParameter.SortCriteria)
-           .ApplyPagination(pageSize, pageNumber)
-           //.ApplyFreeTextSearch(pagingParameter.SearchText, ["Email"])
+           .ApplyPagination(pageSize, pageIndex)
            .ApplyProjection(projection)
            .ToListAsync(cancellationToken);
 
 
         return new PageResult<TResult>()
         {
-            TotalRecords = totalRecords,
             Items = items,
-            PageIndex = pageNumber,
             PageSize = pageSize,
+            PageIndex = pageIndex,
+            TotalRecords = totalRecords,
         };
     }
 
@@ -150,38 +154,12 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
     }
 
 
-    public IQueryable<T> GetQuery()
-    {
-        return _dbSet;
-    }
-
-
-
-    public IQueryable<T> GetQuery(Expression<Func<T, bool>> where)
-    {
-        return _dbSet.Where(where);
-    }
-
-
-
     public IQueryable<T> GetWithInclude(Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, bool canLoadDeleted = false, bool isTracking = false, params string[] includeProperties)
     {
         IQueryable<T> query = isTracking ? _dbSet : _dbSet.AsNoTracking();
-
-
-        if (filter != null)
-        {
-            query = query.Where(filter);
-        }
-
-
-        foreach (var includeProperty in includeProperties)
-        {
-            query = query.Include(includeProperty);
-        }
+        query.ApplyFilter([filter]).IncludeProperties(includeProperties);
 
         return orderBy != null ? orderBy(query) : query;
-
     }
 
 

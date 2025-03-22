@@ -23,11 +23,6 @@ public interface IBaseRepository<T> where T : class
 
     void DeleteRangeWithConditions(Expression<Func<T, bool>> where, bool isHardDelete = false);
 
-    IQueryable<T> GetQuery();
-
-    IQueryable<T> GetQuery(Expression<Func<T, bool>> where);
-
-
     /// <summary>
     /// Include entity property but does not support ThenInclude()
     /// </summary>

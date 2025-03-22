@@ -1,9 +1,10 @@
 ﻿using InterviewManagementSystem.Domain.Enums;
 using Microsoft.AspNetCore.Identity;
+using NpgsqlTypes;
 
 namespace InterviewManagementSystem.Domain.Entities.AppUsers;
 
-public partial class AppUser : IdentityUser<Guid>
+public partial class AppUser : IdentityUser<Guid>, ISearchable
 {
     public DateTime? Dob { get; set; }
 
@@ -28,6 +29,8 @@ public partial class AppUser : IdentityUser<Guid>
     public Guid? UpdatedBy { get; set; }
 
     public string? AvatarLink { get; set; }
+
+    public NpgsqlTsVector SearchVector { get; set; }
 
     // k
     public virtual ICollection<AppUserClaim> AppUserClaims { get; set; } = new List<AppUserClaim>();

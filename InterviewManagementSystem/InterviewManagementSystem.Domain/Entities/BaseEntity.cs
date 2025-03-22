@@ -1,4 +1,6 @@
-﻿namespace InterviewManagementSystem.Domain.Entities
+﻿using NpgsqlTypes;
+
+namespace InterviewManagementSystem.Domain.Entities
 {
     public abstract class BaseEntity
     {
@@ -19,5 +21,15 @@
         {
             Id = Guid.NewGuid();
         }
+    }
+
+
+
+    /// <summary>
+    /// Use for full text search
+    /// </summary>
+    public interface ISearchable
+    {
+        public NpgsqlTsVector SearchVector { get; set; }
     }
 }

@@ -21,8 +21,6 @@ internal static class WebApplicationConfiguration
 
         var scopedServiceProvider = scope.ServiceProvider;
         var unitOfWork = scopedServiceProvider.GetRequiredService<IUnitOfWork>();
-
         MasterDataUtility.InitializeUnitOfWorkInstance(unitOfWork);
-
     }
 }

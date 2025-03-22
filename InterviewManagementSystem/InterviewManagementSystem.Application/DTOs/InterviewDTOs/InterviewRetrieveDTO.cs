@@ -10,10 +10,10 @@ public record InterviewRetrieveDTO : BaseInterviewDTO
 
 
 
-public sealed record InterviewForPaginationRetrieveDTO : InterviewRetrieveDTO { }
+public sealed record InterviewPaginationRetrieveDTO : InterviewRetrieveDTO { }
 
 
-public sealed record InterviewForDetailRetrieveDTO : InterviewRetrieveDTO
+public sealed record InterviewDetailRetrieveDTO : InterviewRetrieveDTO
 {
     public string? Note { get; set; }
     public string? Location { get; set; }

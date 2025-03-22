@@ -5,7 +5,6 @@ using InterviewManagementSystem.Infrastructure.Databases.Cloudinary;
 using InterviewManagementSystem.Infrastructure.Databases.MongoDB;
 using InterviewManagementSystem.Infrastructure.Databases.MongoDB.Repositories;
 using InterviewManagementSystem.Infrastructure.Databases.PostgreSQL;
-using InterviewManagementSystem.Infrastructure.Persistences;
 using InterviewManagementSystem.Infrastructure.UnitOfWorks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -53,7 +52,7 @@ namespace InterviewManagementSystem.Infrastructure.Extensions
             ArgumentNullException.ThrowIfNullOrEmpty(connectionString, "Connection string not found");
 
             // Setup DB
-            services.AddDbContext<InterviewManagementSystemContext>(options => options.UseNpgsql(connectionString));
+            services.AddDbContextPool<InterviewManagementSystemContext>(options => options.UseNpgsql(connectionString));
 
             services.AddIdentity<AppUser, AppRole>()
                 .AddEntityFrameworkStores<InterviewManagementSystemContext>()

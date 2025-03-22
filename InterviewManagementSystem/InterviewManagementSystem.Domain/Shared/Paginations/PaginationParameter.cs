@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using InterviewManagementSystem.Domain.Entities;
+using System.Linq.Expressions;
 
 namespace InterviewManagementSystem.Domain.Shared.Paginations;
 
@@ -16,5 +17,5 @@ public sealed class PaginationParameter<T> where T : class
 public sealed class SortCriteria
 {
     public bool IsAscending { get; set; } = true;
-    public string? SortProperty { get; set; } = string.Empty;
+    public string? SortProperty { get; set; } = nameof(BaseEntity.UpdateAt);
 }

@@ -8,7 +8,7 @@ public sealed class InterviewManager(IMapper mapper, IUnitOfWork unitOfWork, Use
 {
 
 
-    public async Task<ApiResponse<PageResult<InterviewForPaginationRetrieveDTO>>> GetListInterviewPagingAsync(InterviewPaginatedSearchRequest request)
+    public async Task<ApiResponse<PageResult<InterviewPaginationRetrieveDTO>>> GetListInterviewPagingAsync(InterviewPaginatedSearchRequest request)
     {
 
         PaginationParameter<InterviewSchedule> paginationParameter = _mapper.Map<PaginationParameter<InterviewSchedule>>(request);
@@ -28,7 +28,7 @@ public sealed class InterviewManager(IMapper mapper, IUnitOfWork unitOfWork, Use
         }
 
 
-        return await base.GetListPaginationAsync<InterviewForPaginationRetrieveDTO>(paginationParameter);
+        return await base.GetListPaginationAsync<InterviewPaginationRetrieveDTO>(paginationParameter);
     }
 
 

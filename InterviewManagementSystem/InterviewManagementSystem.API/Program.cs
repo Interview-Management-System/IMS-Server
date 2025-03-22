@@ -13,7 +13,7 @@ builder.Services
     .AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 builder.Configuration
-    .AddJsonFile(Path.Combine(AppContext.BaseDirectory, "infraSettings.json"), optional: false, reloadOnChange: true);
+    .AddJsonFile(Path.Combine(AppContext.BaseDirectory, "infra-settings.json"), optional: false, reloadOnChange: true);
 
 
 

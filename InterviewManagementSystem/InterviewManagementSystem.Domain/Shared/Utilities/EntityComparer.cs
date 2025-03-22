@@ -15,7 +15,7 @@ internal static class EntityComparer
     /// <returns></returns>
     internal static IEnumerable<T> GetNonMatchingEntities<T>(IEnumerable<T> originalList, IEnumerable<T> listToCompare)
     {
-        return originalList.Where(e => !IsEntityInList(listToCompare, e)).ToList();
+        return [.. originalList.Where(e => !IsEntityInList(listToCompare, e))];
     }
 
 

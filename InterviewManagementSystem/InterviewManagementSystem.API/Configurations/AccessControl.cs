@@ -82,8 +82,7 @@ internal static class AccessControl
     internal static void AddCorsPolicy(this IServiceCollection services)
     {
         services.AddCors(options =>
-            options.AddDefaultPolicy(builder =>
-                                                builder
+            options.AddDefaultPolicy(builder => builder
                                                 .AllowAnyOrigin()
                                                 .AllowAnyMethod()
                                                 .AllowAnyHeader())

@@ -12,7 +12,6 @@ namespace InterviewManagementSystem.Domain.ValueObjects
 
         public SalaryRange()
         {
-
         }
 
 

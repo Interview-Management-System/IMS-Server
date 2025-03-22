@@ -1,5 +1,7 @@
-﻿using InterviewManagementSystem.Domain.Shared.Paginations;
+﻿using InterviewManagementSystem.Domain.Entities;
+using InterviewManagementSystem.Domain.Shared.Paginations;
 using Microsoft.EntityFrameworkCore;
+using NpgsqlTypes;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -7,25 +9,11 @@ namespace InterviewManagementSystem.Infrastructure.Databases.PostgreSQL.Extensio
 
 internal static class QueryExtension
 {
+
     internal static IQueryable<TOut> ApplyProjection<TIn, TOut>(this IQueryable<TIn> query, Func<IQueryable<TIn>, IQueryable<TOut>>? transform = null)
     {
         return transform == null ? (transform = q => q.Cast<TOut>())(query) : transform(query);
     }
-
-
-    public static IQueryable<TResult> Pipe1<T, TResult>(this DbSet<T> dbSet, Func<IQueryable<T>, IQueryable<TResult>>? queryModifier = null) where T : class
-    {
-        // If a query modifier (projection or other query transformation) is provided, apply it to the DbSet
-        if (queryModifier != null)
-        {
-            return queryModifier(dbSet.AsQueryable());
-        }
-
-        // If no query modifier is provided, return the DbSet casted to TResult
-        return dbSet.Cast<TResult>();
-    }
-
-
 
 
     internal static IQueryable<T> ApplyFilter<T>(this IQueryable<T> query, List<Expression<Func<T, bool>>> filters)
@@ -39,7 +27,6 @@ internal static class QueryExtension
         }
         return query;
     }
-
 
 
     internal static IQueryable<T> ApplySortCriteria<T>(this IQueryable<T> query, SortCriteria? sortCriteria)
@@ -94,56 +81,23 @@ internal static class QueryExtension
     }
 
 
-    internal static IQueryable<T> ApplyFreeTextSearch<T>(this IQueryable<T> query, string? searchText, params string[] columns)
+
+    internal static IQueryable<T> ApplyFullTextSearch<T>(this IQueryable<T> query, string? searchText)
     {
-        if (string.IsNullOrEmpty(searchText))
-            throw new ArgumentException("Search term cannot be null or empty.", nameof(searchText));
-
-        if (columns == null || columns.Length == 0)
-            throw new ArgumentNullException(nameof(columns));
-
-        // Parameter for the entity (e.g., `entity =>`)
-        var parameter = Expression.Parameter(typeof(T), "entity");
-
-        // Get the `EF.Functions.Contains` method reference
-        var containsMethod = typeof(DbFunctionsExtensions)
-            .GetMethod("Contains", [typeof(DbFunctions), typeof(string), typeof(string)]);
-
-        if (containsMethod == null)
-            throw new InvalidOperationException("EF.Functions.Contains method not found.");
-
-        // Create the `EF.Functions` parameter
-        var efFunctions = Expression.Property(null, typeof(EF).GetProperty(nameof(EF.Functions))!);
-
-        // Build a condition for each column
-        Expression? combinedCondition = null;
-
-        foreach (var columnName in columns)
+        if (string.IsNullOrWhiteSpace(searchText))
         {
-            // Access the column (e.g., `entity.ColumnName`)
-            var property = Expression.Property(parameter, columnName);
-
-            // Build the `EF.Functions.Contains(property, searchTerm)` expression
-            var containsExpression = Expression.Call(
-                containsMethod,
-                efFunctions,
-                property,
-                Expression.Constant(searchText)
-            );
-
-            // Combine conditions using OR
-            combinedCondition = combinedCondition == null
-                ? containsExpression
-                : Expression.OrElse(combinedCondition, containsExpression);
+            return query;
         }
 
-        if (combinedCondition == null)
-            throw new InvalidOperationException("No valid conditions were created.");
-
-        // Create the final lambda expression
-        var lambda = Expression.Lambda<Func<T, bool>>(combinedCondition, parameter);
+        const string searchVectorPropertyName = nameof(ISearchable.SearchVector);
 
 
-        return query.Where(lambda);
+        var searchVectorProperty = typeof(T).GetProperty(searchVectorPropertyName);
+        if (searchVectorProperty?.PropertyType != typeof(NpgsqlTsVector))
+        {
+            return query;
+        }
+
+        return query.Where(e => EF.Property<NpgsqlTsVector>(e!, searchVectorPropertyName).Matches(EF.Functions.ToTsQuery("english", $"{searchText}")));
     }
 }

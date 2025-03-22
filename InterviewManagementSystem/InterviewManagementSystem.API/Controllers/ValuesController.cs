@@ -9,11 +9,6 @@ namespace InterviewManagementSystem.API.Controllers
         [HttpGet("test")]
         public async Task<IActionResult> Get()
         {
-            //UserRepo userRepo = new();
-
-            //var sd = await userRepo.GetAllAsync();
-
-
 
 
             return Ok("");

@@ -32,7 +32,7 @@ namespace InterviewManagementSystem.API.Controllers
         [HttpGet("detail/{id}")]
         public async Task<IActionResult> GetInterviewDetailByIdAsync(Guid id)
         {
-            var apiResponse = await _interviewManager.GetDetailByIdAsync<InterviewForDetailRetrieveDTO>(id);
+            var apiResponse = await _interviewManager.GetDetailByIdAsync<InterviewDetailRetrieveDTO>(id);
             return Ok(apiResponse);
         }
 

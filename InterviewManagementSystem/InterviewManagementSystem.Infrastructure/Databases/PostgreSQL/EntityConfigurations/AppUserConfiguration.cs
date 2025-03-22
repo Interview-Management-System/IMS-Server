@@ -85,6 +85,20 @@ internal static class AppUserConfiguration
                     join => join.ToTable("AppUserRoles")
                 );
 
+            string schema = "to_tsvector('english'::regconfig, (((((COALESCE(\"Email\", ''::character varying))::text || ' '::text) || (COALESCE(\"UserName\", ''::character varying))::text) || ' '::text) || COALESCE(\"PhoneNumber\", ''::text)))";
+
+
+            const string computedColumnSql = @"
+                                                to_tsvector(
+                                                    'english'::regconfig, 
+                                                    (
+                                                        COALESCE(""Email"", ''::character varying)::text || ' '::text || 
+                                                        COALESCE(""UserName"", ''::character varying)::text || ' '::text || 
+                                                        COALESCE(""PhoneNumber"", ''::text)
+                                                    )
+                                                )";
+
+            entity.Property(e => e.SearchVector).HasComputedColumnSql(computedColumnSql, true);
         });
 
 

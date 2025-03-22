@@ -8,7 +8,7 @@ using InterviewManagementSystem.Infrastructure.Databases.PostgreSQL.EntityConfig
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace InterviewManagementSystem.Infrastructure.Persistences;
+namespace InterviewManagementSystem.Infrastructure.Databases.PostgreSQL;
 
 
 public partial class InterviewManagementSystemContext : IdentityDbContext<AppUser, AppRole, Guid>
@@ -70,8 +70,6 @@ public partial class InterviewManagementSystemContext : IdentityDbContext<AppUse
     public virtual DbSet<Skill> Skills { get; set; }
 
     #endregion
-
-
 }
 
 
@@ -102,11 +100,22 @@ public partial class InterviewManagementSystemContext
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
+        HanldeUpdateAt();
+        //HandleSoftDelete();
+        return base.SaveChangesAsync(cancellationToken);
+    }
 
+
+
+    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+
+
+    private void HanldeUpdateAt()
+    {
+        const string updateAtPropertyName = nameof(BaseEntity.UpdateAt);
         var editedEntities = ChangeTracker.Entries().Where(E => E.State == EntityState.Modified).ToList();
 
-
-        const string updateAtPropertyName = nameof(BaseEntity.UpdateAt);
 
         var entitiesWithUpdateAtProperty = editedEntities
             .Where(ee => ee.Entity.GetType().GetProperty(updateAtPropertyName)?.Name == updateAtPropertyName)
@@ -117,13 +126,23 @@ public partial class InterviewManagementSystemContext
         {
             entitiesWithUpdateAtProperty.ForEach(E => E.Property(updateAtPropertyName).CurrentValue = DateTime.Now);
         }
-
-
-        return base.SaveChangesAsync(cancellationToken);
     }
 
 
 
-    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 
+    private void HandleSoftDelete()
+    {
+        foreach (var entry in ChangeTracker.Entries())
+        {
+            var entity = entry.Entity;
+            var isDeletedProperty = entity.GetType().GetProperty(nameof(BaseEntity.IsDeleted));
+
+            if (isDeletedProperty != null && entry.State == EntityState.Deleted)
+            {
+                entry.State = EntityState.Modified; // Prevent actual deletion
+                isDeletedProperty.SetValue(entity, true); // Set IsDeleted = true
+            }
+        }
+    }
 }

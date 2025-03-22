@@ -15,7 +15,12 @@ public static class EnumExtension
         { RoleEnum.Interviewer, "9360eb9d-3aa2-4448-ba57-920cb69043af" },
     };
 
-    // Get RoleId for RoleEnum
+    /// <summary>
+    /// Get RoleId for RoleEnum
+    /// </summary>
+    /// <param name="role"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
     public static string GetRoleId(this RoleEnum role)
     {
         if (RoleIdEnumMap.TryGetValue(role, out var id))
@@ -26,7 +31,12 @@ public static class EnumExtension
         throw new ArgumentException($"No GUID mapping found for role {role}");
     }
 
-    // Get RoleName by RoleId (GUID)
+    /// <summary>
+    /// Get RoleName by RoleId (GUID)
+    /// </summary>
+    /// <param name="roleId"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
     public static string GetRoleNameById(this Guid roleId)
     {
         foreach (var (roleEnum, guidString) in RoleIdEnumMap)
