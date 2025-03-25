@@ -4,14 +4,14 @@ using InterviewManagementSystem.Domain.Entities.Interviews;
 
 namespace InterviewManagementSystem.Application.Managers.InterviewManager;
 
-public sealed class InterviewManager(IMapper mapper, IUnitOfWork unitOfWork, UserManager<AppUser> userManager) : BaseManager<InterviewSchedule>(mapper, unitOfWork)
+public sealed class InterviewManager(IUnitOfWork unitOfWork, UserManager<AppUser> userManager) : BaseManager<InterviewSchedule>(unitOfWork)
 {
 
 
     public async Task<ApiResponse<PageResult<InterviewPaginationRetrieveDTO>>> GetListInterviewPagingAsync(InterviewPaginatedSearchRequest request)
     {
 
-        PaginationParameter<InterviewSchedule> paginationParameter = _mapper.Map<PaginationParameter<InterviewSchedule>>(request);
+        PaginationParameter<InterviewSchedule> paginationParameter = MapperHelper.Map<PaginationParameter<InterviewSchedule>>(request);
 
 
         InterviewStatusEnum statusId = request.InterviewStatusId;
@@ -36,7 +36,7 @@ public sealed class InterviewManager(IMapper mapper, IUnitOfWork unitOfWork, Use
     public async Task<string> CreateInterview(InterviewCreateDTO interviewForCreateDTO)
     {
 
-        var interview = _mapper.Map<InterviewSchedule>(interviewForCreateDTO);
+        var interview = MapperHelper.Map<InterviewSchedule>(interviewForCreateDTO);
         var interviewers = await userManager.GetUsersInRoleAsync(nameof(RoleEnum.Interviewer));
 
         var filteredInterviewers = interviewers

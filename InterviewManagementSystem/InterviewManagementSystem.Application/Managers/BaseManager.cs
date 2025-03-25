@@ -3,9 +3,8 @@
 namespace InterviewManagementSystem.Application.Managers;
 
 
-public abstract class BaseManager<T>(IMapper mapper, IUnitOfWork unitOfWork) where T : class
+public abstract class BaseManager<T>(IUnitOfWork unitOfWork) where T : class
 {
-    protected readonly IMapper _mapper = mapper;
     protected readonly IUnitOfWork _unitOfWork = unitOfWork;
     protected readonly IBaseRepository<T> _repository = unitOfWork.GetBaseRepository<T>();
 
@@ -14,12 +13,12 @@ public abstract class BaseManager<T>(IMapper mapper, IUnitOfWork unitOfWork) whe
     protected virtual async Task<ApiResponse<PageResult<TPaginationDTO>>> GetListPaginationAsync<TPaginationDTO>(PaginationParameter<T> paginationParameter)
     {
 
-        var projection = MapperHelper.CreateProjection<T, TPaginationDTO>(_mapper);
+        var projection = MapperHelper.CreateProjection<T, TPaginationDTO>();
         var pageResult = await _repository.GetPaginationList(paginationParameter, projection: projection);
 
         return new ApiResponse<PageResult<TPaginationDTO>>
         {
-            Data = _mapper.Map<PageResult<TPaginationDTO>>(pageResult)
+            Data = MapperHelper.Map<PageResult<TPaginationDTO>>(pageResult)
         };
     }
 
@@ -28,7 +27,7 @@ public abstract class BaseManager<T>(IMapper mapper, IUnitOfWork unitOfWork) whe
     public virtual async Task<ApiResponse<TDetailDTO>> GetDetailByIdAsync<TDetailDTO>(object id)
     {
 
-        var projection = MapperHelper.CreateProjection<T, TDetailDTO>(_mapper);
+        var projection = MapperHelper.CreateProjection<T, TDetailDTO>();
         var detailObjectById = await _repository.GetByIdAsync(id, projection: projection);
 
         ArgumentNullException.ThrowIfNull(detailObjectById, "Data not found to view detail");
@@ -43,51 +42,42 @@ public abstract class BaseManager<T>(IMapper mapper, IUnitOfWork unitOfWork) whe
 
     public virtual async Task<string> DeleteAsync(object id, bool isHardDelete = false)
     {
-        var entityFoundById = await _repository.GetByIdAsync(id);
 
-        ArgumentNullException.ThrowIfNull(entityFoundById, "Data not found to delete");
-        var propertyInfo = entityFoundById.GetType().GetProperty(nameof(BaseEntity.IsDeleted));
+        var idProperty = typeof(T).GetProperty(nameof(BaseEntity.Id));
+        ArgumentNullException.ThrowIfNull(idProperty, "Entity has no Id to delete");
 
 
-        if (propertyInfo != null && propertyInfo.PropertyType == typeof(bool))
+        bool deleteSuccess = false;
+
+        if (isHardDelete)
         {
-            bool currentStatus = (bool)propertyInfo.GetValue(entityFoundById)!;
-            ApplicationException.ThrowIfInvalidOperation(currentStatus != false, "Data is not deleted to restore");
-
-            _repository.Delete(entityFoundById, isHardDelete);
-
-            bool deleteSuccess = await _unitOfWork.SaveChangesAsync();
-            ApplicationException.ThrowIfOperationFail(deleteSuccess, "Fail to delete");
-
-            return "Delete successfully";
+            deleteSuccess = await _repository.InstantDeleteAsync(e => EF.Property<object>(e, idProperty.Name).Equals(id));
+        }
+        else
+        {
+            deleteSuccess = await _repository
+                .InstantUpdateAsync(e => EF.Property<object>(e, idProperty.Name).Equals(id),
+                                    e => e.SetProperty(e => EF.Property<bool>(e, nameof(BaseEntity.IsDeleted)), true));
         }
 
-        return "Delete failed";
+        ApplicationException.ThrowIfOperationFail(deleteSuccess, "Fail to delete");
+        return "Delete successfully";
     }
+
 
 
 
     public virtual async Task<string> UndoDeleteAsync(object id)
     {
-        var entity = await _repository.GetByIdAsync(id, isTracking: true);
-        ArgumentNullException.ThrowIfNull(entity, $"Data not found to restore");
 
+        var idProperty = typeof(T).GetProperty(nameof(BaseEntity.Id));
+        ArgumentNullException.ThrowIfNull(idProperty, "Entity has no Id to delete");
 
-        var propertyInfo = entity.GetType().GetProperty(nameof(BaseEntity.IsDeleted));
+        bool undoDeleteSuccess = await _repository
+            .InstantUpdateAsync(e => EF.Property<object>(e, idProperty.Name).Equals(id),
+                                u => u.SetProperty(e => EF.Property<bool>(e, nameof(BaseEntity.IsDeleted)), false));
 
-        if (propertyInfo != null && propertyInfo.PropertyType == typeof(bool))
-        {
-            bool currentStatus = (bool)propertyInfo.GetValue(entity)!;
-            ApplicationException.ThrowIfInvalidOperation(currentStatus == false, "Data is not deleted to restore");
-
-            propertyInfo.SetValue(entity, false);
-
-            bool success = await _unitOfWork.SaveChangesAsync();
-            ApplicationException.ThrowIfOperationFail(success, $"Failed to restore");
-
-            return "Restored successfully";
-        }
-
+        ApplicationException.ThrowIfOperationFail(undoDeleteSuccess, "Fail to undo delete");
         return "Restore failed";
     }
 }

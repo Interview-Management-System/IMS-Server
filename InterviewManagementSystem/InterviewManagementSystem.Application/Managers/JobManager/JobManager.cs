@@ -8,12 +8,12 @@ namespace InterviewManagementSystem.Application.Managers.JobManager;
 public sealed class JobManager : BaseManager<Job>
 {
 
-    public JobManager(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork) { }
+    public JobManager(IUnitOfWork unitOfWork) : base(unitOfWork) { }
 
 
     public async Task<List<JobOpenRetrieveDTO>> GetListOpenJobAsync()
     {
-        var projection = MapperHelper.CreateProjection<Job, JobOpenRetrieveDTO>(_mapper);
+        var projection = MapperHelper.CreateProjection<Job, JobOpenRetrieveDTO>();
         return await _repository.GetAllAsync(f => f.JobStatusId == JobStatusEnum.Open, projection);
     }
 
@@ -21,7 +21,7 @@ public sealed class JobManager : BaseManager<Job>
     public async Task<ApiResponse<PageResult<JobPaginationRetrieveDTO>>> GetListJobPagingAsync(JobPaginatedSearchRequest request)
     {
 
-        PaginationParameter<Job> paginationParameter = _mapper.Map<PaginationParameter<Job>>(request);
+        PaginationParameter<Job> paginationParameter = MapperHelper.Map<PaginationParameter<Job>>(request);
 
         JobStatusEnum statusId = request.JobStatusId;
 
@@ -37,7 +37,7 @@ public sealed class JobManager : BaseManager<Job>
     public async Task<string> CreateNewJobAsync(JobCreateDTO jobForCreateDTO)
     {
 
-        Job job = _mapper.Map<Job>(jobForCreateDTO);
+        Job job = MapperHelper.Map<Job>(jobForCreateDTO);
 
         var levels = await MasterDataUtility.GetListLevelByIdListAsync(jobForCreateDTO.LevelIds);
         var skills = await MasterDataUtility.GetListSkillByIdListAsync(jobForCreateDTO.SkillIds);
@@ -74,8 +74,10 @@ public sealed class JobManager : BaseManager<Job>
         ArgumentNullException.ThrowIfNull(jobFoundById);
 
 
-        _mapper.Map(jobForUpdateDTO, jobFoundById);
+        MapperHelper.Map(jobForUpdateDTO, jobFoundById);
 
+
+        // use execute update
         /*
         var levels = await MasterDataUtility.GetListLevelByIdListAsync(jobForUpdateDTO.LevelIds, _unitOfWork);
         var skills = await MasterDataUtility.GetListSkillByIdListAsync(jobForUpdateDTO.SkillIds, _unitOfWork);

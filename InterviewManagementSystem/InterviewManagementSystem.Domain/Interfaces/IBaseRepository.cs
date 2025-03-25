@@ -1,27 +1,24 @@
 ﻿using InterviewManagementSystem.Domain.Shared.Paginations;
+using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 
 namespace InterviewManagementSystem.Domain.Interfaces;
 
 public interface IBaseRepository<T> where T : class
 {
-    Task<List<TResult>> GetAllAsync<TResult>(Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>, IQueryable<TResult>>? projection = null, bool isTracking = false);
 
+    #region Retrieve
     Task<T?> GetByIdAsync<TId>(TId id, bool isTracking = false);
+
+
+    Task<PageResult<T>> GetPaginationList(PaginationParameter<T> pagingParameter, IEnumerable<string>? includeProperties = null);
 
     Task<TResult?> GetByIdAsync<TResult>(object id, string? idIdentifier = "Id", Func<IQueryable<T>, IQueryable<TResult>>? projection = null, bool isTracking = false);
 
-    Task AddAsync(T entity);
+    Task<List<TResult>> GetAllAsync<TResult>(Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>, IQueryable<TResult>>? projection = null, bool isTracking = false);
 
-    Task AddRangeAsync(IEnumerable<T> entities);
+    Task<PageResult<TResult>> GetPaginationList<TResult>(PaginationParameter<T> pagingParameter, IEnumerable<string>? includeProperties = null, Func<IQueryable<T>, IQueryable<TResult>>? projection = null);
 
-    void Update(T entity);
-
-    void Delete(T entity, bool isHardDelete = false);
-
-    void DeleteRange(IEnumerable<T> entities, bool isHardDelete = false);
-
-    void DeleteRangeWithConditions(Expression<Func<T, bool>> where, bool isHardDelete = false);
 
     /// <summary>
     /// Include entity property but does not support ThenInclude()
@@ -32,21 +29,83 @@ public interface IBaseRepository<T> where T : class
     /// <param name="canLoadDeleted"></param>
     /// <returns></returns>
     IQueryable<T> GetWithInclude(Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, bool canLoadDeleted = false, bool isTracking = false, params string[] includeProperties);
+    #endregion
 
 
-    Task<PageResult<T>> GetPaginationList(PaginationParameter<T> pagingParameter, IEnumerable<string>? includeProperties = null);
 
 
-    Task<PageResult<TResult>> GetPaginationList<TResult>(PaginationParameter<T> pagingParameter, IEnumerable<string>? includeProperties = null, Func<IQueryable<T>, IQueryable<TResult>>? projection = null);
+
+    #region Create
+    Task AddAsync(T entity);
+
+    Task AddRangeAsync(IEnumerable<T> entities);
+    #endregion
+
+
+
+
+
+
+    #region Update
+    void Update(T entity);
 
 
     /// <summary>
-    /// This method support ThenInclude(). Use this method if need to multiple Include or ThenInclude. NOTE: if want to use this method, must provide includes = [] for overloading the GetWithInclude() above.
+    /// This method will update to DB instantly without save changes from DbContext
     /// </summary>
     /// <param name="filter"></param>
-    /// <param name="orderBy"></param>
-    /// <param name="includes"></param>
-    /// <param name="canLoadDeleted"></param>
-    /// <returns>List of type T</returns>
-    //IQueryable<T> GetWithInclude(Expression<Func<T, bool>>? filter, Expression<Func<IQueryable<T>, IIncludableQueryable<T, object>>>[]? includes);
+    /// <param name="updateExpression"></param>
+    /// <returns></returns>
+    Task<bool> InstantUpdateAsync(Expression<Func<T, bool>> filter, Expression<Func<SetPropertyCalls<T>, SetPropertyCalls<T>>> updateExpression);
+    #endregion
+
+
+
+
+
+    #region Delete
+    /// <summary>
+    /// This method will delete record(s) in DB instantly without save changes from DbContext
+    /// </summary>
+    /// <param name="filter"></param>
+    /// <param name="updateExpression"></param>
+    /// <returns></returns>
+    Task<bool> InstantDeleteAsync(Expression<Func<T, bool>> filter);
+    #endregion
 }
+
+
+/// <summary>
+/// Support ThenInclude()
+/// </summary>
+/// <param name="filter"></param>
+/// <param name="includes"></param>
+/// <returns></returns>
+/// 
+/*
+public IQueryable<T> GetWithInclude(Expression<Func<T, bool>>? filter, Expression<Func<IQueryable<T>, IIncludableQueryable<T, object>>>[]? includes)
+{
+    IQueryable<T> query = _dbSet.AsNoTracking();
+
+
+    if (filter != null)
+    {
+        query = query.Where(filter);
+    }
+
+
+    if (includes != null && includes.Length > 0)
+    {
+        foreach (var include in includes)
+        {
+            query = include.Compile()(query);
+
+        }
+    }
+
+    query = query.AsSplitQuery();
+
+    return query;
+
+}
+*/

@@ -4,6 +4,7 @@ using InterviewManagementSystem.Domain.Interfaces;
 using InterviewManagementSystem.Domain.Shared.Paginations;
 using InterviewManagementSystem.Infrastructure.Databases.PostgreSQL.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 
 namespace InterviewManagementSystem.Infrastructure.Databases.PostgreSQL.Repositories;
@@ -22,60 +23,43 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
     }
 
 
+    #region Create
     public async Task AddAsync(T entity)
     {
-        await _dbSet.AddAsync(entity);
+        await _dbSet.AddAsync(entity, CancellationTokenProvider.CancellationToken);
     }
 
 
 
     public async Task AddRangeAsync(IEnumerable<T> entities)
     {
-        await _dbSet.AddRangeAsync(entities);
+        await _dbSet.AddRangeAsync(entities, CancellationTokenProvider.CancellationToken);
     }
+    #endregion
 
 
 
-    public void Delete(T entity, bool isHardDelete = false)
+    #region Update
+    public void Update(T entity)
     {
-        if (isHardDelete)
-        {
-            _dbSet.Remove(entity);
-        }
-        else
-        {
-            SetDeleteField(entity, true);
-            _interviewManagementSystemContext.Entry(entity).State = EntityState.Modified;
-        }
+        _dbSet.Update(entity);
+        _interviewManagementSystemContext.Entry(entity).State = EntityState.Modified;
     }
 
 
-
-    public void DeleteRange(IEnumerable<T> entities, bool isHardDelete = false)
+    public async Task<bool> InstantUpdateAsync(Expression<Func<T, bool>> filter, Expression<Func<SetPropertyCalls<T>, SetPropertyCalls<T>>> updateExpression)
     {
-        if (isHardDelete)
-        {
-            _dbSet.RemoveRange(entities);
-        }
-        else
-        {
-            foreach (var entity in entities)
-            {
-                SetDeleteField(entity, true);
-            }
-        }
+        int rowAffected = await _dbSet
+            .ApplyFilter([filter])
+            .ExecuteUpdateAsync(updateExpression, CancellationTokenProvider.CancellationToken);
+
+        return rowAffected > 0;
     }
+    #endregion
 
 
 
-    public void DeleteRangeWithConditions(Expression<Func<T, bool>> filter, bool isHardDelete = false)
-    {
-        var entities = _dbSet.ApplyFilter([filter]).AsEnumerable();
-        DeleteRange(entities, isHardDelete);
-    }
-
-
-
+    #region Retrieve
     public async Task<List<TResult>> GetAllAsync<TResult>(Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>, IQueryable<TResult>>? projection = null, bool isTracking = false)
     {
         IQueryable<T> queryable = isTracking ? _dbSet : _dbSet.AsNoTracking();
@@ -161,59 +145,17 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 
         return orderBy != null ? orderBy(query) : query;
     }
+    #endregion
 
 
-    /// <summary>
-    /// Support ThenInclude()
-    /// </summary>
-    /// <param name="filter"></param>
-    /// <param name="includes"></param>
-    /// <returns></returns>
-    /// 
-    /*
-    public IQueryable<T> GetWithInclude(Expression<Func<T, bool>>? filter, Expression<Func<IQueryable<T>, IIncludableQueryable<T, object>>>[]? includes)
+
+    public async Task<bool> InstantDeleteAsync(Expression<Func<T, bool>> filter)
     {
-        IQueryable<T> query = _dbSet.AsNoTracking();
+        int rowAffected = await _dbSet
+            .ApplyFilter([filter])
+            .ExecuteDeleteAsync(CancellationTokenProvider.CancellationToken);
 
-
-        if (filter != null)
-        {
-            query = query.Where(filter);
-        }
-
-
-        if (includes != null && includes.Length > 0)
-        {
-            foreach (var include in includes)
-            {
-                query = include.Compile()(query);
-
-            }
-        }
-
-        query = query.AsSplitQuery();
-
-        return query;
-
-    }
-    */
-
-
-    public void Update(T entity)
-    {
-        _dbSet.Update(entity);
-        _interviewManagementSystemContext.Entry(entity).State = EntityState.Modified;
-    }
-
-
-    private static void SetDeleteField(T entity, bool isDeleted)
-    {
-        var propertyInfo = entity.GetType().GetProperty(nameof(BaseEntity.IsDeleted));
-
-        if (propertyInfo?.PropertyType == typeof(bool))
-        {
-            propertyInfo.SetValue(entity, isDeleted);
-        }
+        return rowAffected > 0;
     }
 }
 

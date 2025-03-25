@@ -14,12 +14,11 @@ public sealed class CandidateManager : BaseUserManager
 
 
     public CandidateManager(
-        IMapper mapper,
         IUnitOfWork unitOfWork,
         UserManager<AppUser> candidateManager,
         RoleManager<AppRole> roleManager,
         ICloudinaryService cloudinaryService
-        ) : base(mapper, unitOfWork, candidateManager, roleManager, cloudinaryService)
+        ) : base(unitOfWork, candidateManager, roleManager, cloudinaryService)
     {
         _candidateManager = candidateManager;
         _candidateRepository = unitOfWork.CandidateRepository;
@@ -31,7 +30,7 @@ public sealed class CandidateManager : BaseUserManager
     {
 
         var allowedCandidateToInterview = CandidateEnumHelper.AllowedCandidateStatusForInterview;
-        var projection = MapperHelper.CreateProjection<Candidate, UserIdentityRetrieveDTO>(_mapper);
+        var projection = MapperHelper.CreateProjection<Candidate, UserIdentityRetrieveDTO>();
 
 
         var candidateForInterview = await _candidateRepository
@@ -46,7 +45,7 @@ public sealed class CandidateManager : BaseUserManager
     public async Task<ApiResponse<PageResult<CandidatePaginationRetrieveDTO>>> GetListCandidatePagingAsync(CandidatePaginatedSearchRequest request)
     {
 
-        PaginationParameter<Candidate> paginationParameter = _mapper.Map<PaginationParameter<Candidate>>(request);
+        PaginationParameter<Candidate> paginationParameter = MapperHelper.Map<PaginationParameter<Candidate>>(request);
 
 
         CandidateStatusEnum statusId = request.StatusId;
@@ -57,13 +56,13 @@ public sealed class CandidateManager : BaseUserManager
         }
 
 
-        var projection = MapperHelper.CreateProjection<Candidate, CandidatePaginationRetrieveDTO>(_mapper);
+        var projection = MapperHelper.CreateProjection<Candidate, CandidatePaginationRetrieveDTO>();
         var pageResult = await _candidateRepository.GetPaginationList(paginationParameter, projection: projection);
 
 
         return new ApiResponse<PageResult<CandidatePaginationRetrieveDTO>>()
         {
-            Data = _mapper.Map<PageResult<CandidatePaginationRetrieveDTO>>(pageResult)
+            Data = MapperHelper.Map<PageResult<CandidatePaginationRetrieveDTO>>(pageResult)
         };
     }
 
@@ -72,12 +71,12 @@ public sealed class CandidateManager : BaseUserManager
 
     public override async Task<ApiResponse<TDetailDTO>> GetDetailByIdAsync<TDetailDTO>(object id)
     {
-        var projection = MapperHelper.CreateProjection<Candidate, TDetailDTO>(_mapper);
+        var projection = MapperHelper.CreateProjection<Candidate, TDetailDTO>();
 
         var candidateFoundById = await _candidateRepository.GetByIdAsync(id, projection: projection);
         ArgumentNullException.ThrowIfNull(candidateFoundById, "Candidate not found");
 
-        var mappedCandidate = _mapper.Map<TDetailDTO>(candidateFoundById);
+        var mappedCandidate = MapperHelper.Map<TDetailDTO>(candidateFoundById);
 
         return new ApiResponse<TDetailDTO>()
         {
@@ -117,7 +116,7 @@ public sealed class CandidateManager : BaseUserManager
         ArgumentNullException.ThrowIfNull(role, "Role not found to add user");
 
 
-        var candidate = _mapper.Map<Candidate>(candidateForCreateDTO);
+        var candidate = MapperHelper.Map<Candidate>(candidateForCreateDTO);
 
 
         var skills = await MasterDataUtility.GetListSkillByIdListAsync(candidateForCreateDTO.SkillList);
@@ -162,7 +161,7 @@ public sealed class CandidateManager : BaseUserManager
         var candidate = userFoundById as Candidate;
 
 
-        _mapper.Map(candidateForUpdateDTO, candidate);
+        MapperHelper.Map(candidateForUpdateDTO, candidate);
         //await UpdateUserRoleAsync(userFoundById, candidateForUpdateDTO.RoleId);
 
 

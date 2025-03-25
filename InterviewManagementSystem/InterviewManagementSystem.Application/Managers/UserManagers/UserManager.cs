@@ -9,12 +9,11 @@ public sealed class UserManager : BaseUserManager
 {
 
     public UserManager(
-        IMapper mapper,
         IUnitOfWork unitOfWork,
         UserManager<AppUser> userManager,
         RoleManager<AppRole> roleManager,
         ICloudinaryService cloudinaryService
-        ) : base(mapper, unitOfWork, userManager, roleManager, cloudinaryService)
+        ) : base(unitOfWork, userManager, roleManager, cloudinaryService)
     { }
 
 
@@ -22,7 +21,7 @@ public sealed class UserManager : BaseUserManager
     public async Task<List<UserIdentityRetrieveDTO>> GetListRecruiterAsync()
     {
         var recruiters = await _userManager.GetUsersInRoleAsync(nameof(RoleEnum.Recruiter));
-        return _mapper.Map<List<UserIdentityRetrieveDTO>>(recruiters);
+        return MapperHelper.Map<List<UserIdentityRetrieveDTO>>(recruiters);
     }
 
 
@@ -30,7 +29,7 @@ public sealed class UserManager : BaseUserManager
     public async Task<List<UserIdentityRetrieveDTO>> GetListInterviewerAsync()
     {
         var interviewers = await _userManager.GetUsersInRoleAsync(nameof(RoleEnum.Interviewer));
-        return _mapper.Map<List<UserIdentityRetrieveDTO>>(interviewers);
+        return MapperHelper.Map<List<UserIdentityRetrieveDTO>>(interviewers);
     }
 
 
@@ -46,7 +45,7 @@ public sealed class UserManager : BaseUserManager
         ArgumentNullException.ThrowIfNull(role, "Role not found to add user");
 
 
-        var appUser = _mapper.Map<AppUser>(userForCreateDTO);
+        var appUser = MapperHelper.Map<AppUser>(userForCreateDTO);
 
 
         var createUserResult = await _userManager.CreateAsync(appUser, DEFAULT_PASSWORD);
@@ -65,7 +64,7 @@ public sealed class UserManager : BaseUserManager
     public async Task<ApiResponse<PageResult<UserPaginationRetrieveDTO>>> GetListUserPagingAsync(UserPaginatedSearchRequest request)
     {
 
-        PaginationParameter<AppUser> paginationParameter = _mapper.Map<PaginationParameter<AppUser>>(request);
+        PaginationParameter<AppUser> paginationParameter = MapperHelper.Map<PaginationParameter<AppUser>>(request);
 
         RoleEnum roleId = request.RoleId;
 
@@ -79,13 +78,13 @@ public sealed class UserManager : BaseUserManager
         }
 
 
-        var projection = MapperHelper.CreateProjection<AppUser, UserPaginationRetrieveDTO>(_mapper);
+        var projection = MapperHelper.CreateProjection<AppUser, UserPaginationRetrieveDTO>();
         var pageResult = await _repository.GetPaginationList(paginationParameter, projection: projection);
 
 
         return new ApiResponse<PageResult<UserPaginationRetrieveDTO>>()
         {
-            Data = _mapper.Map<PageResult<UserPaginationRetrieveDTO>>(pageResult)
+            Data = MapperHelper.Map<PageResult<UserPaginationRetrieveDTO>>(pageResult)
         };
     }
 
@@ -100,7 +99,7 @@ public sealed class UserManager : BaseUserManager
         ApplicationException.ThrowIfGetDeletedRecord(userFoundById.IsDeleted);
 
 
-        _mapper.Map(userForUpdateDTO, userFoundById);
+        MapperHelper.Map(userForUpdateDTO, userFoundById);
         await UpdateUserRoleAsync(userFoundById, userForUpdateDTO.RoleId);
 
 
@@ -123,7 +122,7 @@ public sealed class UserManager : BaseUserManager
         ApplicationException.ThrowIfGetDeletedRecord(userFoundById.IsDeleted);
 
 
-        await UpdateUserRoleAsync(userFoundById, roleId);
+        await base.UpdateUserRoleAsync(userFoundById, roleId);
 
 
         var result = await _userManager.UpdateAsync(userFoundById);
@@ -136,33 +135,21 @@ public sealed class UserManager : BaseUserManager
 
     public async Task<string> DeActivateUser(Guid id)
     {
-        var userFoundById = await _userManager.FindByIdAsync(id.ToString());
+        bool updateSuccess = await _repository
+            .InstantUpdateAsync(u => u.Id.Equals(id), u => u.SetProperty(u => u.IsActive, false));
 
-
-        ArgumentNullException.ThrowIfNull(userFoundById, "User not found to de-activate");
-        AppUserException.ThrowIfUserNotActive(userFoundById);
-
-
-        userFoundById.DeActivate();
-        var result = await _userManager.UpdateAsync(userFoundById);
-
-
-        ApplicationException.ThrowIfOperationFail(result.Succeeded, "De-activate user failed");
+        ApplicationException.ThrowIfOperationFail(updateSuccess, "De-activate user failed");
         return "De-activate user successfully";
     }
 
 
 
-
     public async Task<string> ActivateUser(Guid id)
     {
-        var userFoundById = await _userManager.FindByIdAsync(id.ToString());
-        ArgumentNullException.ThrowIfNull(userFoundById, "User not found to de-activate");
+        bool updateSuccess = await _repository
+            .InstantUpdateAsync(u => u.Id.Equals(id), u => u.SetProperty(u => u.IsActive, true));
 
-        userFoundById.Activate();
-        var result = await _userManager.UpdateAsync(userFoundById);
-
-        ApplicationException.ThrowIfOperationFail(result.Succeeded, "Activate user failed");
+        ApplicationException.ThrowIfOperationFail(updateSuccess, "Activate user failed");
         return "Activate user successfully";
     }
 }

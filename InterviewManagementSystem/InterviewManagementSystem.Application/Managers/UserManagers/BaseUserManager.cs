@@ -11,7 +11,13 @@ public abstract class BaseUserManager : BaseManager<AppUser>
     protected static readonly string DEFAULT_PASSWORD = "T@n75541972";
 
 
-    protected BaseUserManager(IMapper mapper, IUnitOfWork unitOfWork, UserManager<AppUser> userManager, RoleManager<AppRole> roleManager, ICloudinaryService cloudinaryService) : base(mapper, unitOfWork)
+    protected BaseUserManager(
+        IUnitOfWork unitOfWork,
+        UserManager<AppUser> userManager,
+        RoleManager<AppRole> roleManager,
+        ICloudinaryService cloudinaryService)
+
+        : base(unitOfWork)
     {
         _userManager = userManager;
         _roleManager = roleManager;
