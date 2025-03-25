@@ -1,6 +1,4 @@
 ﻿using InterviewManagementSystem.Application.DTOs.OfferDTOs;
-using InterviewManagementSystem.Domain.Entities.AppUsers;
-using InterviewManagementSystem.Domain.Entities.Interviews;
 using InterviewManagementSystem.Domain.Entities.Offers;
 using InterviewManagementSystem.Domain.Shared.EntityData.OfferData;
 
@@ -46,101 +44,14 @@ public sealed class OfferMappingProfile : Profile
             .ForPath(dest => dest.DatePeriod!.EndDate, opt => opt.MapFrom(src => src.ContractTo))
             .ForPath(dest => dest.DatePeriod!.StartDate, opt => opt.MapFrom(src => src.ContractFrom));
 
-        CreateFlexibleMap(createOfferMap);
-
 
 
         var updateOfferMap = CreateMap<OfferForUpdateDTO, DataForUpdateOffer>()
             .ForPath(dest => dest.DatePeriod!.EndDate, opt => opt.MapFrom(src => src.ContractTo))
             .ForPath(dest => dest.DatePeriod!.StartDate, opt => opt.MapFrom(src => src.ContractFrom));
 
-        CreateFlexibleMap(updateOfferMap);
-
 
         CreateMap<PageResult<Offer>, PageResult<OfferForRetrieveDTO>>().ReverseMap();
-
-
-        /*
-        CreateMap<OfferForCreateDTO, DataForCreateOffer>()
-            .ForMember(dest => dest.LevelId, opt => opt.MapFrom(src => (short)src.LevelId))
-            .ForMember(dest => dest.PositionId, opt => opt.MapFrom(src => (short)src.PositionId))
-            .ForPath(dest => dest.DatePeriod!.EndDate, opt => opt.MapFrom(src => src.ContractTo))
-            .ForMember(dest => dest.DepartmentId, opt => opt.MapFrom(src => (short)src.DepartmentId))
-            .ForPath(dest => dest.DatePeriod!.StartDate, opt => opt.MapFrom(src => src.ContractFrom))
-            .ForMember(dest => dest.ContractTypeId, opt => opt.MapFrom(src => (short)src.ContractTypeId))
-            .ForMember(dest => dest.AssociatedCandidate, opt => opt.MapFrom((src, dest, destMember, context) => MapperHelper.GetContextItem<Candidate>(context, "Candidate")))
-            .ForMember(dest => dest.AssociatedInterviewSchedule, opt => opt.MapFrom((src, dest, destMember, context) => MapperHelper.GetContextItem<InterviewSchedule>(context, "InterviewSchedule")))
-            .ReverseMap();
-
-        CreateMap<OfferForUpdateDTO, DataForUpdateOffer>()
-             .ForMember(dest => dest.LevelId, opt => opt.MapFrom(src => (short)src.LevelId))
-            .ForMember(dest => dest.PositionId, opt => opt.MapFrom(src => (short)src.PositionId))
-            .ForPath(dest => dest.DatePeriod!.EndDate, opt => opt.MapFrom(src => src.ContractTo))
-            .ForMember(dest => dest.DepartmentId, opt => opt.MapFrom(src => (short)src.DepartmentId))
-            .ForPath(dest => dest.DatePeriod!.StartDate, opt => opt.MapFrom(src => src.ContractFrom))
-            .ForMember(dest => dest.ContractTypeId, opt => opt.MapFrom(src => (short)src.ContractTypeId))
-            .ForMember(dest => dest.AssociatedCandidate, opt => opt.MapFrom((src, dest, destMember, context) => MapperHelper.GetContextItem<Candidate>(context, "Candidate")))
-            .ForMember(dest => dest.AssociatedInterviewSchedule, opt => opt.MapFrom((src, dest, destMember, context) => MapperHelper.GetContextItem<InterviewSchedule>(context, "InterviewSchedule")))
-            .ReverseMap();
-        */
     }
-
-
-
-
-
-    private static void CreateFlexibleMap<TSource, TDestination>(IMappingExpression<TSource, TDestination> mappingExpression)
-    {
-
-
-        const string levelIdString = nameof(BaseOfferData.LevelId);
-        const string positionIdString = nameof(BaseOfferData.PositionId);
-        const string contractTypeIdString = nameof(BaseOfferData.ContractTypeId);
-        const string associatedCandidate = nameof(BaseOfferData.AssociatedCandidate);
-        const string associatedInterviewSchedule = nameof(BaseOfferData.AssociatedInterviewSchedule);
-
-
-        // Dynamically set properties using inline lambda if properties exist
-        AddConditionalMapping(mappingExpression, levelIdString, levelIdString, src => (short)GetPropertyValue(src, levelIdString)!);
-        AddConditionalMapping(mappingExpression, positionIdString, positionIdString, src => (short)GetPropertyValue(src, positionIdString)!);
-        AddConditionalMapping(mappingExpression, contractTypeIdString, contractTypeIdString, src => (short)GetPropertyValue(src, contractTypeIdString)!);
-
-
-        // Context item mappings for complex properties (if present)
-        if (PropertyExists<TDestination>(associatedCandidate))
-        {
-            mappingExpression.ForMember(associatedCandidate, opt => opt.MapFrom((src, dest, _, context)
-                => MapperHelper.GetContextItem<Candidate>(context, nameof(Candidate))));
-        }
-
-
-        if (PropertyExists<TDestination>(associatedInterviewSchedule))
-        {
-            mappingExpression.ForMember(associatedInterviewSchedule, opt => opt.MapFrom((src, dest, _, context)
-                => MapperHelper.GetContextItem<InterviewSchedule>(context, nameof(InterviewSchedule))));
-        }
-    }
-
-
-    private static void AddConditionalMapping<TSource, TDestination, TProp>(IMappingExpression<TSource, TDestination> map, string srcPropName, string destPropName, Func<TSource, TProp> mapFunc)
-    {
-        if (PropertyExists<TSource>(srcPropName) && PropertyExists<TDestination>(destPropName))
-        {
-            map.ForMember(destPropName, opt => opt.MapFrom(src => mapFunc(src)));
-        }
-    }
-
-
-    private static object? GetPropertyValue<T>(T obj, string propertyName)
-    {
-        return typeof(T).GetProperty(propertyName)?.GetValue(obj);
-    }
-
-
-    private static bool PropertyExists<T>(string propName)
-    {
-        return typeof(T).GetProperty(propName) != null;
-    }
-
 
 }

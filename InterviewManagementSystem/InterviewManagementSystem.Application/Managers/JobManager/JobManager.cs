@@ -5,10 +5,8 @@ using InterviewManagementSystem.Domain.Entities.Jobs;
 
 namespace InterviewManagementSystem.Application.Managers.JobManager;
 
-public sealed class JobManager : BaseManager<Job>
+public sealed class JobManager(IUnitOfWork unitOfWork) : BaseManager<Job>(unitOfWork)
 {
-
-    public JobManager(IUnitOfWork unitOfWork) : base(unitOfWork) { }
 
 
     public async Task<List<JobOpenRetrieveDTO>> GetListOpenJobAsync()
@@ -16,6 +14,7 @@ public sealed class JobManager : BaseManager<Job>
         var projection = MapperHelper.CreateProjection<Job, JobOpenRetrieveDTO>();
         return await _repository.GetAllAsync(f => f.JobStatusId == JobStatusEnum.Open, projection);
     }
+
 
 
     public async Task<ApiResponse<PageResult<JobPaginationRetrieveDTO>>> GetListJobPagingAsync(JobPaginatedSearchRequest request)
@@ -32,6 +31,7 @@ public sealed class JobManager : BaseManager<Job>
 
         return await base.GetListPaginationAsync<JobPaginationRetrieveDTO>(paginationParameter);
     }
+
 
 
     public async Task<string> CreateNewJobAsync(JobCreateDTO jobForCreateDTO)

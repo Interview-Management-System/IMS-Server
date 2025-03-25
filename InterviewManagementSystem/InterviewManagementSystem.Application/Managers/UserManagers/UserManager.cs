@@ -73,18 +73,17 @@ public sealed class UserManager : BaseUserManager
             AppRole? role = await _roleManager.FindByIdAsync(roleId.GetRoleId());
             ArgumentNullException.ThrowIfNull(role, "Role not found to filter");
 
-            List<Guid> userWithRole = (await _userManager.GetUsersInRoleAsync(role.Name!)).Select(x => x.Id).ToList();
+            List<Guid> userWithRole = [.. (await _userManager.GetUsersInRoleAsync(role.Name!)).Select(x => x.Id)];
             paginationParameter.Filters.Add(x => userWithRole.Contains(x.Id));
         }
 
-
-        var projection = MapperHelper.CreateProjection<AppUser, UserPaginationRetrieveDTO>();
-        var pageResult = await _repository.GetPaginationList(paginationParameter, projection: projection);
+        var paginationQuery = PaginationHelper.CreatePaginationQuery<AppUser, UserPaginationRetrieveDTO>(paginationParameter);
+        var pageResult = await _repository.GetPaginationList(paginationQuery);
 
 
         return new ApiResponse<PageResult<UserPaginationRetrieveDTO>>()
         {
-            Data = MapperHelper.Map<PageResult<UserPaginationRetrieveDTO>>(pageResult)
+            Data = pageResult
         };
     }
 

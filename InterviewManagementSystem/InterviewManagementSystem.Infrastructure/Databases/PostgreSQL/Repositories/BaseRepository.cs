@@ -94,12 +94,14 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
     }
 
 
-    public async Task<PageResult<TResult>> GetPaginationList<TResult>(PaginationParameter<T> pagingParameter, IEnumerable<string>? includeProperties = null, Func<IQueryable<T>, IQueryable<TResult>>? projection = null)
+    public async Task<PageResult<TResult>> GetPaginationList<TResult>(PaginationQuery<T, TResult> paginationQuery)
     {
 
         IQueryable<T> query = _dbSet.AsNoTracking().AsSplitQuery();
         var cancellationToken = CancellationTokenProvider.CancellationToken;
 
+
+        var pagingParameter = paginationQuery.PagingParameter;
 
         query = query
             .Where(f => !EF.Property<bool>(f, nameof(BaseEntity.IsDeleted)))
@@ -115,10 +117,9 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 
 
         var items = await query
-           .IncludeProperties(includeProperties)
            .ApplySortCriteria(pagingParameter.SortCriteria)
            .ApplyPagination(pageSize, pageIndex)
-           .ApplyProjection(projection)
+           .ApplyProjection(paginationQuery.Projection)
            .ToListAsync(cancellationToken);
 
 
@@ -134,7 +135,8 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 
     public async Task<PageResult<T>> GetPaginationList(PaginationParameter<T> pagingParameter, IEnumerable<string>? includeProperties = null)
     {
-        return await GetPaginationList<T>(pagingParameter, includeProperties);
+        var paginationQuery = new PaginationQuery<T, T>() { PagingParameter = pagingParameter, IncludeProperties = includeProperties };
+        return await GetPaginationList(paginationQuery);
     }
 
 

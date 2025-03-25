@@ -13,12 +13,13 @@ public abstract class BaseManager<T>(IUnitOfWork unitOfWork) where T : class
     protected virtual async Task<ApiResponse<PageResult<TPaginationDTO>>> GetListPaginationAsync<TPaginationDTO>(PaginationParameter<T> paginationParameter)
     {
 
-        var projection = MapperHelper.CreateProjection<T, TPaginationDTO>();
-        var pageResult = await _repository.GetPaginationList(paginationParameter, projection: projection);
+        var paginationQuery = PaginationHelper.CreatePaginationQuery<T, TPaginationDTO>(paginationParameter);
+        var pageResult = await _repository.GetPaginationList(paginationQuery);
+
 
         return new ApiResponse<PageResult<TPaginationDTO>>
         {
-            Data = MapperHelper.Map<PageResult<TPaginationDTO>>(pageResult)
+            Data = pageResult
         };
     }
 

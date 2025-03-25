@@ -55,14 +55,13 @@ public sealed class CandidateManager : BaseUserManager
             paginationParameter.Filters.Add(f => f.CandidateStatusId == statusId);
         }
 
-
-        var projection = MapperHelper.CreateProjection<Candidate, CandidatePaginationRetrieveDTO>();
-        var pageResult = await _candidateRepository.GetPaginationList(paginationParameter, projection: projection);
+        var paginationQuery = PaginationHelper.CreatePaginationQuery<Candidate, CandidatePaginationRetrieveDTO>(paginationParameter);
+        var pageResult = await _candidateRepository.GetPaginationList(paginationQuery);
 
 
         return new ApiResponse<PageResult<CandidatePaginationRetrieveDTO>>()
         {
-            Data = MapperHelper.Map<PageResult<CandidatePaginationRetrieveDTO>>(pageResult)
+            Data = pageResult
         };
     }
 

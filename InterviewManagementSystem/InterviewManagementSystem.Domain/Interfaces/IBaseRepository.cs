@@ -8,16 +8,27 @@ public interface IBaseRepository<T> where T : class
 {
 
     #region Retrieve
+
+    /// <summary>
+    /// Find by primary key
+    /// </summary>
+    /// <typeparam name="TId"></typeparam>
+    /// <param name="id"></param>
+    /// <param name="isTracking"></param>
+    /// <returns></returns>
     Task<T?> GetByIdAsync<TId>(TId id, bool isTracking = false);
 
 
+    Task<PageResult<TResult>> GetPaginationList<TResult>(PaginationQuery<T, TResult> paginationQuery)
+        ;
+
     Task<PageResult<T>> GetPaginationList(PaginationParameter<T> pagingParameter, IEnumerable<string>? includeProperties = null);
+
 
     Task<TResult?> GetByIdAsync<TResult>(object id, string? idIdentifier = "Id", Func<IQueryable<T>, IQueryable<TResult>>? projection = null, bool isTracking = false);
 
-    Task<List<TResult>> GetAllAsync<TResult>(Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>, IQueryable<TResult>>? projection = null, bool isTracking = false);
 
-    Task<PageResult<TResult>> GetPaginationList<TResult>(PaginationParameter<T> pagingParameter, IEnumerable<string>? includeProperties = null, Func<IQueryable<T>, IQueryable<TResult>>? projection = null);
+    Task<List<TResult>> GetAllAsync<TResult>(Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>, IQueryable<TResult>>? projection = null, bool isTracking = false);
 
 
     /// <summary>
