@@ -1,5 +1,4 @@
-﻿using InterviewManagementSystem.API.SignalR.Hubs;
-using InterviewManagementSystem.Application.Shared.Utilities;
+﻿using InterviewManagementSystem.API.SignalR.Hubs.UserHub;
 using InterviewManagementSystem.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
@@ -13,8 +12,6 @@ internal static class WebApplicationConfiguration
     {
         using var scope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope();
         var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
-
-        MasterDataUtility.InitializeUnitOfWorkInstance(unitOfWork);
     }
 
 

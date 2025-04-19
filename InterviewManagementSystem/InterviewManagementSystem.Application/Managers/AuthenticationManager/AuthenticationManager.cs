@@ -1,28 +1,40 @@
 ﻿using InterviewManagementSystem.Domain.Entities.AppUsers;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Text;
 
 namespace InterviewManagementSystem.Application.Managers.AuthenticationManager;
 
+
+public class JwtSettings
+{
+    public int Expiration { get; set; }
+    public string? SecretKey { get; set; }
+    public int RefreshTokenExpiration { get; set; }
+}
+
+
+
 public sealed class AuthenticationManager
 {
-
-    private readonly IConfiguration _configuration;
 
     private readonly UserManager<AppUser> _userManager;
 
 
 
-    public AuthenticationManager(IConfiguration configuration, UserManager<AppUser> userManager)
+    public AuthenticationManager(UserManager<AppUser> userManager, TokenHelper tokenHelper)
     {
-        _configuration = configuration;
         _userManager = userManager;
+        //_tokenHelper = tokenHelper;
+
+
     }
 
+
+    private void A()
+    {
+        _userManager.RemoveAuthenticationTokenAsync(null, "Default", "Default").Wait();
+        _userManager.GenerateUserTokenAsync(null, "Default", "Default").Wait();
+    }
 
 
     public async Task<ApiResponse<UserLoginResponse>> BasicLoginAsync(UserLoginRequest userLoginRequest)
@@ -37,12 +49,20 @@ public sealed class AuthenticationManager
         bool isValidPassword = await _userManager.CheckPasswordAsync(user, userLoginRequest.Password);
         AppUserException.ThrowIfWrongPassword(isValidPassword);
 
+        // update user to add refresh token
+        // add 2 cols for user are resfresh token and refresh token expiration
+        // _userManager.UpdateAsync(user).Wait();
+
+        var userRole = (await _userManager.GetRolesAsync(user)).FirstOrDefault();
+        ArgumentNullException.ThrowIfNullOrEmpty(userRole, "User role not found");
+
 
         return new ApiResponse<UserLoginResponse>
         {
             Data = new UserLoginResponse
             {
-                Token = await GenerateJwtToken(user),
+                Token = TokenHelper.GenerateJwtToken(user, userRole),
+                RefreshToken = TokenHelper.GenerateRefreshToken()
             },
             Message = "Login successfully"
         };
@@ -76,40 +96,5 @@ public sealed class AuthenticationManager
     public Task<ApiResponse<string>> ForgetPasswordAsync(string email)
     {
         throw new NotImplementedException();
-    }
-
-
-
-
-
-
-
-
-
-    private async Task<string> GenerateJwtToken(AppUser user)
-    {
-        var userRole = (await _userManager.GetRolesAsync(user)).FirstOrDefault();
-
-
-        var claims = new List<Claim>
-            {
-                new (ClaimTypes.Role, userRole!),
-                new (ClaimTypes.Email, user.Email!),
-                new (ClaimTypes.Name, user.UserName!),
-                new (ClaimTypes.NameIdentifier, user.Id.ToString()),
-            };
-
-
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]!));
-
-        var token = new JwtSecurityToken(
-            claims: claims,
-            expires: DateTime.Now.AddHours(Convert.ToDouble(_configuration["Jwt:Expiration"])),
-            signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
-        );
-
-
-        var jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
-        return jwtToken;
     }
 }

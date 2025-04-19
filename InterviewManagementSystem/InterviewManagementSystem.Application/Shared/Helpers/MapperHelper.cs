@@ -2,22 +2,30 @@
 
 namespace InterviewManagementSystem.Application.Shared.Helpers;
 
-public static class MapperHelper
+public sealed class MapperHelper
 {
 
-    private static IMapper? _mapper;
+    private static IMapper _mapper = default!;
 
 
-    public static void InitializeMapperInstance(IMapper mapper)
+    public MapperHelper(IMapper _mapper)
     {
-        _mapper = mapper;
+
+        var a = _mapper;
+
+        _mapper = _mapper;
+    }
+
+    public static void InitMapper(IMapper mapper)
+    {
+        _mapper ??= mapper;
     }
 
 
 
     public static Func<IQueryable<TSource>, IQueryable<TResult>> CreateProjection<TSource, TResult>()
     {
-        return query => query.ProjectTo<TResult>(_mapper!.ConfigurationProvider);
+        return query => query.ProjectTo<TResult>(_mapper.ConfigurationProvider);
     }
 
 
@@ -29,7 +37,7 @@ public static class MapperHelper
     /// <returns></returns>
     public static TDestination Map<TDestination>(object source)
     {
-        return _mapper!.Map<TDestination>(source);
+        return _mapper.Map<TDestination>(source);
     }
 
 
@@ -43,6 +51,6 @@ public static class MapperHelper
     /// <returns></returns>
     public static TDestination Map<TSource, TDestination>(TSource source, TDestination destination)
     {
-        return _mapper!.Map(source, destination);
+        return _mapper.Map(source, destination);
     }
 }

@@ -1,6 +1,5 @@
 ﻿
 using InterviewManagementSystem.Application.DTOs.JobDTOs;
-using InterviewManagementSystem.Application.Shared.Utilities;
 using InterviewManagementSystem.Domain.Entities.Jobs;
 
 namespace InterviewManagementSystem.Application.Managers.JobManager;
@@ -39,6 +38,7 @@ public sealed class JobManager(IUnitOfWork unitOfWork) : BaseManager<Job>(unitOf
 
         Job job = MapperHelper.Map<Job>(jobForCreateDTO);
 
+        /*
         var levels = await MasterDataUtility.GetListLevelByIdListAsync(jobForCreateDTO.LevelIds);
         var skills = await MasterDataUtility.GetListSkillByIdListAsync(jobForCreateDTO.SkillIds);
         var benefits = await MasterDataUtility.GetListBenefitByIdListAsync(jobForCreateDTO.BenefitIds);
@@ -46,7 +46,7 @@ public sealed class JobManager(IUnitOfWork unitOfWork) : BaseManager<Job>(unitOf
         job.AddSkills(skills);
         job.AddLevels(levels);
         job.AddBenefits(benefits);
-
+        */
         await _repository.AddAsync(job);
         bool createdSuccessful = await _unitOfWork.SaveChangesAsync();
 
@@ -74,20 +74,18 @@ public sealed class JobManager(IUnitOfWork unitOfWork) : BaseManager<Job>(unitOf
         ArgumentNullException.ThrowIfNull(jobFoundById);
 
 
-        MapperHelper.Map(jobForUpdateDTO, jobFoundById);
+        //MapperHelper.Map(jobForUpdateDTO, jobFoundById);
 
 
-        // use execute update
-        /*
-        var levels = await MasterDataUtility.GetListLevelByIdListAsync(jobForUpdateDTO.LevelIds, _unitOfWork);
-        var skills = await MasterDataUtility.GetListSkillByIdListAsync(jobForUpdateDTO.SkillIds, _unitOfWork);
-        var benefits = await MasterDataUtility.GetListBenefitByIdListAsync(jobForUpdateDTO.BenefitIds, _unitOfWork);
+        var levels = await _unitOfWork.LevelRepository.GetAllAsync<Level>(s => jobForUpdateDTO.LevelIds.Contains(s.Id), isTracking: true);
+        var skills = await _unitOfWork.SkillRepository.GetAllAsync<Skill>(l => jobForUpdateDTO.SkillIds.Contains(l.Id), isTracking: true);
+        var benefits = await _unitOfWork.BenefitRepository.GetAllAsync<Benefit>(b => jobForUpdateDTO.BenefitIds.Contains(b.Id), isTracking: true);
 
 
         jobFoundById.AddSkills(skills);
         jobFoundById.AddLevels(levels);
         jobFoundById.AddBenefits(benefits);
-        */
+
 
         _repository.Update(jobFoundById);
         bool updatedSuccessful = await _unitOfWork.SaveChangesAsync();

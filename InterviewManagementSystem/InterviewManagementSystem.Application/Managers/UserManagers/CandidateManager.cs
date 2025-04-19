@@ -1,7 +1,6 @@
 ﻿using InterviewManagementSystem.Application.DTOs.UserDTOs;
 using InterviewManagementSystem.Application.DTOs.UserDTOs.CandidateDTOs;
 using InterviewManagementSystem.Application.Services;
-using InterviewManagementSystem.Application.Shared.Utilities;
 using InterviewManagementSystem.Domain.Entities.AppUsers;
 using InterviewManagementSystem.Domain.Enums.Helpers;
 
@@ -44,6 +43,12 @@ public sealed class CandidateManager : BaseUserManager
 
     public async Task<ApiResponse<PageResult<CandidatePaginationRetrieveDTO>>> GetListCandidatePagingAsync(CandidatePaginatedSearchRequest request)
     {
+
+        //var levels = _unitOfWork.LevelRepository.GetAllAsync<Level>();
+        //var skills = _unitOfWork.SkillRepository.GetAllAsync<Skill>();
+        //var benefits = _unitOfWork.BenefitRepository.GetAllAsync<Benefit>();
+
+        //await Task.WhenAll(levels, skills, benefits);
 
         PaginationParameter<Candidate> paginationParameter = MapperHelper.Map<PaginationParameter<Candidate>>(request);
 
@@ -117,10 +122,10 @@ public sealed class CandidateManager : BaseUserManager
 
         var candidate = MapperHelper.Map<Candidate>(candidateForCreateDTO);
 
-
+        /*
         var skills = await MasterDataUtility.GetListSkillByIdListAsync(candidateForCreateDTO.SkillList);
         candidate.SetSkillList(skills);
-
+        */
 
         var uploadAvatarTask = _cloudinaryService.UploadFileAsync(candidateForCreateDTO.Avatar);
         var uploadAttachmentTask = _cloudinaryService.UploadFileAsync(candidateForCreateDTO.Attachment);

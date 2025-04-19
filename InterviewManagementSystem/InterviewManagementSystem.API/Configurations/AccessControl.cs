@@ -1,58 +1,94 @@
-﻿using InterviewManagementSystem.Domain.Enums;
-using InterviewManagementSystem.Domain.Enums.Extensions;
+﻿using InterviewManagementSystem.Application.Managers.AuthenticationManager;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 namespace InterviewManagementSystem.API.Configurations;
 
+
 internal static class AccessControl
 {
 
-    internal static void AddJWTAuthentication(this IServiceCollection services, IConfiguration configuration)
+    internal static void AddIMSAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
 
-        string? secretKeyString = configuration["JWT:SecretKey"];
-        ArgumentException.ThrowIfNullOrWhiteSpace(secretKeyString, "Secret key not found");
-
-
-        var secretKeyByte = Encoding.UTF8.GetBytes(secretKeyString);
+        services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
 
         services.AddAuthentication(opt =>
         {
-            //opt.DefaultScheme = "Windows";
+            opt.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         })
-        .AddCookie(x => x.Cookie.Name = "token")
-        .AddJwtBearer(o =>
+       .AddJwtBearer(o =>
+       {
+
+           using var serviceProvider = services.BuildServiceProvider();
+           var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+           var jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings>();
+
+           ArgumentException.ThrowIfNullOrWhiteSpace(jwtSettings!.SecretKey, "Secret key not found");
+           var secretKeyByte = Encoding.UTF8.GetBytes(jwtSettings.SecretKey);
+
+
+           o.SaveToken = true;
+           o.TokenValidationParameters = new TokenValidationParameters
+           {
+               ValidateIssuer = false,
+               ValidateAudience = false,
+               ClockSkew = TimeSpan.Zero,
+               //ValidateIssuerSigningKey = true,
+               IssuerSigningKey = new SymmetricSecurityKey(secretKeyByte)
+           };
+
+           // Use an event to log the ClockSkew value whenever a token is validated
+           o.Events = new JwtBearerEvents
+           {
+               OnTokenValidated = context =>
+               {
+                   // Retrieve the configured ClockSkew
+                   var clockSkew = context.Options.TokenValidationParameters.ClockSkew;
+
+                   // Obtain a logger instance from the DI container
+                   var loggerFactory = context.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>();
+                   var logger = loggerFactory.CreateLogger("JwtBearer");
+
+                   // Log the value - this will occur every time a token is successfully validated.
+                   logger.LogInformation("JWT token validated with ClockSkew: {ClockSkew}", clockSkew);
+
+                   return Task.CompletedTask;
+               },
+
+               OnAuthenticationFailed = context =>
+               {
+                   // Optionally log the ClockSkew value if token authentication fails.
+                   var clockSkew = context.Options.TokenValidationParameters.ClockSkew;
+                   var loggerFactory = context.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>();
+                   var logger = loggerFactory.CreateLogger("JwtBearer");
+
+                   logger.LogWarning("Authentication failed. ClockSkew used: {ClockSkew}. Error: {Error}", clockSkew, context.Exception.Message);
+
+                   return Task.CompletedTask;
+               }
+           };
+       });
+
+        services.AddLogging(builder =>
         {
-            o.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = false,
-                ValidateAudience = false,
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(secretKeyByte),
-                ClockSkew = TimeSpan.Zero,
-            };
-            o.Events = new JwtBearerEvents
-            {
-                OnMessageReceived = context =>
-                {
-                    context.Token = context.Request.Cookies["token"];
-                    return Task.CompletedTask;
-                }
-            };
-            o.SaveToken = true;
+            builder.AddConsole()
+                   .AddFilter("Microsoft.AspNetCore.Authentication", LogLevel.Debug)
+                   .AddFilter("Microsoft.AspNetCore.Authorization", LogLevel.Debug);
         });
     }
 
 
 
 
-    internal static void AddRoleAuthorization(this IServiceCollection services)
+    internal static void AddIMSAuthorization(this IServiceCollection services)
     {
+        services.AddAuthorization();
 
+        /*
         string adminRole = RoleEnum.Admin.GetDescription();
         string managerRole = RoleEnum.Manager.GetDescription();
         string candidateRole = RoleEnum.Candidate.GetDescription();
@@ -73,19 +109,18 @@ internal static class AccessControl
             .AddPolicy(AuthorizationPolicy.RequiredInterviewerRole, policy => policy.RequireRole(interviewRole))
             .AddPolicy(AuthorizationPolicy.RequiredAdminManager, policy => policy.RequireRole(adminAndManagerRoles))
             .AddPolicy(AuthorizationPolicy.RequiredAdminManagerRecruiter, policy => policy.RequireRole(adminManagerRecruiterRoles))
-            .AddPolicy(AuthorizationPolicy.RequiredAdminManagerRecruiterInterviewer, policy => policy.RequireRole(adminManagerRecruiterInterviewerRoles));
+            .AddPolicy(AuthorizationPolicy.RequiredAdminManagerRecruiterInterviewer, policy => policy.RequireRole(adminManagerRecruiterInterviewerRoles));*/
     }
 
 
 
 
-    internal static void AddCorsPolicy(this IServiceCollection services)
+    internal static void AddIMSCors(this IServiceCollection services)
     {
-        services.AddCors(options =>
-            options.AddDefaultPolicy(builder => builder
-                                                .AllowAnyOrigin()
-                                                .AllowAnyMethod()
-                                                .AllowAnyHeader())
+        services.AddCors(options => options.AddDefaultPolicy(builder => builder
+                                                                            .AllowAnyOrigin()
+                                                                            .AllowAnyMethod()
+                                                                            .AllowAnyHeader())
         );
     }
 }

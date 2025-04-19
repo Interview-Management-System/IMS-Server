@@ -25,6 +25,6 @@ public partial class Level
 
     public void RemoveJob(Job job)
     {
-        Jobs.Add(job);
+        Jobs.Remove(job);
     }
 }

@@ -135,7 +135,7 @@ public sealed class UserManager : BaseUserManager
     public async Task<string> DeActivateUser(Guid id)
     {
         bool updateSuccess = await _repository
-            .InstantUpdateAsync(u => u.Id.Equals(id), u => u.SetProperty(u => u.IsActive, false));
+            .BulkUpdateAsync(u => u.Id.Equals(id) && u.IsActive, u => u.SetProperty(u => u.IsActive, false));
 
         ApplicationException.ThrowIfOperationFail(updateSuccess, "De-activate user failed");
         return "De-activate user successfully";
@@ -146,7 +146,7 @@ public sealed class UserManager : BaseUserManager
     public async Task<string> ActivateUser(Guid id)
     {
         bool updateSuccess = await _repository
-            .InstantUpdateAsync(u => u.Id.Equals(id), u => u.SetProperty(u => u.IsActive, true));
+            .BulkUpdateAsync(u => u.Id.Equals(id) && !u.IsActive, u => u.SetProperty(u => u.IsActive, true));
 
         ApplicationException.ThrowIfOperationFail(updateSuccess, "Activate user failed");
         return "Activate user successfully";

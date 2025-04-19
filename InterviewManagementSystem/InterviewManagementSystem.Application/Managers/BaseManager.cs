@@ -57,8 +57,8 @@ public abstract class BaseManager<T>(IUnitOfWork unitOfWork) where T : class
         else
         {
             deleteSuccess = await _repository
-                .InstantUpdateAsync(e => EF.Property<object>(e, idProperty.Name).Equals(id),
-                                    e => e.SetProperty(e => EF.Property<bool>(e, nameof(BaseEntity.IsDeleted)), true));
+                .BulkUpdateAsync(e => EF.Property<object>(e, idProperty.Name).Equals(id),
+                                 e => e.SetProperty(e => EF.Property<bool>(e, nameof(BaseEntity.IsDeleted)), true));
         }
 
         ApplicationException.ThrowIfOperationFail(deleteSuccess, "Fail to delete");
@@ -74,9 +74,10 @@ public abstract class BaseManager<T>(IUnitOfWork unitOfWork) where T : class
         var idProperty = typeof(T).GetProperty(nameof(BaseEntity.Id));
         ArgumentNullException.ThrowIfNull(idProperty, "Entity has no Id to delete");
 
+
         bool undoDeleteSuccess = await _repository
-            .InstantUpdateAsync(e => EF.Property<object>(e, idProperty.Name).Equals(id),
-                                u => u.SetProperty(e => EF.Property<bool>(e, nameof(BaseEntity.IsDeleted)), false));
+            .BulkUpdateAsync(e => EF.Property<object>(e, idProperty.Name).Equals(id),
+                             e => e.SetProperty(e => EF.Property<bool>(e, nameof(BaseEntity.IsDeleted)), false));
 
         ApplicationException.ThrowIfOperationFail(undoDeleteSuccess, "Fail to undo delete");
         return "Restore failed";

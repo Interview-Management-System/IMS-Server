@@ -73,6 +73,8 @@ public sealed class UserController(UserManager userManager, UserHubService userH
     public async Task<IActionResult> DeleteUserAsync(Guid id, [FromQuery] bool? isHardDelete)
     {
         var apiResponse = await userManager.DeleteAsync(id, isHardDelete ?? false);
+        await userHubService.NotifyUserChangeAsync();
+
         return Ok(apiResponse);
     }
 
@@ -93,7 +95,7 @@ public sealed class UserController(UserManager userManager, UserHubService userH
     public async Task<IActionResult> ActivateUserAsync(Guid id)
     {
         var apiResponse = await userManager.ActivateUser(id);
-        await userHubService.NotifyUserStatusChangeAsync();
+        await userHubService.NotifyUserChangeAsync();
 
         return Ok(apiResponse);
     }
@@ -106,7 +108,7 @@ public sealed class UserController(UserManager userManager, UserHubService userH
     public async Task<IActionResult> DeActivateUserAsync(Guid id)
     {
         var apiResponse = await userManager.DeActivateUser(id);
-        await userHubService.NotifyUserStatusChangeAsync();
+        await userHubService.NotifyUserChangeAsync();
 
         return Ok(apiResponse);
     }

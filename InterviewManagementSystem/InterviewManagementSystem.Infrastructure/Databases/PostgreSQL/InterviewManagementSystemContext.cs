@@ -81,6 +81,12 @@ public partial class InterviewManagementSystemContext : IdentityDbContext<AppUse
 public partial class InterviewManagementSystemContext
 {
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        base.OnConfiguring(optionsBuilder);
+    }
+
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -100,7 +106,7 @@ public partial class InterviewManagementSystemContext
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        HanldeUpdateAt();
+        this.HanldeUpdateAt();
         //HandleSoftDelete();
         return base.SaveChangesAsync(cancellationToken);
     }

@@ -25,15 +25,15 @@ public partial class Job : BaseEntity
 
     public virtual AppUser? UpdatedByNavigation { get; set; }
 
-    public virtual ICollection<Benefit> Benefits { get; set; } = new List<Benefit>();
+    public virtual ICollection<Benefit> Benefits { get; set; } = [];
 
-    public virtual ICollection<Level> Levels { get; set; } = new List<Level>();
+    public virtual ICollection<Level> Levels { get; set; } = [];
 
-    public virtual ICollection<Skill> Skills { get; set; } = new List<Skill>();
+    public virtual ICollection<Skill> Skills { get; set; } = [];
 
-    public virtual ICollection<Candidate> Candidates { get; set; } = new List<Candidate>();
+    public virtual ICollection<Candidate> Candidates { get; set; } = [];
 
-    public virtual ICollection<InterviewSchedule> InterviewSchedules { get; set; } = new List<InterviewSchedule>();
+    public virtual ICollection<InterviewSchedule> InterviewSchedules { get; set; } = [];
 
 
 

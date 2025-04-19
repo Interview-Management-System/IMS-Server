@@ -1,12 +1,13 @@
-﻿using AutoMapper;
-using InterviewManagementSystem.API.SignalR.Services;
+﻿using InterviewManagementSystem.API.SignalR.Services;
 using InterviewManagementSystem.Application.Managers.AuthenticationManager;
 using InterviewManagementSystem.Application.Managers.InterviewManager;
 using InterviewManagementSystem.Application.Managers.JobManager;
 using InterviewManagementSystem.Application.Managers.UserManagers;
 using InterviewManagementSystem.Application.Mappers;
 using InterviewManagementSystem.Application.Shared.Helpers;
+using InterviewManagementSystem.Domain.Interfaces;
 using InterviewManagementSystem.Infrastructure.Extensions;
+using InterviewManagementSystem.Infrastructure.UnitOfWorks;
 
 namespace InterviewManagementSystem.API.Configurations;
 
@@ -17,7 +18,6 @@ internal static class InjectionService
     {
         services.AddCloudinaryService(configuration);
         services.AddPostgreSqlDbContext(configuration);
-        services.AddMongoDb(configuration);
         //services.AddHostedService<JobAutoCloserService>();
         //services.AddScoped<UserManager<Candidate>>();
 
@@ -27,7 +27,10 @@ internal static class InjectionService
         services.AddScoped<CandidateManager>();
         services.AddScoped<InterviewManager>();
         services.AddScoped<AuthenticationManager>();
+
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddSingleton<UserHubService>();
+        services.AddSingleton<TokenHelper>();
     }
 
 
@@ -42,10 +45,14 @@ internal static class InjectionService
             cfg.AddProfile<InterviewMappingProfile>();
         });
 
-        IMapper mapper = config.CreateMapper();
-
-        services.AddSingleton(mapper);
-        MapperHelper.InitializeMapperInstance(mapper);
+        /*
+        services.AddAutoMapper(typeof(JobMappingProfile),
+                               typeof(UserMappingProfile),
+                               typeof(OfferMappingProfile),
+                               typeof(CommonMappingProfile),
+                               typeof(InterviewMappingProfile));
+        */
+        MapperHelper.InitMapper(config.CreateMapper());
     }
 }
 

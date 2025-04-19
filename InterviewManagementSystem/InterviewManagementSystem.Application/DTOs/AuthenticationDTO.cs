@@ -46,4 +46,5 @@ public sealed record ResetPasswordRequest
 public sealed record UserLoginResponse
 {
     public string? Token { get; set; }
+    public string? RefreshToken { get; set; }
 }

@@ -1,15 +1,14 @@
-﻿using InterviewManagementSystem.Application.DTOs.UserDTOs.CandidateDTOs;
-using InterviewManagementSystem.Application.Managers.UserManagers;
-using InterviewManagementSystem.Domain.Enums;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace InterviewManagementSystem.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public sealed class CandidateController(CandidateManager candidateManager) : ControllerBase
+public class CandidateController() : ControllerBase
 {
 
+    /*
+    [Authorize]
     [HttpGet("list-for-interview")]
     public async Task<IActionResult> GetListCandidateForInterviewAsync()
     {
@@ -62,4 +61,5 @@ public sealed class CandidateController(CandidateManager candidateManager) : Con
         var apiResponse = await candidateManager.SetCandidateStatus(id, candidateStatusEnum);
         return Ok(apiResponse);
     }
+    */
 }

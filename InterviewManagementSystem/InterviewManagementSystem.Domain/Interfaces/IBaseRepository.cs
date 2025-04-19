@@ -31,6 +31,8 @@ public interface IBaseRepository<T> where T : class
     Task<List<TResult>> GetAllAsync<TResult>(Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>, IQueryable<TResult>>? projection = null, bool isTracking = false);
 
 
+
+
     /// <summary>
     /// Include entity property but does not support ThenInclude()
     /// </summary>
@@ -62,12 +64,12 @@ public interface IBaseRepository<T> where T : class
 
 
     /// <summary>
-    /// This method will update to DB instantly without save changes from DbContext
+    /// This method will update to DB instantly without using save changes method from DbContext
     /// </summary>
     /// <param name="filter"></param>
     /// <param name="updateExpression"></param>
     /// <returns></returns>
-    Task<bool> InstantUpdateAsync(Expression<Func<T, bool>> filter, Expression<Func<SetPropertyCalls<T>, SetPropertyCalls<T>>> updateExpression);
+    Task<bool> BulkUpdateAsync(Expression<Func<T, bool>> filter, Expression<Func<SetPropertyCalls<T>, SetPropertyCalls<T>>> updateExpression);
     #endregion
 
 

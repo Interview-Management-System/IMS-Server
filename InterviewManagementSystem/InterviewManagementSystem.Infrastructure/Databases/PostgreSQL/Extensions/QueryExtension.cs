@@ -16,15 +16,20 @@ internal static class QueryExtension
     }
 
 
-    internal static IQueryable<T> ApplyFilter<T>(this IQueryable<T> query, List<Expression<Func<T, bool>>> filters)
+    internal static IQueryable<T> ApplyFilter<T>(this IQueryable<T> query, params Expression<Func<T, bool>>[]? filters)
     {
-        if (filters != null)
+
+        if (filters == null || filters.Length == 0 || filters.All(f => f is null))
         {
-            foreach (var filter in filters)
-            {
-                query = query.Where(filter);
-            }
+            return query;
         }
+
+
+        foreach (var filter in filters)
+        {
+            query = query.Where(filter);
+        }
+
         return query;
     }
 

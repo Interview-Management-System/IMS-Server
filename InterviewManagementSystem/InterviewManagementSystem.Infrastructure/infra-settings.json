@@ -1,12 +1,7 @@
 {
 
   "IMS_PostgreSqlSetting": {
-    "ConnectionString": "Host=localhost;Database=InterviewManagementSystem;Username=postgres;Password=sa"
-  },
-
-  "IMS_MongoDbSetting": {
-    "ConnectionString": "mongodb://localhost:27017",
-    "DatabaseName": "BookStore"
+    "ConnectionString": "Host=localhost; Database=InterviewManagementSystem; Username=postgres; Password=sa"
   },
 
   "IMS_CloudinarySetting": {

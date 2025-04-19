@@ -1,6 +1,4 @@
-﻿using InterviewManagementSystem.Application.DTOs.InterviewDTOs;
-using InterviewManagementSystem.Application.Managers.InterviewManager;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace InterviewManagementSystem.API.Controllers
 {
@@ -9,6 +7,7 @@ namespace InterviewManagementSystem.API.Controllers
     public sealed class InterviewController : ControllerBase
     {
 
+        /*
         private readonly InterviewManager _interviewManager;
 
 
@@ -52,5 +51,8 @@ namespace InterviewManagementSystem.API.Controllers
             var response = await _interviewManager.SubmitInterviewAsync(request);
             return Ok(response);
         }
+
+        */
     }
+
 }

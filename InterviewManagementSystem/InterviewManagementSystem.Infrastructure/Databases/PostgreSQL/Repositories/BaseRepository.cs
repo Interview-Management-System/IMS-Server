@@ -47,10 +47,10 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
     }
 
 
-    public async Task<bool> InstantUpdateAsync(Expression<Func<T, bool>> filter, Expression<Func<SetPropertyCalls<T>, SetPropertyCalls<T>>> updateExpression)
+    public async Task<bool> BulkUpdateAsync(Expression<Func<T, bool>> filter, Expression<Func<SetPropertyCalls<T>, SetPropertyCalls<T>>> updateExpression)
     {
         int rowAffected = await _dbSet
-            .ApplyFilter([filter])
+            .ApplyFilter(filter)
             .ExecuteUpdateAsync(updateExpression, CancellationTokenProvider.CancellationToken);
 
         return rowAffected > 0;
@@ -64,7 +64,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
     {
         IQueryable<T> queryable = isTracking ? _dbSet : _dbSet.AsNoTracking();
 
-        return await queryable.ApplyFilter([filter]).ApplyProjection(projection).ToListAsync();
+        return await queryable.ApplyFilter([filter!]).ApplyProjection(projection).ToListAsync();
     }
 
 
@@ -105,7 +105,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 
         query = query
             .Where(f => !EF.Property<bool>(f, nameof(BaseEntity.IsDeleted)))
-            .ApplyFilter(pagingParameter.Filters)
+            .ApplyFilter([.. pagingParameter.Filters])
             .ApplyFullTextSearch(pagingParameter.SearchText);
 
 

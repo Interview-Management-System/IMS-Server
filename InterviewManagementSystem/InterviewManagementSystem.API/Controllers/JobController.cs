@@ -1,5 +1,4 @@
-﻿using InterviewManagementSystem.Application.DTOs.JobDTOs;
-using InterviewManagementSystem.Application.Managers.JobManager;
+﻿using InterviewManagementSystem.Application.Managers.JobManager;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InterviewManagementSystem.API.Controllers;
@@ -8,7 +7,7 @@ namespace InterviewManagementSystem.API.Controllers;
 [ApiController]
 public class JobController(JobManager manager) : ControllerBase
 {
-
+    /*
 
     private readonly JobManager _jobManager = manager;
 
@@ -74,4 +73,5 @@ public class JobController(JobManager manager) : ControllerBase
         var responseMessage = await _jobManager.UndoDeleteAsync(id);
         return Ok(responseMessage);
     }
+    */
 }

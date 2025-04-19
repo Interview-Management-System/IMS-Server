@@ -1,21 +1,20 @@
-﻿using InterviewManagementSystem.Domain.Interfaces;
-using InterviewManagementSystem.Infrastructure.Databases.MongoDB.Repositories;
+﻿using InterviewManagementSystem.Domain.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace InterviewManagementSystem.API.Controllers
 {
-    public class ValuesController(IMongoRepository<User> userRepo) : ControllerBase
+    public class ValuesController(IHttpContextAccessor httpContextAccessor) : ControllerBase
     {
         [HttpGet("test")]
+        [Authorize(Roles = nameof(RoleEnum.Recruiter))] // Fixed: Use nameof to ensure a constant expression
         public async Task<IActionResult> Get()
         {
-
-
-            return Ok("");
+            var aa = User.FindFirstValue(JwtRegisteredClaimNames.Name);
+            return Ok(aa);
         }
-
-
-
     }
 
 
