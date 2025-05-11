@@ -120,17 +120,25 @@ public partial class InterviewManagementSystemContext
     private void HanldeUpdateAt()
     {
         const string updateAtPropertyName = nameof(BaseEntity.UpdateAt);
-        var editedEntities = ChangeTracker.Entries().Where(E => E.State == EntityState.Modified).ToList();
+        var editedEntities = ChangeTracker.Entries().Where(E => E.State == EntityState.Modified);
 
 
         var entitiesWithUpdateAtProperty = editedEntities
-            .Where(ee => ee.Entity.GetType().GetProperty(updateAtPropertyName)?.Name == updateAtPropertyName)
-            .ToList();
+            .Where(ee => ee.Entity.GetType().GetProperty(updateAtPropertyName)?.Name == updateAtPropertyName);
 
 
-        if (entitiesWithUpdateAtProperty.Count > 0)
+        if (entitiesWithUpdateAtProperty.Any())
         {
-            entitiesWithUpdateAtProperty.ForEach(E => E.Property(updateAtPropertyName).CurrentValue = DateTime.Now);
+
+            foreach (var entry in entitiesWithUpdateAtProperty)
+            {
+                var entity = entry.Entity;
+                var updateAtProperty = entity.GetType().GetProperty(updateAtPropertyName);
+
+                updateAtProperty?.SetValue(entity, DateTime.Now);
+            }
+
+            //entitiesWithUpdateAtProperty.ForEach(E => E.Property(updateAtPropertyName).CurrentValue = DateTime.Now);
         }
     }
 

@@ -16,7 +16,7 @@ public class BaseHub<T> : Hub<T> where T : class
 
 
     /// <summary>
-    /// Use for cancel all query/execution when connection is aborted. This can apply for HTTP request (DB query will also cancel)
+    /// Use for canceling all query/execution when connection is aborted. This can apply for HTTP request (DB query will also cancel)
     /// </summary>
     /// <typeparam name="TResult">The type of the result returned by the action.</typeparam>
     /// <param name="action">A function representing the asynchronous action to execute.</param>

@@ -65,7 +65,7 @@ public partial class Candidate
     {
 
         bool isValidStatus = CandidateStatusId != candidateStatusEnum;
-        DomainException.ThrowIfInvalidOperation(isValidStatus, "Current candidate has the same status");
+        ImsError.ThrowIfInvalidOperation(isValidStatus, "Current candidate has the same status");
 
         CandidateStatusId = candidateStatusEnum;
     }

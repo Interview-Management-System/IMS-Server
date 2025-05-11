@@ -119,7 +119,7 @@ public partial class InterviewSchedule
 
     public void SetStatus(InterviewStatusEnum status)
     {
-        DomainException.ThrowIfInvalidOperation(status != InterviewScheduleStatusId, "Same status");
+        ImsError.ThrowIfInvalidOperation(status != InterviewScheduleStatusId, "Same status");
         InterviewScheduleStatusId = status;
     }
 
@@ -127,7 +127,7 @@ public partial class InterviewSchedule
     public void SetResult(InterviewResultEnum result)
     {
         bool isValidResult = (result != InterviewResultId) || (result.IsNotDefault());
-        DomainException.ThrowIfInvalidOperation(isValidResult, "Same result");
+        ImsError.ThrowIfInvalidOperation(isValidResult, "Same result");
         InterviewResultId = result;
     }
 

@@ -1,4 +1,4 @@
-﻿using InterviewManagementSystem.API.SignalR.Services;
+﻿using InterviewManagementSystem.API.SignalR.Notifiers;
 using InterviewManagementSystem.Application.Managers.AuthenticationManager;
 using InterviewManagementSystem.Application.Managers.InterviewManager;
 using InterviewManagementSystem.Application.Managers.JobManager;
@@ -29,7 +29,7 @@ internal static class InjectionService
         services.AddScoped<AuthenticationManager>();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
-        services.AddSingleton<UserHubService>();
+        services.AddSingleton<UserHubNotifier>();
         services.AddSingleton<TokenHelper>();
     }
 

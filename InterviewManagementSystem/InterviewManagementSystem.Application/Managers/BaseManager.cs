@@ -1,4 +1,5 @@
 ﻿using InterviewManagementSystem.Domain.Entities;
+using InterviewManagementSystem.Domain.Shared.Exceptions;
 
 namespace InterviewManagementSystem.Application.Managers;
 
@@ -16,11 +17,7 @@ public abstract class BaseManager<T>(IUnitOfWork unitOfWork) where T : class
         var paginationQuery = PaginationHelper.CreatePaginationQuery<T, TPaginationDTO>(paginationParameter);
         var pageResult = await _repository.GetPaginationList(paginationQuery);
 
-
-        return new ApiResponse<PageResult<TPaginationDTO>>
-        {
-            Data = pageResult
-        };
+        return ApiResponse.Create(pageResult);
     }
 
 
@@ -31,12 +28,8 @@ public abstract class BaseManager<T>(IUnitOfWork unitOfWork) where T : class
         var projection = MapperHelper.CreateProjection<T, TDetailDTO>();
         var detailObjectById = await _repository.GetByIdAsync(id, projection: projection);
 
-        ArgumentNullException.ThrowIfNull(detailObjectById, "Data not found to view detail");
-
-        return new ApiResponse<TDetailDTO>
-        {
-            Data = detailObjectById,
-        };
+        ImsError.ThrowIfNullOrEmpty(detailObjectById, "Data not found to view detail");
+        return ApiResponse.Create(detailObjectById);
     }
 
 
@@ -45,7 +38,7 @@ public abstract class BaseManager<T>(IUnitOfWork unitOfWork) where T : class
     {
 
         var idProperty = typeof(T).GetProperty(nameof(BaseEntity.Id));
-        ArgumentNullException.ThrowIfNull(idProperty, "Entity has no Id to delete");
+        ImsError.ThrowIfNullOrEmpty(idProperty, "Entity has no Id to delete");
 
 
         bool deleteSuccess = false;
@@ -61,7 +54,7 @@ public abstract class BaseManager<T>(IUnitOfWork unitOfWork) where T : class
                                  e => e.SetProperty(e => EF.Property<bool>(e, nameof(BaseEntity.IsDeleted)), true));
         }
 
-        ApplicationException.ThrowIfOperationFail(deleteSuccess, "Fail to delete");
+        ImsError.ThrowIfInvalidOperation(deleteSuccess, "Fail to delete");
         return "Delete successfully";
     }
 
@@ -72,14 +65,14 @@ public abstract class BaseManager<T>(IUnitOfWork unitOfWork) where T : class
     {
 
         var idProperty = typeof(T).GetProperty(nameof(BaseEntity.Id));
-        ArgumentNullException.ThrowIfNull(idProperty, "Entity has no Id to delete");
+        ImsError.ThrowIfNullOrEmpty(idProperty, "Entity has no Id to delete");
 
 
         bool undoDeleteSuccess = await _repository
             .BulkUpdateAsync(e => EF.Property<object>(e, idProperty.Name).Equals(id),
                              e => e.SetProperty(e => EF.Property<bool>(e, nameof(BaseEntity.IsDeleted)), false));
 
-        ApplicationException.ThrowIfOperationFail(undoDeleteSuccess, "Fail to undo delete");
+        ImsError.ThrowIfInvalidOperation(undoDeleteSuccess, "Fail to undo delete");
         return "Restore failed";
     }
 }

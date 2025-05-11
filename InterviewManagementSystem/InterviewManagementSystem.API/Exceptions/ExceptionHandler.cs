@@ -1,5 +1,5 @@
 ﻿using InterviewManagementSystem.Application.Shared;
-using InterviewManagementSystem.Domain.Shared.Exceptions;
+using InterviewManagementSystem.Application.Shared.Utilities;
 using Microsoft.AspNetCore.Diagnostics;
 using System.Text.RegularExpressions;
 using ApplicationException = InterviewManagementSystem.Application.Shared.Exceptions.ApplicationException;
@@ -13,18 +13,11 @@ internal sealed class ExceptionHandler : IExceptionHandler
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
 
-        var apiResponse = new ApiResponse<bool>()
-        {
-            Message = exception.Message
-        };
-
-
         int statusCode;
         Match? match = null;
 
         switch (exception)
         {
-            case DomainException:
             case ApplicationException:
                 statusCode = StatusCodes.Status400BadRequest;
                 break;
@@ -47,23 +40,18 @@ internal sealed class ExceptionHandler : IExceptionHandler
                 break;
         }
 
-
-        if (match?.Success == true)
-        {
-            apiResponse.Message = match.Groups[1].Value;
-        }
-
-        //apiResponse.StatusCode = statusCode;
         httpContext.Response.StatusCode = statusCode;
 
 
         try
         {
-            await httpContext.Response.WriteAsJsonAsync(apiResponse, cancellationToken);
+            await httpContext.Response.WriteAsJsonAsync(ApiResponse.Create("", match?.Groups[1].Value), cancellationToken);
+            IMSLogger.Error($"Request failed (code {statusCode}): {exception.Message}");
             return true;
         }
-        catch (Exception)
+        catch (Exception e)
         {
+            IMSLogger.Error($"Unknown error {e.Message}");
             return false;
         }
     }

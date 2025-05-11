@@ -20,7 +20,7 @@ namespace InterviewManagementSystem.Domain.ValueObjects
             TimeOnly startHour = TimeOnly.Parse(startHourString);
             TimeOnly endHour = TimeOnly.Parse(endHourString);
 
-            InvalidPeriodException.ThrowIfInvalidHourPeriod(startHour, endHour);
+            PeriodException.ThrowIfInvalidHourPeriod(startHour, endHour);
             return new HourPeriod(startHour, endHour);
         }
 

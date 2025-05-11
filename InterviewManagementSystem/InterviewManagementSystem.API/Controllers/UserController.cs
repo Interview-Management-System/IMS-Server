@@ -1,4 +1,4 @@
-﻿using InterviewManagementSystem.API.SignalR.Services;
+﻿using InterviewManagementSystem.API.SignalR.Notifiers;
 using InterviewManagementSystem.Application.DTOs.UserDTOs.UserDTOs;
 using InterviewManagementSystem.Application.Managers.UserManagers;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +7,7 @@ namespace InterviewManagementSystem.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public sealed class UserController(UserManager userManager, UserHubService userHubService) : ControllerBase
+public sealed class UserController(UserManager userManager, UserHubNotifier userHubService) : ControllerBase
 {
 
 
@@ -33,7 +33,7 @@ public sealed class UserController(UserManager userManager, UserHubService userH
     [HttpPost("pagination")]
     public async Task<IActionResult> GetListUserPagingAsync(UserPaginatedSearchRequest? request)
     {
-        var newRequest = request ?? new UserPaginatedSearchRequest();
+        var newRequest = request ?? UserPaginatedSearchRequest.DefaultSearchValue;
 
         var apiResponse = await userManager.GetListUserPagingAsync(newRequest);
         return Ok(apiResponse);

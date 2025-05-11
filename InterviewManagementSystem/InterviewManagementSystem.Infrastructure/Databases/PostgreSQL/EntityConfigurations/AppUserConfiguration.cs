@@ -23,7 +23,7 @@ internal static class AppUserConfiguration
 
         modelBuilder.Entity<AppRoleClaim>(entity =>
         {
-            entity.ToTable("AppCustomRoleClaims", "IMS");
+            //entity.ToTable("AppCustomRoleClaims", "IMS");
             entity.HasIndex(e => e.RoleId, "IX_AppRoleClaims_RoleId");
             entity.HasOne(d => d.Role).WithMany(p => p.AppRoleClaims).HasForeignKey(d => d.RoleId);
         });
@@ -104,7 +104,7 @@ internal static class AppUserConfiguration
 
         modelBuilder.Entity<AppUserClaim>(entity =>
         {
-            entity.ToTable("AppCustomUserClaims", "IMS");
+            //entity.ToTable("AppCustomUserClaim", "IMS");
             entity.HasIndex(e => e.UserId, "IX_AppUserClaims_UserId");
             entity.HasOne(d => d.User).WithMany(p => p.AppUserClaims).HasForeignKey(d => d.UserId);
         });
@@ -113,7 +113,7 @@ internal static class AppUserConfiguration
         modelBuilder.Entity<AppUserLogin>(entity =>
         {
             entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
-            entity.ToTable("AppCustomUserLogins", "IMS");
+            //entity.ToTable("AppCustomUserLogins", "IMS");
             entity.HasIndex(e => e.UserId, "IX_AppUserLogins_UserId");
             entity.HasOne(d => d.User).WithMany(p => p.AppUserLogins).HasForeignKey(d => d.UserId);
         });
@@ -121,7 +121,7 @@ internal static class AppUserConfiguration
 
         modelBuilder.Entity<AppUserToken>(entity =>
         {
-            entity.ToTable("AppCustomUserTokens", "IMS");
+            //entity.ToTable("AppCustomUserTokens", "IMS");
             entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name });
             entity.HasOne(d => d.User).WithMany(p => p.AppUserTokens).HasForeignKey(d => d.UserId);
         });

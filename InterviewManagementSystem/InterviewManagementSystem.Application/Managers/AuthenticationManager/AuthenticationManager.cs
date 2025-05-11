@@ -1,4 +1,5 @@
 ﻿using InterviewManagementSystem.Domain.Entities.AppUsers;
+using InterviewManagementSystem.Domain.Shared.Exceptions;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
 
@@ -42,41 +43,39 @@ public sealed class AuthenticationManager
         AppUser? user = await _userManager.FindByEmailAsync(userLoginRequest.Email);
 
 
-        ArgumentNullException.ThrowIfNull(user, "User not found (Wrong email)");
-        AppUserException.ThrowIfUserNotActive(user);
+        ImsError.ThrowIfNullOrEmpty(user, "User not found (Wrong email)");
+        ImsError.ThrowIfInvalidOperation(!user.IsActive, "Account is de-activated");
 
 
         bool isValidPassword = await _userManager.CheckPasswordAsync(user, userLoginRequest.Password);
-        AppUserException.ThrowIfWrongPassword(isValidPassword);
+        ImsError.ThrowIfInvalidOperation(isValidPassword);
+
+
+        string? userRole = (await _userManager.GetRolesAsync(user)).FirstOrDefault();
+        ImsError.ThrowIfNullOrEmpty(userRole, "User role not found");
 
         // update user to add refresh token
         // add 2 cols for user are resfresh token and refresh token expiration
         // _userManager.UpdateAsync(user).Wait();
 
-        var userRole = (await _userManager.GetRolesAsync(user)).FirstOrDefault();
-        ArgumentNullException.ThrowIfNullOrEmpty(userRole, "User role not found");
-
-
-        return new ApiResponse<UserLoginResponse>
+        var loginResponse = new UserLoginResponse()
         {
-            Data = new UserLoginResponse
-            {
-                Token = TokenHelper.GenerateJwtToken(user, userRole),
-                RefreshToken = TokenHelper.GenerateRefreshToken()
-            },
-            Message = "Login successfully"
+            Token = TokenHelper.GenerateJwtToken(user, userRole),
+            RefreshToken = TokenHelper.GenerateRefreshToken()
         };
+
+        return ApiResponse.Create(loginResponse, "Login successfully");
     }
 
 
     public async Task<string> ResetPasswordAsync(ResetPasswordRequest resetPasswordRequest)
     {
         var user = await _userManager.FindByEmailAsync(resetPasswordRequest.Email);
-        ArgumentNullException.ThrowIfNull(user, "User not found (Wrong email)");
+        ImsError.ThrowIfNullOrEmpty(user, "User not found (Wrong email)");
 
 
         string newPassword = resetPasswordRequest.NewPassword;
-        AppUserException.ThrowIfResetPasswordsNotEqual(newPassword, resetPasswordRequest.ConfirmPassword);
+        ImsError.ThrowIfInvalidOperation(newPassword != resetPasswordRequest.ConfirmPassword, "Pass and confirm pass are not equal");
 
 
         var decodedToken = WebEncoders.Base64UrlDecode(resetPasswordRequest.Token);
@@ -84,7 +83,7 @@ public sealed class AuthenticationManager
 
 
         var resetResult = await _userManager.ResetPasswordAsync(user, normalToken, newPassword);
-        AppUserException.ThrowIfResetPasswordFail(resetResult.Succeeded);
+        ImsError.ThrowIfInvalidOperation(resetResult.Succeeded);
 
 
         return "Reset password successfully";

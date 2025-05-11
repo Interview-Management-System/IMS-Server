@@ -8,7 +8,7 @@ namespace InterviewManagementSystem.Infrastructure.Databases.PostgreSQL
         public InterviewManagementSystemContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<InterviewManagementSystemContext>();
-            optionsBuilder.UseNpgsql("Host=localhost;Database=test;Username=postgres;Password=sa");
+            optionsBuilder.UseNpgsql("Host=localhost;Database=AAA;Username=postgres;Password=sa");
 
             return new InterviewManagementSystemContext(optionsBuilder.Options);
         }

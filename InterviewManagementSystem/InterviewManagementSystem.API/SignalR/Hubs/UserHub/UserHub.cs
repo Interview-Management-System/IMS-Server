@@ -12,7 +12,7 @@ public sealed class UserHub(UserManager userManager) : BaseHub<IUserSignalEvent>
     {
         return ExecuteWithCancellationAsync(async () =>
         {
-            var apiResponse = await userManager.GetListUserPagingAsync(new UserPaginatedSearchRequest());
+            var apiResponse = await userManager.GetListUserPagingAsync(UserPaginatedSearchRequest.DefaultSearchValue);
             return apiResponse.Data!;
         });
     }

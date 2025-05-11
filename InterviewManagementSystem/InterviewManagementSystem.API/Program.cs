@@ -1,15 +1,17 @@
-global using Microsoft.AspNetCore.SignalR;
+﻿global using Microsoft.AspNetCore.SignalR;
 using InterviewManagementSystem.API.Configurations;
 using InterviewManagementSystem.API.Middlewares;
 using System.Text.Json.Serialization;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 // Add services to the container.
 
+SerilogConfiguration.ConfigureSerilog();
 // opts => opts.AddFilter<CancellationFilter>()
 builder.Services.AddSignalR();
-
 builder.Services.AddControllers()
                 .AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
@@ -43,6 +45,7 @@ app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<CancellationTokenMiddleware>();
+app.UseMiddleware<LoggingMiddleware>();
 app.MapControllers();
 app.UseHubs();
 

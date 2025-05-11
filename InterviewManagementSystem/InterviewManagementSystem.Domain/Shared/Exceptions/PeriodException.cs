@@ -1,6 +1,6 @@
 ﻿namespace InterviewManagementSystem.Domain.Shared.Exceptions;
 
-internal sealed class InvalidPeriodException(string message) : DomainException(message)
+internal sealed class PeriodException(string message) : ImsError(message)
 {
 
 
@@ -11,16 +11,13 @@ internal sealed class InvalidPeriodException(string message) : DomainException(m
 
     internal static void ThrowIfInvalidHourPeriod(TimeOnly startHour, TimeOnly endHour)
     {
-        if (startHour >= endHour)
-            throw new InvalidPeriodException("Start hour must be less than end hour.");
+        ThrowIfInvalidOperation(startHour >= endHour, "Start hour must be less than end hour.");
+
+        bool validHour = startHour < TimeOnly.FromTimeSpan(TimeSpan.FromHours(0)) && startHour > TimeOnly.FromTimeSpan(TimeSpan.FromHours(24));
+        ThrowIfInvalidOperation(validHour, "Start hour must be within 00:00 to 23:59.");
 
 
-        if (startHour < TimeOnly.FromTimeSpan(TimeSpan.FromHours(0)) && startHour > TimeOnly.FromTimeSpan(TimeSpan.FromHours(24)))
-            throw new InvalidPeriodException("Start hour must be within 00:00 to 23:59.");
-
-
-        if (endHour < TimeOnly.FromTimeSpan(TimeSpan.FromHours(0)) && endHour > TimeOnly.FromTimeSpan(TimeSpan.FromHours(24)))
-            throw new InvalidPeriodException("End hour must be within 00:00 to 23:59.");
+        ThrowIfInvalidOperation(endHour < TimeOnly.FromTimeSpan(TimeSpan.FromHours(0)) && endHour > TimeOnly.FromTimeSpan(TimeSpan.FromHours(24)), "End hour must be within 00:00 to 23:59.");
     }
 
 
@@ -45,6 +42,6 @@ internal sealed class InvalidPeriodException(string message) : DomainException(m
             errorMessage = $"Error: End date must be between {MinDate.ToShortDateString()} and {MaxDate.ToShortDateString()}.";
 
 
-        throw new InvalidPeriodException(errorMessage);
+        throw new PeriodException(errorMessage);
     }
 }

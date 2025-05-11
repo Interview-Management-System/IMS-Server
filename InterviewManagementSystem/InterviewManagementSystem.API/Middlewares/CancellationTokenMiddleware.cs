@@ -1,4 +1,5 @@
 ﻿using InterviewManagementSystem.Application.Shared;
+using InterviewManagementSystem.Application.Shared.Utilities;
 
 namespace InterviewManagementSystem.API.Middlewares;
 
@@ -18,7 +19,7 @@ internal sealed class CancellationTokenMiddleware(RequestDelegate next)
         }
         catch (OperationCanceledException)
         {
-            Console.WriteLine($"Request canceled for: {context.Request.Path}");
+            IMSLogger.Error($"Request canceled for: {context.Request.Path}");
         }
     }
 }

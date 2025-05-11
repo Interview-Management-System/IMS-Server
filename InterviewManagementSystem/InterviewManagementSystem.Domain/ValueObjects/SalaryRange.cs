@@ -1,6 +1,4 @@
-﻿using InterviewManagementSystem.Domain.Shared.Exceptions;
-
-namespace InterviewManagementSystem.Domain.ValueObjects
+﻿namespace InterviewManagementSystem.Domain.ValueObjects
 {
     public sealed record SalaryRange
     {
@@ -24,7 +22,7 @@ namespace InterviewManagementSystem.Domain.ValueObjects
 
         public static SalaryRange Create(decimal from, decimal to)
         {
-            //CheckValidSalaryRange(from, to);
+            CheckValidSalaryRange(from, to);
             return new SalaryRange(from, to);
         }
 
@@ -32,6 +30,7 @@ namespace InterviewManagementSystem.Domain.ValueObjects
 
         private static void CheckValidSalaryRange(decimal from, decimal to)
         {
+            /*
             if (from <= 0)
                 throw new InvalidSalaryRange("Salary 'From' must be greater than 0.");
 
@@ -43,6 +42,7 @@ namespace InterviewManagementSystem.Domain.ValueObjects
 
             if (from > decimal.MaxValue || to > decimal.MaxValue)
                 throw new InvalidSalaryRange("Salaries must not exceed the maximum decimal value.");
+            */
         }
     }
 }

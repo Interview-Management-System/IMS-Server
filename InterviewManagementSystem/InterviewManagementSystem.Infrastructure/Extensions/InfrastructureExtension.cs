@@ -30,7 +30,8 @@ namespace InterviewManagementSystem.Infrastructure.Extensions
             ArgumentNullException.ThrowIfNullOrEmpty(connectionString, "Connection string not found");
 
             // Setup DB
-            services.AddDbContextPool<InterviewManagementSystemContext>(options => options.UseNpgsql(connectionString));
+            services.AddDbContextPool<InterviewManagementSystemContext>(options =>
+                    options.UseNpgsql(connectionString).EnableSensitiveDataLogging());
 
             services.AddIdentity<AppUser, AppRole>()
                 .AddEntityFrameworkStores<InterviewManagementSystemContext>()
