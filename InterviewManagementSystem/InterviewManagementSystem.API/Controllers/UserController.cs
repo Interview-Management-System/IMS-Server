@@ -81,20 +81,20 @@ public sealed class UserController(UserManager userManager, UserHubNotifier user
 
 
 
-    [HttpPatch("undo-delete/{id}")]
-    public async Task<IActionResult> UndoDeleteUserAsync(Guid id)
+    [HttpPatch("undo-delete")]
+    public async Task<IActionResult> UndoDeleteUserAsync(List<Guid> idList)
     {
-        var apiResponse = await userManager.UndoDeleteAsync(id);
+        var apiResponse = await userManager.UndoDeleteAsync([.. idList.Cast<object>()]);
         return Ok(apiResponse);
     }
 
 
 
 
-    [HttpPatch("activate/{id}")]
-    public async Task<IActionResult> ActivateUserAsync(Guid id)
+    [HttpPatch("activate")]
+    public async Task<IActionResult> ActivateUserAsync(List<Guid> idList)
     {
-        var apiResponse = await userManager.ActivateUser(id);
+        var apiResponse = await userManager.ActivateUser(idList);
         await userHubService.NotifyUserChangeAsync();
 
         return Ok(apiResponse);
@@ -104,10 +104,10 @@ public sealed class UserController(UserManager userManager, UserHubNotifier user
 
 
 
-    [HttpPatch("de-activate/{id}")]
-    public async Task<IActionResult> DeActivateUserAsync(Guid id)
+    [HttpPatch("de-activate")]
+    public async Task<IActionResult> DeActivateUserAsync(List<Guid> idList)
     {
-        var apiResponse = await userManager.DeActivateUser(id);
+        var apiResponse = await userManager.DeActivateUser(idList);
         await userHubService.NotifyUserChangeAsync();
 
         return Ok(apiResponse);

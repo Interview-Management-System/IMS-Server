@@ -1,12 +1,12 @@
-﻿namespace InterviewManagementSystem.Application.DTOs.UserDTOs.UserDTOs
+﻿using System.Text.Json.Serialization;
+
+namespace InterviewManagementSystem.Application.DTOs.UserDTOs.UserDTOs
 {
-    public sealed partial record UserPaginatedSearchRequest : PaginatedSearchRequest
+    public sealed record UserPaginatedSearchRequest : PaginatedSearchRequest
     {
         public RoleEnum RoleId { get; set; } = RoleEnum.Default;
 
-
-        private static readonly UserPaginatedSearchRequest _defaultSearchValue = new();
-
-        public static UserPaginatedSearchRequest DefaultSearchValue => _defaultSearchValue with { };
+        [JsonIgnore]
+        public static UserPaginatedSearchRequest DefaultSearchValue => new();
     }
 }

@@ -40,12 +40,12 @@ public abstract class BaseManager<T>(IUnitOfWork unitOfWork) where T : class
         var idProperty = typeof(T).GetProperty(nameof(BaseEntity.Id));
         ImsError.ThrowIfNullOrEmpty(idProperty, "Entity has no Id to delete");
 
-
+        /*
         bool deleteSuccess = false;
 
         if (isHardDelete)
         {
-            deleteSuccess = await _repository.InstantDeleteAsync(e => EF.Property<object>(e, idProperty.Name).Equals(id));
+            var (deleteSuccess, a) = await _repository.InstantDeleteAsync(e => EF.Property<object>(e, idProperty.Name).Equals(id));
         }
         else
         {
@@ -55,24 +55,25 @@ public abstract class BaseManager<T>(IUnitOfWork unitOfWork) where T : class
         }
 
         ImsError.ThrowIfInvalidOperation(deleteSuccess, "Fail to delete");
+        */
         return "Delete successfully";
     }
 
 
 
 
-    public virtual async Task<string> UndoDeleteAsync(object id)
+    public virtual async Task<string> UndoDeleteAsync(List<object> idList)
     {
 
         var idProperty = typeof(T).GetProperty(nameof(BaseEntity.Id));
         ImsError.ThrowIfNullOrEmpty(idProperty, "Entity has no Id to delete");
 
 
-        bool undoDeleteSuccess = await _repository
-            .BulkUpdateAsync(e => EF.Property<object>(e, idProperty.Name).Equals(id),
+        var (undoDeleteSuccess, deletedCount) = await _repository
+            .BulkUpdateAsync(e => idList.Contains(EF.Property<object>(e, idProperty.Name)),
                              e => e.SetProperty(e => EF.Property<bool>(e, nameof(BaseEntity.IsDeleted)), false));
 
         ImsError.ThrowIfInvalidOperation(undoDeleteSuccess, "Fail to undo delete");
-        return "Restore failed";
+        return $"Restore ({deletedCount}) deleted and fail ({idList.Count - deletedCount})";
     }
 }

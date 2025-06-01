@@ -1,5 +1,7 @@
 ﻿namespace InterviewManagementSystem.API.SignalR.Hubs;
 
+
+//[Authorize]
 public class BaseHub<T> : Hub<T> where T : class
 {
 
@@ -26,16 +28,5 @@ public class BaseHub<T> : Hub<T> where T : class
     {
         Context.ConnectionAborted.ThrowIfCancellationRequested();
         return await action();
-    }
-}
-
-
-
-public class CancellationFilter : IHubFilter
-{
-    public async ValueTask<object?> InvokeMethodAsync(HubInvocationContext ctx, Func<HubInvocationContext, ValueTask<object?>> next)
-    {
-        ctx.Context.ConnectionAborted.ThrowIfCancellationRequested();
-        return await next(ctx);
     }
 }

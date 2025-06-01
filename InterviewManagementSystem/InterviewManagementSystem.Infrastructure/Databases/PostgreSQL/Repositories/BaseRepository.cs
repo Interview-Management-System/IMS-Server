@@ -47,13 +47,13 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
     }
 
 
-    public async Task<bool> BulkUpdateAsync(Expression<Func<T, bool>> filter, Expression<Func<SetPropertyCalls<T>, SetPropertyCalls<T>>> updateExpression)
+    public async Task<(bool, int)> BulkUpdateAsync(Expression<Func<T, bool>> filter, Expression<Func<SetPropertyCalls<T>, SetPropertyCalls<T>>> updateExpression)
     {
         int rowAffected = await _dbSet
             .ApplyFilter(filter)
             .ExecuteUpdateAsync(updateExpression, CancellationTokenProvider.CancellationToken);
 
-        return rowAffected > 0;
+        return (rowAffected > 0, rowAffected);
     }
     #endregion
 
@@ -143,7 +143,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
     public IQueryable<T> GetWithInclude(Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, bool canLoadDeleted = false, bool isTracking = false, params string[] includeProperties)
     {
         IQueryable<T> query = isTracking ? _dbSet : _dbSet.AsNoTracking();
-        query.ApplyFilter([filter]).IncludeProperties(includeProperties);
+        query.ApplyFilter(filter!).IncludeProperties(includeProperties);
 
         return orderBy != null ? orderBy(query) : query;
     }
@@ -151,13 +151,13 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 
 
 
-    public async Task<bool> InstantDeleteAsync(Expression<Func<T, bool>> filter)
+    public async Task<(bool, int)> InstantDeleteAsync(Expression<Func<T, bool>> filter)
     {
         int rowAffected = await _dbSet
             .ApplyFilter([filter])
             .ExecuteDeleteAsync(CancellationTokenProvider.CancellationToken);
 
-        return rowAffected > 0;
+        return (rowAffected > 0, rowAffected);
     }
 }
 

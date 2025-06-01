@@ -1,19 +1,21 @@
-﻿using InterviewManagementSystem.Application.Shared.Utilities;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace InterviewManagementSystem.API.Controllers
 {
-    public class ValuesController(IHttpContextAccessor httpContextAccessor) : ControllerBase
+
+
+    public class ValuesController(HttpClient httpClient) : ControllerBase
     {
         [HttpGet("test")]
-        //[Authorize(Roles = nameof(RoleEnum.Recruiter))] // Fixed: Use nameof to ensure a constant expression
         public async Task<IActionResult> Get()
         {
-            //var aa = User.FindFirstValue(JwtRegisteredClaimNames.Name);
+            return Ok(await GetPublicIpAddressAsync());
+        }
 
-            throw new Exception("Test exception");
-            IMSLogger.Success("safdf");
-            return Ok();
+
+        public async Task<string> GetPublicIpAddressAsync()
+        {
+            return await httpClient.GetStringAsync("https://api.ipify.org");
         }
     }
 

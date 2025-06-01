@@ -8,16 +8,9 @@ public sealed class MapperHelper
     private static IMapper _mapper = default!;
 
 
-    public MapperHelper(IMapper _mapper)
-    {
-
-        var a = _mapper;
-
-        _mapper = _mapper;
-    }
-
     public static void InitMapper(IMapper mapper)
     {
+        ArgumentNullException.ThrowIfNull(mapper, nameof(mapper));
         _mapper ??= mapper;
     }
 

@@ -69,7 +69,7 @@ public interface IBaseRepository<T> where T : class
     /// <param name="filter"></param>
     /// <param name="updateExpression"></param>
     /// <returns></returns>
-    Task<bool> BulkUpdateAsync(Expression<Func<T, bool>> filter, Expression<Func<SetPropertyCalls<T>, SetPropertyCalls<T>>> updateExpression);
+    Task<(bool, int)> BulkUpdateAsync(Expression<Func<T, bool>> filter, Expression<Func<SetPropertyCalls<T>, SetPropertyCalls<T>>> updateExpression);
     #endregion
 
 
@@ -83,7 +83,7 @@ public interface IBaseRepository<T> where T : class
     /// <param name="filter"></param>
     /// <param name="updateExpression"></param>
     /// <returns></returns>
-    Task<bool> InstantDeleteAsync(Expression<Func<T, bool>> filter);
+    Task<(bool, int)> InstantDeleteAsync(Expression<Func<T, bool>> filter);
     #endregion
 }
 

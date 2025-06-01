@@ -50,7 +50,7 @@ public partial class Candidate
 
     public Candidate()
     {
-        SetCandidateStatus(CandidateStatusEnum.Open);
+        //SetCandidateStatus(CandidateStatusEnum.Open);
     }
 
 

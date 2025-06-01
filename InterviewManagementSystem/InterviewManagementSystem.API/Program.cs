@@ -10,37 +10,32 @@ var configuration = builder.Configuration;
 // Add services to the container.
 
 SerilogConfiguration.ConfigureSerilog();
-// opts => opts.AddFilter<CancellationFilter>()
 builder.Services.AddSignalR();
 builder.Services.AddControllers()
                 .AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
-configuration.AddJsonFile(Path.Combine(AppContext.BaseDirectory, "infra-settings.json"), optional: false, reloadOnChange: true);
-
-
+var env = builder.Environment;
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwagger();
+builder.Services.AddSwagger(env);
 builder.Services.AddMapper();
 builder.Services.AddFluentValidation();
 builder.Services.AddExceptionHandlers();
-builder.Services.AddInjectionService(configuration);
+builder.Services.AddInjectionService(configuration, env);
 builder.Services.AddIMSAuthentication(configuration);
 builder.Services.AddIMSAuthorization();
 builder.Services.AddIMSCors();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddCompression();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
+app.UseImsSwagger(builder);
 app.UseExceptionHandler();
 app.UseHttpsRedirection();
+app.UseMiddleware<UncompressedLoggingMiddleware>();
+app.UseResponseCompression();
+app.UseMiddleware<CompressedSizeLoggingMiddleware>();
 app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();

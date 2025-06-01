@@ -1,5 +1,6 @@
 ﻿using InterviewManagementSystem.Application.Shared;
 using InterviewManagementSystem.Application.Shared.Utilities;
+using InterviewManagementSystem.Domain.Shared.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 using System.Text.RegularExpressions;
 using ApplicationException = InterviewManagementSystem.Application.Shared.Exceptions.ApplicationException;
@@ -29,6 +30,7 @@ internal sealed class ExceptionHandler : IExceptionHandler
                 break;
 
 
+            case ImsError:
             case InvalidOperationException:
                 statusCode = StatusCodes.Status500InternalServerError;
                 match = Regex.Match(exception.Message, MESSAGE_PATTERN);

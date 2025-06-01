@@ -14,10 +14,10 @@ namespace InterviewManagementSystem.API.Configurations;
 internal static class InjectionService
 {
 
-    internal static void AddInjectionService(this IServiceCollection services, IConfiguration configuration)
+    internal static void AddInjectionService(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env)
     {
         services.AddCloudinaryService(configuration);
-        services.AddPostgreSqlDbContext(configuration);
+        services.AddPostgreSqlDbContext(configuration, env);
         //services.AddHostedService<JobAutoCloserService>();
         //services.AddScoped<UserManager<Candidate>>();
 
